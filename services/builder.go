@@ -35,6 +35,8 @@ func (b *Builder) Execute() error {
 	}
 	defer client.Close()
 
+	client.SetMaxOpenConns(1)
+
 	slog.Info("db.schema.create", slog.String("filename", b.dbPath))
 
 	_, err = client.Exec(`
