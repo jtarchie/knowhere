@@ -58,6 +58,16 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.import", slog.String("filename", b.dbPath))
 
+	insert, err := client.Prepare(`
+	INSERT INTO entries
+		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags)
+			VALUES
+		(?, ?, ?, ?, ?, ?, ?);
+	`)
+	if err != nil {
+		return fmt.Errorf("could not create prepared statement for insert: %w", err)
+	}
+
 	err = importer.Execute(
 		func(node *osm.Node) error {
 			contents, err := json.Marshal(node.TagMap())
@@ -65,12 +75,7 @@ func (b *Builder) Execute() error {
 				return fmt.Errorf("could not marshal tag map for node %d: %w", node.ID, err)
 			}
 
-			_, err = client.Exec(
-				`INSERT INTO entries
-					(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags)
-						VALUES
-					(?, ?, ?, ?, ?, ?, ?);
-			`, node.ID, "node", node.Lat, node.Lat, node.Lon, node.Lon, string(contents))
+			_, err = insert.Exec(node.ID, "node", node.Lat, node.Lat, node.Lon, node.Lon, string(contents))
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
@@ -83,12 +88,7 @@ func (b *Builder) Execute() error {
 				return fmt.Errorf("could not marshal tag map for node %d: %w", way.ID, err)
 			}
 
-			_, err = client.Exec(
-				`INSERT INTO entries
-					(osm_id, osm_type, tags)
-						VALUES
-					(?, ?, ?);
-			`, way.ID, "way", string(contents))
+			_, err = insert.Exec(way.ID, "way", nil, nil, nil, nil, string(contents))
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
@@ -101,12 +101,7 @@ func (b *Builder) Execute() error {
 				return fmt.Errorf("could not marshal tag map for node %d: %w", relation.ID, err)
 			}
 
-			_, err = client.Exec(
-				`INSERT INTO entries
-					(osm_id, osm_type, tags)
-						VALUES
-					(?, ?, ?);
-			`, relation.ID, "relation", string(contents))
+			_, err = insert.Exec(relation.ID, "relation", nil, nil, nil, nil, string(contents))
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
