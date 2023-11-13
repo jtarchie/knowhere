@@ -58,7 +58,21 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.import", slog.String("filename", b.dbPath))
 
-	insert, err := client.Prepare(`
+	// create transaction for the batch
+	// keep track of number inserts
+	// close that transaction
+	// create new one
+
+	transaction, err := client.Begin()
+	if err != nil {
+		return fmt.Errorf("could not create a transaction: %w", err)
+	}
+
+	defer func() {
+		_ = transaction.Rollback()
+	}()
+
+	insert, err := transaction.Prepare(`
 	INSERT INTO entries
 		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags)
 			VALUES
@@ -120,6 +134,11 @@ func (b *Builder) Execute() error {
 	)
 	if err != nil {
 		return fmt.Errorf("could not import into the database: %w", err)
+	}
+
+	err = transaction.Commit()
+	if err != nil {
+		return fmt.Errorf("could not commit transaction: %w", err)
 	}
 
 	slog.Info("db.import.complete", slog.String("filename", b.dbPath))
