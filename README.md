@@ -12,3 +12,12 @@ transfer of smaller files for processing. The files (download from
 
 - Index OSM data into an SQLite data to help mass search of the Point of
   Interests.
+
+## Usage
+
+To run the tests:
+
+```bash
+brew bundle
+task
+```
