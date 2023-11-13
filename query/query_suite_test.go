@@ -19,6 +19,7 @@ var _ = Describe("Building a query", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(result).To(Equal(&query.AST{
 			Types: types,
+			Tags:  []query.FilterTag{},
 		}))
 	},
 		Entry("nodes", "n", query.NodeFilter),
@@ -37,5 +38,20 @@ var _ = Describe("Building a query", func() {
 	It("errors with unrecognized type", func() {
 		_, err := query.Parse("not")
 		Expect(err).To(HaveOccurred())
+	})
+
+	It("can parse a single tag", func() {
+		ast, err := query.Parse("a[amenity=restaurant]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.AreaFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:   "amenity",
+					Lookup: "restaurant",
+					Op:     query.OpEquals,
+				},
+			},
+		}))
 	})
 })

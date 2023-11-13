@@ -15,16 +15,34 @@ const (
 	RelationFilter
 )
 
-type AST struct {
-	Types []FilterType
+type OpType uint
+
+const (
+	OpEquals OpType = iota
+)
+
+type FilterTag struct {
+	Name   string
+	Lookup string
+	Op     OpType
 }
 
-var ErrUndefinedFilter = errors.New("undefined filter type")
+type AST struct {
+	Types []FilterType
+	Tags  []FilterTag
+}
+
+var (
+	ErrUndefinedFilter    = errors.New("undefined filter type")
+	ErrUnbalancedBrackets = errors.New("unbalanced brackets")
+)
 
 func Parse(query string) (*AST, error) {
 	setTypes := map[FilterType]struct{}{}
 
-	for _, char := range query {
+	startTags := 0
+
+	for index, char := range query {
 		switch char {
 		case 'n':
 			setTypes[NodeFilter] = struct{}{}
@@ -35,14 +53,20 @@ func Parse(query string) (*AST, error) {
 		case 'r':
 			setTypes[RelationFilter] = struct{}{}
 		case '*':
-			setTypes[NodeFilter] = struct{}{}
 			setTypes[AreaFilter] = struct{}{}
-			setTypes[WayFilter] = struct{}{}
+			setTypes[NodeFilter] = struct{}{}
 			setTypes[RelationFilter] = struct{}{}
+			setTypes[WayFilter] = struct{}{}
+		case '[':
+			startTags = index
+
+			goto outOfLoop
 		default:
-			return nil, fmt.Errorf("an undefined type was specified %b: %w", char, ErrUndefinedFilter)
+			return nil, fmt.Errorf("an undefined type was specified %c: %w", char, ErrUndefinedFilter)
 		}
 	}
+
+outOfLoop:
 
 	foundTypes := []FilterType{}
 
@@ -54,7 +78,49 @@ func Parse(query string) (*AST, error) {
 		return foundTypes[i] < foundTypes[j]
 	})
 
+	tags := []FilterTag{}
+
+	if 0 < startTags {
+		brackets := 0
+
+		for index := startTags; index < len(query); index++ {
+			switch query[index] {
+			case '[':
+				brackets++
+
+				tag := FilterTag{}
+
+				var start int
+
+				index++
+
+				for start = index; query[index] != '='; index++ {
+				}
+
+				tag.Name = query[start:index]
+
+				index++
+
+				for start = index; query[index] != ']'; index++ {
+				}
+
+				tag.Lookup = query[start:index]
+
+				tags = append(tags, tag)
+				index--
+
+			case ']':
+				brackets--
+			}
+		}
+
+		if brackets != 0 {
+			return nil, fmt.Errorf("could not parse tags: %w", ErrUnbalancedBrackets)
+		}
+	}
+
 	return &AST{
 		Types: foundTypes,
+		Tags:  tags,
 	}, nil
 }
