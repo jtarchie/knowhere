@@ -1,9 +1,14 @@
 package query
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"sort"
+	"strings"
+
+	"github.com/samber/lo"
 )
 
 type FilterType uint
@@ -38,76 +43,68 @@ var (
 )
 
 func Parse(query string) (*AST, error) {
-	setTypes := map[FilterType]struct{}{}
+	foundTypes := []FilterType{}
+	tags := []FilterTag{}
+	scanner := bufio.NewReader(strings.NewReader(query))
 
-	startTags := 0
+	for {
+		char, err := scanner.ReadByte()
 
-	for index, char := range query {
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			return nil, fmt.Errorf("could not read character while scanning for types: %w", err)
+		}
+
 		switch char {
 		case 'n':
-			setTypes[NodeFilter] = struct{}{}
+			foundTypes = append(foundTypes, NodeFilter)
 		case 'a':
-			setTypes[AreaFilter] = struct{}{}
+			foundTypes = append(foundTypes, AreaFilter)
 		case 'w':
-			setTypes[WayFilter] = struct{}{}
+			foundTypes = append(foundTypes, WayFilter)
 		case 'r':
-			setTypes[RelationFilter] = struct{}{}
+			foundTypes = append(foundTypes, RelationFilter)
 		case '*':
-			setTypes[AreaFilter] = struct{}{}
-			setTypes[NodeFilter] = struct{}{}
-			setTypes[RelationFilter] = struct{}{}
-			setTypes[WayFilter] = struct{}{}
-		case '[':
-			startTags = index
-
-			goto outOfLoop
+			foundTypes = append(foundTypes, NodeFilter, AreaFilter, WayFilter, RelationFilter)
 		default:
 			return nil, fmt.Errorf("an undefined type was specified %c: %w", char, ErrUndefinedFilter)
 		}
+
+		peek, _ := scanner.Peek(1)
+		if string(peek) == "[" {
+			break
+		}
 	}
 
-outOfLoop:
+	brackets := 0
 
-	foundTypes := []FilterType{}
+	peek, _ := scanner.Peek(1)
+	if string(peek) == "[" {
+		for {
+			char, err := scanner.ReadByte()
 
-	for key := range setTypes {
-		foundTypes = append(foundTypes, key)
-	}
+			if err == io.EOF {
+				break
+			}
 
-	sort.Slice(foundTypes, func(i, j int) bool {
-		return foundTypes[i] < foundTypes[j]
-	})
+			if err != nil {
+				return nil, fmt.Errorf("could not read character while scanning for tags: %w", err)
+			}
 
-	tags := []FilterTag{}
-
-	if 0 < startTags {
-		brackets := 0
-
-		for index := startTags; index < len(query); index++ {
-			switch query[index] {
+			switch char {
 			case '[':
 				brackets++
 
 				tag := FilterTag{}
+				tag.Name, _ = readWord(scanner)
 
-				var start int
+				_, _ = scanner.ReadByte() // =
 
-				index++
-
-				for start = index; query[index] != '='; index++ {
-				}
-
-				tag.Name = query[start:index]
-
-				index++
-
-				for start = index; query[index] != ']'; index++ {
-				}
-
-				tag.Lookup = query[start:index]
-
+				tag.Lookup, _ = readWord(scanner)
 				tags = append(tags, tag)
-				index--
 
 			case ']':
 				brackets--
@@ -119,8 +116,40 @@ outOfLoop:
 		}
 	}
 
+	sort.Slice(foundTypes, func(i, j int) bool {
+		return foundTypes[i] < foundTypes[j]
+	})
+
+	foundTypes = lo.Uniq(foundTypes)
+
 	return &AST{
 		Types: foundTypes,
 		Tags:  tags,
 	}, nil
+}
+
+func readWord(scanner *bufio.Reader) (string, error) {
+	var builder strings.Builder
+
+	for {
+		char, err := scanner.ReadByte()
+
+		if err == io.EOF {
+			return builder.String(), nil
+		}
+
+		if err != nil {
+			return "", fmt.Errorf("could not read byte for word: %w", err)
+		}
+
+		if 'a' <= char && char <= 'z' {
+			_ = builder.WriteByte(char)
+		} else {
+			_ = scanner.UnreadByte()
+
+			break
+		}
+	}
+
+	return builder.String(), nil
 }

@@ -17,7 +17,9 @@ require (
 	github.com/paulmach/osm v0.7.1 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/samber/lo v1.38.1 // indirect
 	github.com/schollz/progressbar/v3 v3.14.1 // indirect
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
 	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/sys v0.14.0 // indirect
 	golang.org/x/term v0.14.0 // indirect
