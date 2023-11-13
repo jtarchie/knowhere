@@ -31,3 +31,4 @@ Brewfile.lock.json
 dist/
 .DS_Store
 .env*
+*.db*

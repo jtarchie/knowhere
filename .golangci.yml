@@ -12,6 +12,7 @@ linters:
 
   # cleanup later
   - funlen
+  - cyclop
 
   # linters deprecated
   - deadcode

@@ -8,6 +8,7 @@ import (
 
 	"github.com/paulmach/osm"
 	"github.com/paulmach/osm/osmpbf"
+	"github.com/schollz/progressbar/v3"
 )
 
 type Importer struct {
@@ -29,12 +30,22 @@ func (i *Importer) Execute(
 ) error {
 	file, err := os.Open(i.filename)
 	if err != nil {
-		return fmt.Errorf("could not open osm pdb file: %w", err)
+		return fmt.Errorf("could not open osm pbf file: %w", err)
 	}
 	defer file.Close()
 
+	stat, err := os.Stat(i.filename)
+	if err != nil {
+		return fmt.Errorf("could stat the osm pbf file: %w", err)
+	}
+
 	scanner := osmpbf.New(context.Background(), file, runtime.NumCPU())
 	defer scanner.Close()
+
+	bar := progressbar.DefaultBytes(
+		stat.Size(),
+		"importing",
+	)
 
 	for scanner.Scan() {
 		switch object := scanner.Object().(type) {
@@ -54,7 +65,11 @@ func (i *Importer) Execute(
 				return fmt.Errorf("could not import relation %d: %w", object.ID, err)
 			}
 		}
+
+		_ = bar.Set64(scanner.FullyScannedBytes())
 	}
+
+	_ = bar.Close()
 
 	err = scanner.Err()
 	if err != nil {
