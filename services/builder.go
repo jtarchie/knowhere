@@ -58,11 +58,6 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.import", slog.String("filename", b.dbPath))
 
-	// create transaction for the batch
-	// keep track of number inserts
-	// close that transaction
-	// create new one
-
 	transaction, err := client.Begin()
 	if err != nil {
 		return fmt.Errorf("could not create a transaction: %w", err)
@@ -74,9 +69,9 @@ func (b *Builder) Execute() error {
 
 	insert, err := transaction.Prepare(`
 	INSERT INTO entries
-		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags)
+		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags, refs)
 			VALUES
-		(?, ?, ?, ?, ?, ?, ?);
+		(?, ?, ?, ?, ?, ?, ?, ?);
 	`)
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for insert: %w", err)
@@ -92,6 +87,7 @@ func (b *Builder) Execute() error {
 				node.Lon,
 				node.Lon,
 				marshal.Tags(node.TagMap()),
+				nil,
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
@@ -108,6 +104,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				marshal.Tags(way.TagMap()),
+				marshal.WayNodes(way.Nodes),
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
@@ -124,6 +121,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				marshal.Tags(relation.TagMap()),
+				marshal.Members(relation.Members),
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
