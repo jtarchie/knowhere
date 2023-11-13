@@ -2,10 +2,10 @@ package services
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"log/slog"
 
+	"github.com/jtarchie/knowhere/marshal"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulmach/osm"
 )
@@ -70,12 +70,15 @@ func (b *Builder) Execute() error {
 
 	err = importer.Execute(
 		func(node *osm.Node) error {
-			contents, err := json.Marshal(node.TagMap())
-			if err != nil {
-				return fmt.Errorf("could not marshal tag map for node %d: %w", node.ID, err)
-			}
-
-			_, err = insert.Exec(node.ID, "node", node.Lat, node.Lat, node.Lon, node.Lon, string(contents))
+			_, err = insert.Exec(
+				node.ID,
+				"node",
+				node.Lat,
+				node.Lat,
+				node.Lon,
+				node.Lon,
+				marshal.Tags(node.TagMap()),
+			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
@@ -83,12 +86,15 @@ func (b *Builder) Execute() error {
 			return nil
 		},
 		func(way *osm.Way) error {
-			contents, err := json.Marshal(way.TagMap())
-			if err != nil {
-				return fmt.Errorf("could not marshal tag map for node %d: %w", way.ID, err)
-			}
-
-			_, err = insert.Exec(way.ID, "way", nil, nil, nil, nil, string(contents))
+			_, err = insert.Exec(
+				way.ID,
+				"way",
+				nil,
+				nil,
+				nil,
+				nil,
+				marshal.Tags(way.TagMap()),
+			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
@@ -96,12 +102,15 @@ func (b *Builder) Execute() error {
 			return nil
 		},
 		func(relation *osm.Relation) error {
-			contents, err := json.Marshal(relation.TagMap())
-			if err != nil {
-				return fmt.Errorf("could not marshal tag map for node %d: %w", relation.ID, err)
-			}
-
-			_, err = insert.Exec(relation.ID, "relation", nil, nil, nil, nil, string(contents))
+			_, err = insert.Exec(
+				relation.ID,
+				"relation",
+				nil,
+				nil,
+				nil,
+				nil,
+				marshal.Tags(relation.TagMap()),
+			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
