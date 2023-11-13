@@ -38,5 +38,14 @@ var _ = Describe("Builder", func() {
 
 		result := sql(dbPath, "SELECT COUNT(*) FROM entries")
 		Expect(result).To(BeEquivalentTo(339))
+
+		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'node'")
+		Expect(result).To(BeEquivalentTo(290))
+
+		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way'")
+		Expect(result).To(BeEquivalentTo(44))
+
+		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation'")
+		Expect(result).To(BeEquivalentTo(5))
 	})
 })

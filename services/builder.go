@@ -106,7 +106,7 @@ func (b *Builder) Execute() error {
 					(osm_id, osm_type, tags)
 						VALUES
 					(?, ?, ?);
-			`, relation.ID, "way", string(contents))
+			`, relation.ID, "relation", string(contents))
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
