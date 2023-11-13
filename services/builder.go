@@ -56,7 +56,7 @@ func (b *Builder) Execute() error {
 
 	importer := NewImporter(b.osmPath)
 
-	slog.Info("db.import", slog.String("filename", b.dbPath))
+	slog.Info("db.import.init", slog.String("filename", b.dbPath))
 
 	transaction, err := client.Begin()
 	if err != nil {
@@ -141,7 +141,17 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.import.complete", slog.String("filename", b.dbPath))
 
-	// insert nodes, ways, and relations from osm pbf file
-	// close db
+	slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
+
+	_, err = client.Exec(`
+		pragma vacuum;
+		pragma optimize;
+	`)
+	if err != nil {
+		return fmt.Errorf("could not optimize database: %w", err)
+	}
+
+	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath))
+
 	return nil
 }
