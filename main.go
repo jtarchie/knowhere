@@ -8,14 +8,10 @@ import (
 	"github.com/jtarchie/knowhere/commands"
 )
 
-type CLI struct {
-	Build commands.Build `cmd:""`
-}
-
 func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
 
-	cli := &CLI{}
+	cli := &commands.CLI{}
 	ctx := kong.Parse(cli)
 	// Call the Run() method of the selected parsed command.
 	err := ctx.Run()
