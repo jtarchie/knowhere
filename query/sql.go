@@ -11,36 +11,37 @@ func ToSQL(query string) (string, error) {
 		return "", fmt.Errorf("could not parse query into SQL: %w", err)
 	}
 
-	sql := `
+	var builder strings.Builder
+
+	builder.WriteString(`
 		SELECT
 			*
 		FROM
 			entries e
-		-- JOIN
-		--	search s
-		-- ON search.id = e.id
-	`
+	`)
 
 	if 0 < len(ast.Types) {
-		sql += " WHERE "
+		builder.WriteString(" WHERE (")
 
-		conds := []string{}
+		for index, t := range ast.Types {
+			if 0 < index {
+				builder.WriteString(" OR ")
+			}
 
-		for _, t := range ast.Types {
 			switch t {
 			case NodeFilter:
-				conds = append(conds, "e.osm_type = 'node'")
+				builder.WriteString("e.osm_type = 'node'")
 			case AreaFilter:
-				conds = append(conds, "e.osm_type = 'area'")
+				builder.WriteString("e.osm_type = 'area'")
 			case WayFilter:
-				conds = append(conds, "e.osm_type = 'way'")
+				builder.WriteString("e.osm_type = 'way'")
 			case RelationFilter:
-				conds = append(conds, "e.osm_type = 'relation'")
+				builder.WriteString("e.osm_type = 'relation'")
 			}
 		}
 
-		sql += "(" + strings.Join(conds, " OR ") + ")"
+		builder.WriteString(")")
 	}
 
-	return sql, nil
+	return builder.String(), nil
 }
