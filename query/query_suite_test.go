@@ -77,4 +77,37 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("can parse tags with values and existence", func() {
+		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi][takeaway][website]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{
+				query.NodeFilter,
+				query.AreaFilter,
+			},
+			Tags: []query.FilterTag{
+				{
+					Name:   "amenity",
+					Lookup: "restaurant",
+					Op:     query.OpEquals,
+				},
+				{
+					Name:   "cuisine",
+					Lookup: "sushi",
+					Op:     query.OpEquals,
+				},
+				{
+					Name:   "takeaway",
+					Lookup: "",
+					Op:     query.OpExists,
+				},
+				{
+					Name:   "website",
+					Lookup: "",
+					Op:     query.OpExists,
+				},
+			},
+		}))
+	})
 })

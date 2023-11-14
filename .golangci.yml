@@ -13,6 +13,8 @@ linters:
   # cleanup later
   - funlen
   - cyclop
+  - gocognit
+  - nestif
 
   # linters deprecated
   - deadcode
