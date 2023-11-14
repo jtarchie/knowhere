@@ -18,9 +18,10 @@ const (
 type OpType uint
 
 const (
-	OpEquals OpType = iota
+	OpEquals    OpType = iota
+	OpNotEquals OpType = iota
 	OpExists
-	OpNotExist
+	OpNotExists
 )
 
 type FilterTag struct {
@@ -37,4 +38,5 @@ type AST struct {
 var (
 	ErrUndefinedFilter    = errors.New("undefined filter type")
 	ErrUnbalancedBrackets = errors.New("unbalanced brackets")
+	ErrUnparsableQuery    = errors.New("unparsable query")
 )

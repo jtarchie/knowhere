@@ -125,7 +125,7 @@ var _ = Describe("Building a query", func() {
 				{
 					Name:    "oneway",
 					Lookups: []string{},
-					Op:      query.OpNotExist,
+					Op:      query.OpNotExists,
 				},
 			},
 		}))
@@ -149,5 +149,25 @@ var _ = Describe("Building a query", func() {
 	It("errors on unbalanced brackets for tags", func() {
 		_, err := query.Parse("w[amenity=restaurant,pub,cafe")
 		Expect(err).To(HaveOccurred())
+	})
+
+	It("can support tags that do not equal values", func() {
+		ast, err := query.Parse("w[highway][highway!=motorway,primary]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "highway",
+					Lookups: []string{},
+					Op:      query.OpExists,
+				},
+				{
+					Name:    "highway",
+					Lookups: []string{"motorway", "primary"},
+					Op:      query.OpNotEquals,
+				},
+			},
+		}))
 	})
 })

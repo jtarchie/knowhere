@@ -8,7 +8,7 @@ import (
 )
 
 %%{
-  machine syslog_rfc5424;
+  machine query;
   write data;
 }%%
 
@@ -42,9 +42,10 @@ func Parse(data string) (*AST, error) {
     action create_tag { tag = FilterTag{Lookups: []string{}} }
     action append_tag { tags = append(tags, tag) }
 
-    action tag_equals { tag.Op = OpEquals }
+    action tag_eq     { tag.Op = OpEquals }
+    action tag_ne     { tag.Op = OpNotEquals }
     action tag_exists { tag.Op = OpExists }
-    action tag_not    { tag.Op = OpNotExist }
+    action tag_not    { tag.Op = OpNotExists }
 
     action tag_name  { tag.Name    = data[mark:p] }
     action tag_value { tag.Lookups = append(tag.Lookups, data[mark:p]) }
@@ -59,16 +60,23 @@ func Parse(data string) (*AST, error) {
     tag_value = alnum+ >mark %tag_value;
     tag_eq = (
       tag_name "=" tag_value ( "," tag_value )*
-    ) %tag_equals;
+    ) %tag_eq;
+    tag_ne = (
+      tag_name "!=" tag_value ( "," tag_value )*
+    ) %tag_ne;
     tag_exists = (tag_name) %tag_exists;
     tag_not    = ("!" tag_name) %tag_not;
-    tag    = ("[" %inc_bracket) (tag_eq | tag_exists | tag_not) ("]" %dec_bracket);
+    tag    = ("[" %inc_bracket) (tag_eq | tag_ne | tag_exists | tag_not) ("]" %dec_bracket);
     tags   = (tag >create_tag %append_tag)*;
 
     main := types tags;
     write init;
     write exec;
   }%%
+
+  if cs < query_first_final {
+    return nil, ErrUnparsableQuery
+  }
 
   if brackets != 0 {
     return nil, fmt.Errorf("tags not enclosed properly (%d): %w", brackets, ErrUnbalancedBrackets)
