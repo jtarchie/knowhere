@@ -3,13 +3,21 @@ module github.com/jtarchie/knowhere
 go 1.21.4
 
 require (
-	github.com/alecthomas/kong v0.8.1 // indirect
+	github.com/alecthomas/kong v0.8.1
+	github.com/cockroachdb/cockroachdb-parser v0.0.0-20230705064001-302c9ad52e1a
+	github.com/mattn/go-sqlite3 v1.14.18
+	github.com/onsi/ginkgo/v2 v2.13.1
+	github.com/onsi/gomega v1.30.0
+	github.com/paulmach/osm v0.7.1
+	github.com/samber/lo v1.38.1
+	github.com/schollz/progressbar/v3 v3.14.1
+)
+
+require (
 	github.com/biogo/store v0.0.0-20201120204734-aad293a2328f // indirect
 	github.com/blevesearch/snowballstem v0.9.0 // indirect
 	github.com/cockroachdb/apd/v3 v3.1.0 // indirect
-	github.com/cockroachdb/cockroachdb-parser v0.0.0-20230705064001-302c9ad52e1a // indirect
 	github.com/cockroachdb/errors v1.9.0 // indirect
-	github.com/cockroachdb/gostdlib v1.19.0 // indirect
 	github.com/cockroachdb/logtags v0.0.0-20211118104740-dabe8e521a4f // indirect
 	github.com/cockroachdb/redact v1.1.3 // indirect
 	github.com/datadog/czlib v0.0.0-20160811164712-4bc9a24e37f2 // indirect
@@ -28,12 +36,8 @@ require (
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lib/pq v1.10.6 // indirect
-	github.com/mattn/go-sqlite3 v1.14.18 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
-	github.com/onsi/ginkgo/v2 v2.13.1 // indirect
-	github.com/onsi/gomega v1.30.0 // indirect
 	github.com/paulmach/orb v0.1.3 // indirect
-	github.com/paulmach/osm v0.7.1 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pierrre/geohash v1.0.0 // indirect
@@ -41,9 +45,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
-	github.com/samber/lo v1.38.1 // indirect
 	github.com/sasha-s/go-deadlock v0.3.1 // indirect
-	github.com/schollz/progressbar/v3 v3.14.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/twpayne/go-geom v1.4.1 // indirect
