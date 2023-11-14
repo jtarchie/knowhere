@@ -14,7 +14,7 @@ func TestQuery(t *testing.T) {
 }
 
 var _ = Describe("Building a query", func() {
-	FDescribeTable("can parse types into AST", func(q string, types ...query.FilterType) {
+	DescribeTable("can parse types into AST", func(q string, types ...query.FilterType) {
 		result, err := query.Parse(q)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(result).To(Equal(&query.AST{
@@ -125,21 +125,21 @@ var _ = Describe("Building a query", func() {
 				{
 					Name:    "oneway",
 					Lookups: []string{},
-					Op:      query.OpNoExists,
+					Op:      query.OpNotExist,
 				},
 			},
 		}))
 	})
 
 	It("can support multiple value on a single tag", func() {
-		ast, err := query.Parse("na[amenity=restaurant,pub,cafe]")
+		ast, err := query.Parse("w[amenity=restaurant,pub,cafe]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Types: []query.FilterType{query.WayFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",
-					Lookups: []string{"residential", "pub", "cafe"},
+					Lookups: []string{"restaurant", "pub", "cafe"},
 					Op:      query.OpEquals,
 				},
 			},
