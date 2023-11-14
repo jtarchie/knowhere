@@ -207,5 +207,23 @@ var _ = Describe("Building a query", func() {
 				},
 			},
 		}))
+
+		ast, err = query.Parse(`na[amenity=pub][name="The King's Head","Another Value",Yep]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+				{
+					Name:    "name",
+					Lookups: []string{"The King's Head", "Another Value", "Yep"},
+					Op:      query.OpEquals,
+				},
+			},
+		}))
 	})
 })
