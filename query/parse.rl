@@ -26,13 +26,11 @@ func Parse(data string) (*AST, error) {
 
     action all { foundTypes = append(foundTypes, NodeFilter, AreaFilter, WayFilter, RelationFilter) }
 
-    main := (
-      (
-        (("a" >area) | ("n" >node) | ("r" >relation) | ("w" >way))+
-        |
-        ("*" >all)
-      )
-    );
+    type  = ("a" >area) | ("n" >node) | ("r" >relation) | ("w" >way);
+    types = type+ | ("*" >all);
+    
+
+    main := types;
     write init;
     write exec;
   }%%
