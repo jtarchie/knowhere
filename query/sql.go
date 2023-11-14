@@ -20,8 +20,19 @@ func ToSQL(query string) (string, error) {
 			entries e
 	`)
 
+	if 0 < len(ast.Tags) {
+		builder.WriteString(`
+			JOIN
+				search s
+			ON
+				s.id = e.id
+		`)
+	}
+
+	builder.WriteString(" WHERE ")
+
 	if 0 < len(ast.Types) {
-		builder.WriteString(" WHERE (")
+		builder.WriteString("(")
 
 		for index, t := range ast.Types {
 			if 0 < index {
@@ -40,7 +51,39 @@ func ToSQL(query string) (string, error) {
 			}
 		}
 
-		builder.WriteString(")")
+		builder.WriteString(") ")
+	}
+
+	if 0 < len(ast.Tags) {
+		builder.WriteString("AND s.tags MATCH '")
+
+		for index, tag := range ast.Tags {
+			if 0 < index {
+				builder.WriteString(" AND ")
+			}
+
+			switch tag.Op {
+			case OpEquals:
+				builder.WriteString("( ")
+
+				for index, lookup := range tag.Lookups {
+					if 0 < index {
+						builder.WriteString(" OR ")
+					}
+
+					builder.WriteString(`("`)
+					builder.WriteString(tag.Name)
+					builder.WriteString(" ")
+					builder.WriteString(lookup)
+					builder.WriteString(`")`)
+				}
+
+				builder.WriteString(" )")
+			case OpNotEquals, OpExists, OpNotExists:
+			}
+		}
+
+		builder.WriteString("'")
 	}
 
 	return builder.String(), nil
