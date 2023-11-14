@@ -38,8 +38,8 @@ var _ = Describe("Build SQL from a query", func() {
 
 		Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
 	},
-		Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.id = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") )'`),
-		Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.id = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )'`),
-		Entry("single tag with multiple values", "na[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.id = e.id WHERE (e.osm_type = 'node' OR e.osm_type = 'area') AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
+		Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") )'`),
+		Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )'`),
+		Entry("single tag with multiple values", "na[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node' OR e.osm_type = 'area') AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
 	)
 })

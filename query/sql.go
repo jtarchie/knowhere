@@ -25,7 +25,7 @@ func ToSQL(query string) (string, error) {
 			JOIN
 				search s
 			ON
-				s.id = e.id
+				s.rowid = e.id
 		`)
 	}
 
