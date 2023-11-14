@@ -110,4 +110,24 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("parses for tags that should not exist", func() {
+		ast, err := query.Parse("w[highway=residential][!oneway]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:   "highway",
+					Lookup: "residential",
+					Op:     query.OpEquals,
+				},
+				{
+					Name:   "oneway",
+					Lookup: "",
+					Op:     query.OpNoExists,
+				},
+			},
+		}))
+	})
 })

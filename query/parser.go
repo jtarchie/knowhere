@@ -25,6 +25,7 @@ type OpType uint
 const (
 	OpEquals OpType = iota
 	OpExists
+	OpNoExists
 )
 
 type FilterTag struct {
@@ -100,7 +101,16 @@ func Parse(query string) (*AST, error) {
 			case '[':
 				brackets++
 
-				tag := FilterTag{}
+				tag := FilterTag{
+					Op: OpExists,
+				}
+
+				peek, _ := scanner.Peek(1)
+				if string(peek) == "!" {
+					tag.Op = OpNoExists
+					_, _ = scanner.ReadByte()
+				}
+
 				tag.Name, err = readWord(scanner)
 
 				if err != nil {
@@ -117,7 +127,6 @@ func Parse(query string) (*AST, error) {
 						return nil, fmt.Errorf("could not read tag assignment: %w", err)
 					}
 				case ']':
-					tag.Op = OpExists
 					_ = scanner.UnreadByte()
 				}
 
