@@ -4,6 +4,7 @@ tasks:
   format:
     cmds:
     - deno fmt README.md
+    - go generate ./...
     - gofmt -w .
   lint: golangci-lint run --fix --timeout "10m"
   test: go run github.com/onsi/ginkgo/v2/ginkgo -tags "fts5" -cover -race -r -p

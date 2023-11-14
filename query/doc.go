@@ -1,5 +1,7 @@
 package query
 
+//go:generate ragel -e -G2 -Z parse.rl
+
 import (
 	"bufio"
 	"errors"
@@ -29,9 +31,9 @@ const (
 )
 
 type FilterTag struct {
-	Name   string
-	Lookup string
-	Op     OpType
+	Name    string
+	Lookups []string
+	Op      OpType
 }
 
 type AST struct {
@@ -44,7 +46,7 @@ var (
 	ErrUnbalancedBrackets = errors.New("unbalanced brackets")
 )
 
-func Parse(query string) (*AST, error) {
+func XParse(query string) (*AST, error) {
 	foundTypes := []FilterType{}
 	tags := []FilterTag{}
 	scanner := bufio.NewReader(strings.NewReader(query))
@@ -102,7 +104,8 @@ func Parse(query string) (*AST, error) {
 				brackets++
 
 				tag := FilterTag{
-					Op: OpExists,
+					Op:      OpExists,
+					Lookups: []string{},
 				}
 
 				peek, _ := scanner.Peek(1)
@@ -121,11 +124,12 @@ func Parse(query string) (*AST, error) {
 				switch op {
 				case '=':
 					tag.Op = OpEquals
-					tag.Lookup, err = readWord(scanner)
-
+					lookup, err := readWord(scanner)
 					if err != nil {
 						return nil, fmt.Errorf("could not read tag assignment: %w", err)
 					}
+
+					tag.Lookups = append(tag.Lookups, lookup)
 				case ']':
 					_ = scanner.UnreadByte()
 				}

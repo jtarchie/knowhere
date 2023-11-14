@@ -14,7 +14,7 @@ func TestQuery(t *testing.T) {
 }
 
 var _ = Describe("Building a query", func() {
-	DescribeTable("can parse types into AST", func(q string, types ...query.FilterType) {
+	FDescribeTable("can parse types into AST", func(q string, types ...query.FilterType) {
 		result, err := query.Parse(q)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(result).To(Equal(&query.AST{
@@ -47,9 +47,9 @@ var _ = Describe("Building a query", func() {
 			Types: []query.FilterType{query.AreaFilter},
 			Tags: []query.FilterTag{
 				{
-					Name:   "amenity",
-					Lookup: "restaurant",
-					Op:     query.OpEquals,
+					Name:    "amenity",
+					Lookups: []string{"restaurant"},
+					Op:      query.OpEquals,
 				},
 			},
 		}))
@@ -65,14 +65,14 @@ var _ = Describe("Building a query", func() {
 			},
 			Tags: []query.FilterTag{
 				{
-					Name:   "amenity",
-					Lookup: "restaurant",
-					Op:     query.OpEquals,
+					Name:    "amenity",
+					Lookups: []string{"restaurant"},
+					Op:      query.OpEquals,
 				},
 				{
-					Name:   "cuisine",
-					Lookup: "sushi",
-					Op:     query.OpEquals,
+					Name:    "cuisine",
+					Lookups: []string{"sushi"},
+					Op:      query.OpEquals,
 				},
 			},
 		}))
@@ -88,24 +88,24 @@ var _ = Describe("Building a query", func() {
 			},
 			Tags: []query.FilterTag{
 				{
-					Name:   "amenity",
-					Lookup: "restaurant",
-					Op:     query.OpEquals,
+					Name:    "amenity",
+					Lookups: []string{"restaurant"},
+					Op:      query.OpEquals,
 				},
 				{
-					Name:   "cuisine",
-					Lookup: "sushi",
-					Op:     query.OpEquals,
+					Name:    "cuisine",
+					Lookups: []string{"sushi"},
+					Op:      query.OpEquals,
 				},
 				{
-					Name:   "takeaway",
-					Lookup: "",
-					Op:     query.OpExists,
+					Name:    "takeaway",
+					Lookups: []string{},
+					Op:      query.OpExists,
 				},
 				{
-					Name:   "website",
-					Lookup: "",
-					Op:     query.OpExists,
+					Name:    "website",
+					Lookups: []string{},
+					Op:      query.OpExists,
 				},
 			},
 		}))
@@ -118,14 +118,29 @@ var _ = Describe("Building a query", func() {
 			Types: []query.FilterType{query.WayFilter},
 			Tags: []query.FilterTag{
 				{
-					Name:   "highway",
-					Lookup: "residential",
-					Op:     query.OpEquals,
+					Name:    "highway",
+					Lookups: []string{"residential"},
+					Op:      query.OpEquals,
 				},
 				{
-					Name:   "oneway",
-					Lookup: "",
-					Op:     query.OpNoExists,
+					Name:    "oneway",
+					Lookups: []string{},
+					Op:      query.OpNoExists,
+				},
+			},
+		}))
+	})
+
+	It("can support multiple value on a single tag", func() {
+		ast, err := query.Parse("na[amenity=restaurant,pub,cafe]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"residential", "pub", "cafe"},
+					Op:      query.OpEquals,
 				},
 			},
 		}))
