@@ -226,4 +226,24 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("supports options for a globbing syntax", func() {
+		ast, err := query.Parse(`na[amenity=pub][name="*King*"]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+				{
+					Name:    "name",
+					Lookups: []string{"*King*"},
+					Op:      query.OpEquals,
+				},
+			},
+		}))
+	})
 })
