@@ -81,6 +81,7 @@ func (b *Builder) Execute() error {
 
 	err = importer.Execute(
 		func(node *osm.Node) error {
+			tags := marshal.Tags(node.TagMap())
 			_, err = insert.Exec(
 				node.ID,
 				"node",
@@ -88,7 +89,7 @@ func (b *Builder) Execute() error {
 				node.Lat,
 				node.Lon,
 				node.Lon,
-				marshal.Tags(node.TagMap()),
+				tags,
 				nil,
 			)
 			if err != nil {
@@ -154,18 +155,18 @@ func (b *Builder) Execute() error {
 		CREATE VIRTUAL TABLE
 			search
 		USING
-			fts5(id, tags, content = 'entries');
+			fts5(tags, content = 'entries');
 
 		WITH tags AS (
 			SELECT
-				entries.id,
+				entries.id AS id,
 				json_each.key || ' ' || json_each.value AS kv
 			FROM
 				entries,
 				json_each(entries.tags)
 		)
 		INSERT INTO
-			search(id, tags)
+			search(rowid, tags)
 		SELECT
 			id,
 			GROUP_CONCAT(kv, ' ')

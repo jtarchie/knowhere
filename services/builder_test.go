@@ -59,5 +59,10 @@ var _ = Describe("Builder", func() {
 
 		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation' AND refs <> '[]'")
 		Expect(result).To(BeEquivalentTo(5))
+
+		// checking the id of full text search matches the id in the entries table
+		searchID := sql(dbPath, "SELECT MIN(rowid) FROM search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1")
+		wayID := sql(dbPath, "SELECT id FROM entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';")
+		Expect(searchID).To(BeEquivalentTo(wayID))
 	})
 })
