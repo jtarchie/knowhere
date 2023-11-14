@@ -145,4 +145,9 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("errors on unbalanced brackets for tags", func() {
+		_, err := query.Parse("w[amenity=restaurant,pub,cafe")
+		Expect(err).To(HaveOccurred())
+	})
 })
