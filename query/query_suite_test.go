@@ -13,6 +13,9 @@ func TestQuery(t *testing.T) {
 	RunSpecs(t, "Query Suite")
 }
 
+// examples taken from:
+// https://docs.geodesk.com/java/goql
+
 var _ = Describe("Building a query", func() {
 	DescribeTable("can parse types into AST", func(q string, types ...query.FilterType) {
 		result, err := query.Parse(q)
@@ -181,6 +184,26 @@ var _ = Describe("Building a query", func() {
 					Name:    "name",
 					Lookups: []string{},
 					Op:      query.OpNotExists,
+				},
+			},
+		}))
+	})
+
+	It("can support quoted values for a tag", func() {
+		ast, err := query.Parse(`na[amenity=pub][name="The King's Head"]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+				{
+					Name:    "name",
+					Lookups: []string{"The King's Head"},
+					Op:      query.OpEquals,
 				},
 			},
 		}))

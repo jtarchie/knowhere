@@ -57,12 +57,15 @@ func Parse(data string) (*AST, error) {
     types = (type+ | ("*" >all)) %!type_error;
     
     tag_name = alnum+ >mark %tag_name;
-    tag_value = alnum+ >mark %tag_value;
+    tag_value_unquoted = [^,\"\]]+ >mark %tag_value;
+    tag_value_quoted   = '"' ([^"]+ >mark %tag_value) '"';
+    tag_value = tag_value_quoted | tag_value_unquoted;
+    tag_values = tag_value ( "," tag_value )*;
     tag_eq = (
-      tag_name "=" tag_value ( "," tag_value )*
+      tag_name "=" tag_values
     ) %tag_eq;
     tag_ne = (
-      tag_name "!=" tag_value ( "," tag_value )*
+      tag_name "!=" tag_values
     ) %tag_ne;
     tag_exists = (tag_name) %tag_exists;
     tag_not    = ("!" tag_name) %tag_not;
