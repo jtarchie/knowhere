@@ -54,4 +54,27 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("can parse multiple tags", func() {
+		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{
+				query.NodeFilter,
+				query.AreaFilter,
+			},
+			Tags: []query.FilterTag{
+				{
+					Name:   "amenity",
+					Lookup: "restaurant",
+					Op:     query.OpEquals,
+				},
+				{
+					Name:   "cuisine",
+					Lookup: "sushi",
+					Op:     query.OpEquals,
+				},
+			},
+		}))
+	})
 })
