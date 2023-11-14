@@ -27,7 +27,7 @@ var _ = Describe("Building a query", func() {
 		Entry("ways and nodes", "wn", query.NodeFilter, query.WayFilter),
 		Entry("ways and relations", "wr", query.WayFilter, query.RelationFilter),
 		Entry("all explicit", "nwar", query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter),
-		Entry("all explicit", "*", query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter),
+		Entry("all implicit", "*", query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter),
 		Entry("duplicate ways and nodes", "wwnn", query.NodeFilter, query.WayFilter),
 	)
 
