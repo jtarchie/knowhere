@@ -170,4 +170,19 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("supports any feature", func() {
+		ast, err := query.Parse("*[!name]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "name",
+					Lookups: []string{},
+					Op:      query.OpNotExists,
+				},
+			},
+		}))
+	})
 })
