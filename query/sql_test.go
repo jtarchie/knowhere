@@ -41,5 +41,9 @@ var _ = Describe("Build SQL from a query", func() {
 		Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") )'`),
 		Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node') AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )'`),
 		Entry("single tag with multiple values", "na[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node' OR e.osm_type = 'area') AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
+		Entry("single tag with multiple values", "na[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node' OR e.osm_type = 'area') AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
+		Entry("single tag that exists", "na[amenity]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'node' OR e.osm_type = 'area') AND s.tags MATCH '( "amenity" )'`),
+		Entry("multiple tag that exists", "r[route][ref][network]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'relation') AND s.tags MATCH '( "route" ) AND ( "ref" ) AND ( "network" )'`),
+		Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE (e.osm_type = 'relation') AND s.tags MATCH '( ("amenity restaurant") ) AND ( "name" )'`),
 	)
 })

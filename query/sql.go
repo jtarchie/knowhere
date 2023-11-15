@@ -3,6 +3,8 @@ package query
 import (
 	"fmt"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 func ToSQL(query string) (string, error) {
@@ -55,7 +57,13 @@ func ToSQL(query string) (string, error) {
 	}
 
 	if 0 < len(ast.Tags) {
-		builder.WriteString("AND s.tags MATCH '")
+		exists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+			return tag.Op == OpEquals || tag.Op == OpExists
+		})
+
+		if exists {
+			builder.WriteString("AND s.tags MATCH '")
+		}
 
 		for index, tag := range ast.Tags {
 			if 0 < index {
@@ -79,7 +87,11 @@ func ToSQL(query string) (string, error) {
 				}
 
 				builder.WriteString(" )")
-			case OpNotEquals, OpExists, OpNotExists:
+			case OpExists:
+				builder.WriteString(`( "`)
+				builder.WriteString(tag.Name)
+				builder.WriteString(`" )`)
+			case OpNotEquals, OpNotExists:
 			}
 		}
 
