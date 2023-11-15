@@ -65,13 +65,15 @@ func ToSQL(query string) (string, error) {
 			builder.WriteString("AND s.tags MATCH '")
 		}
 
-		for index, tag := range ast.Tags {
-			if 0 < index {
-				builder.WriteString(" AND ")
-			}
+		index := 0
 
+		for _, tag := range ast.Tags {
 			switch tag.Op {
 			case OpEquals:
+				if 0 < index {
+					builder.WriteString(" AND ")
+				}
+
 				builder.WriteString("( ")
 
 				for index, lookup := range tag.Lookups {
@@ -87,15 +89,71 @@ func ToSQL(query string) (string, error) {
 				}
 
 				builder.WriteString(" )")
+
+				index++
 			case OpExists:
+				if 0 < index {
+					builder.WriteString(" AND ")
+				}
+
 				builder.WriteString(`( "`)
 				builder.WriteString(tag.Name)
 				builder.WriteString(`" )`)
+
+				index++
 			case OpNotEquals, OpNotExists:
 			}
 		}
 
-		builder.WriteString("'")
+		if exists {
+			builder.WriteString("'")
+		}
+
+		notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+			return tag.Op == OpNotEquals || tag.Op == OpNotExists
+		})
+
+		if notExists {
+			builder.WriteString(" AND s.tags MATCH NOT '")
+		}
+
+		index = 0
+
+		for _, tag := range ast.Tags {
+			switch tag.Op {
+			case OpNotEquals:
+				if 0 < index {
+					builder.WriteString(" AND ")
+				}
+
+				builder.WriteString("( ")
+
+				for index, lookup := range tag.Lookups {
+					if 0 < index {
+						builder.WriteString(" OR ")
+					}
+
+					builder.WriteString(`("`)
+					builder.WriteString(tag.Name)
+					builder.WriteString(" ")
+					builder.WriteString(lookup)
+					builder.WriteString(`")`)
+				}
+
+				builder.WriteString(" )")
+
+				index++
+			case OpNotExists:
+				builder.WriteString(`( "`)
+				builder.WriteString(tag.Name)
+				builder.WriteString(`" )`)
+			case OpEquals, OpExists:
+			}
+		}
+
+		if notExists {
+			builder.WriteString("'")
+		}
 	}
 
 	return builder.String(), nil

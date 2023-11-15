@@ -16,6 +16,7 @@ linters:
   - cyclop
   - gocognit
   - nestif
+  - gocyclo
 
   # linters deprecated
   - deadcode
