@@ -20,21 +20,16 @@ func ToSQL(query string) (string, error) {
 			*
 		FROM
 			entries e
-	`)
-
-	if 0 < len(ast.Tags) {
-		builder.WriteString(`
 			JOIN
 				search s
 			ON
 				s.rowid = e.id
-		`)
-	}
+	`)
 
 	builder.WriteString(" WHERE ")
 
 	if 0 < len(ast.Types) {
-		builder.WriteString("(")
+		builder.WriteString("s.osm_type MATCH '")
 
 		for index, t := range ast.Types {
 			if 0 < index {
@@ -43,17 +38,17 @@ func ToSQL(query string) (string, error) {
 
 			switch t {
 			case NodeFilter:
-				builder.WriteString("e.osm_type = 'node'")
+				builder.WriteString("node")
 			case AreaFilter:
-				builder.WriteString("e.osm_type = 'area'")
+				builder.WriteString("area")
 			case WayFilter:
-				builder.WriteString("e.osm_type = 'way'")
+				builder.WriteString("way")
 			case RelationFilter:
-				builder.WriteString("e.osm_type = 'relation'")
+				builder.WriteString("relation")
 			}
 		}
 
-		builder.WriteString(") ")
+		builder.WriteString("' ")
 	}
 
 	if 0 < len(ast.Tags) {

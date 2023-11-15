@@ -147,33 +147,30 @@ func (b *Builder) Execute() error {
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
 
 	_, err = client.Exec(`
-		CREATE UNIQUE INDEX
-			ids
-		ON
-			entries (osm_type, osm_id);
-
 		CREATE VIRTUAL TABLE
 			search
 		USING
-			fts5(tags, content = 'entries');
+			fts5(osm_type, tags, content = 'entries');
 
 		WITH tags AS (
 			SELECT
 				entries.id AS id,
+				entries.osm_type AS osm_type,
 				json_each.key || ' ' || json_each.value AS kv
 			FROM
 				entries,
 				json_each(entries.tags)
 		)
 		INSERT INTO
-			search(rowid, tags)
+			search(rowid, osm_type, tags)
 		SELECT
 			id,
+			osm_type,
 			GROUP_CONCAT(kv, ' ')
 		FROM
 			tags
 		GROUP BY
-			id;
+			id, osm_type;
 		
 		pragma vacuum;
 		pragma optimize;

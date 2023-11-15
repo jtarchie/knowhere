@@ -2,13 +2,13 @@ package main_test
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"testing"
 
-	"github.com/alecthomas/kong"
-	"github.com/jtarchie/knowhere/commands"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gexec"
 )
 
 func TestKnowhere(t *testing.T) {
@@ -16,16 +16,18 @@ func TestKnowhere(t *testing.T) {
 	RunSpecs(t, "Knowhere Suite")
 }
 
-func cli(args ...string) {
-	cli := &commands.CLI{}
-	parser, err := kong.New(cli)
+func cli(args ...string) string {
+	path, err := gexec.Build("github.com/jtarchie/knowhere", "--tags", "fts5")
 	Expect(err).NotTo(HaveOccurred())
 
-	ctx, err := parser.Parse(args)
-	Expect(err).NotTo(HaveOccurred())
+	command := exec.Command(path, args...)
 
-	err = ctx.Run()
-	Expect(err).NotTo(HaveOccurred())
+	session, err := gexec.Start(command, GinkgoWriter, GinkgoWriter)
+	Expect(err).ToNot(HaveOccurred())
+
+	Eventually(session, "5s").Should(gexec.Exit(0))
+
+	return string(session.Out.Contents())
 }
 
 var _ = Describe("Running the application", func() {
@@ -35,12 +37,19 @@ var _ = Describe("Running the application", func() {
 
 		dbFilename := filepath.Join(buildPath, "test.sqlite")
 
-		cli(
+		_ = cli(
 			"build",
 			"--osm", "./fixtures/sample.pbf",
 			"--db", dbFilename,
 		)
 
-		Expect(dbFilename).To(BeAnExistingFile())
+		By("can generate a query")
+
+		output := cli(
+			"query",
+			"n[name=Starbucks]",
+		)
+
+		Expect(output).To(ContainSubstring("SELECT"))
 	})
 })
