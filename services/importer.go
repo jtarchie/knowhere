@@ -69,7 +69,7 @@ func (i *Importer) Execute(
 		_ = bar.Set64(scanner.FullyScannedBytes())
 	}
 
-	_ = bar.Close()
+	_ = bar.Finish()
 
 	err = scanner.Err()
 	if err != nil {

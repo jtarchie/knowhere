@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/jmoiron/sqlx"
 	"github.com/jtarchie/knowhere/services"
 	_ "github.com/mattn/go-sqlite3"
 	. "github.com/onsi/ginkgo/v2"
@@ -12,18 +13,12 @@ import (
 )
 
 var _ = Describe("Builder", func() {
-	sql := func(dbPath string, query string) interface{} {
-		client, err := sql.Open("sqlite3", dbPath)
+	value := func(dbPath string, query string, result any) {
+		client, err := sqlx.Open("sqlite3", dbPath)
 		Expect(err).NotTo(HaveOccurred())
 
-		row := client.QueryRow(query)
-		Expect(row.Err()).NotTo(HaveOccurred())
-
-		var result interface{}
-		err = row.Scan(&result)
+		err = client.Get(result, query)
 		Expect(err).NotTo(HaveOccurred())
-
-		return result
 	}
 
 	It("puts nodes, ways, and relations into the entries", func() {
@@ -36,33 +31,60 @@ var _ = Describe("Builder", func() {
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
 
-		result := sql(dbPath, "SELECT COUNT(*) FROM entries")
+		var result int64
+
+		value(dbPath, "SELECT COUNT(*) FROM entries", &result)
 		Expect(result).To(BeEquivalentTo(339))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'node'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'node'", &result)
 		Expect(result).To(BeEquivalentTo(290))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way' AND tags <> '{}'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way' AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way' AND refs <> '[]'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'way' AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation' AND tags <> '{}'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation' AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		result = sql(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation' AND refs <> '[]'")
+		value(dbPath, "SELECT COUNT(*) FROM entries WHERE osm_type = 'relation' AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
 		// checking the id of full text search matches the id in the entries table
-		searchID := sql(dbPath, "SELECT MIN(rowid) FROM search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1")
-		wayID := sql(dbPath, "SELECT id FROM entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';")
+		var searchID, wayID int64
+		value(dbPath, "SELECT MIN(rowid) FROM search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1", &searchID)
+		value(dbPath, "SELECT id FROM entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';", &wayID)
 		Expect(searchID).To(BeEquivalentTo(wayID))
+
+		/*
+			Napkin math for bounding box
+			25365927: 51.7659279, -0.2326975
+			691202858: 51.7663325, -0.2326806
+			minLat, maxLat, minLon, maxLon
+			51.7659279, 51.7663325,  -0.2326975,  -0.2326806
+		*/
+		var points struct {
+			MinLat sql.NullFloat64 `db:"minLat"`
+			MaxLat sql.NullFloat64 `db:"maxLat"`
+			MinLon sql.NullFloat64 `db:"minLon"`
+			MaxLon sql.NullFloat64 `db:"maxLon"`
+		}
+		value(dbPath, "SELECT minLat, maxLat, minLon, maxLon FROM entries WHERE id = 330;", &points)
+		Expect(points.MinLat.Valid).To(BeTrue())
+		Expect(points.MaxLat.Valid).To(BeTrue())
+		Expect(points.MinLon.Valid).To(BeTrue())
+		Expect(points.MaxLon.Valid).To(BeTrue())
+
+		Expect(points.MinLat.Float64).To(BeNumerically("~", 51.7659279))
+		Expect(points.MaxLat.Float64).To(BeNumerically("~", 51.7663325))
+		Expect(points.MinLon.Float64).To(BeNumerically("~", -0.2326975))
+		Expect(points.MaxLon.Float64).To(BeNumerically("~", -0.2326806))
 	})
 })
