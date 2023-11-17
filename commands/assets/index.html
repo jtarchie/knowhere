@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@next/css/pico.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <title>Knowhere</title>
+  <style>
+    #map {
+      height: 800px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><strong>Knowhere</strong></li>
+    </ul>
+    <ul>
+      <li><input id="search" type="search" placeholder="Search" aria-label="Search" /></li>
+    </ul>
+  </nav>
+  <main class="container">
+    <div id="map"></div>
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var searchInput = document.getElementById('search');
+
+      // Function to handle the enter key press event
+      function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault(); // Prevents the default action of the enter key
+
+          // Fetch data from API
+          fetch('/api/search', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'search=' + encodeURIComponent(searchInput.value)
+          })
+            .then(response => response.json())
+            .then(data => {
+              displayBoundingBoxes(data); // Log the response data
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+      }
+
+      // Add the event listener for the enter key press
+      searchInput.addEventListener('keypress', handleKeyPress);
+    });
+
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Layer group to hold all your bounding box layers
+    var boundingBoxLayer = L.featureGroup().addTo(map);
+
+    function displayBoundingBoxes(data) {
+      // Clear existing bounding boxes
+      boundingBoxLayer.clearLayers();
+
+      // Iterate through the data to create and add bounding boxes
+      data.forEach(box => {
+        if (box.minLat === box.maxLat && box.minLon === box.maxLon) {
+          // It's a single point
+          L.marker([box.minLat, box.minLon])
+            .addTo(boundingBoxLayer);
+        } else {
+          // It's a bounding box
+          var bounds = [[box.minLat, box.minLon], [box.maxLat, box.maxLon]];
+          L.rectangle(bounds, { color: 'blue', weight: 1, opacity: 0.5, fillOpacity: 0.2 })
+            .addTo(boundingBoxLayer);
+        }
+      });
+
+      // Fit the map to the bounding box layer bounds
+      if (boundingBoxLayer.getLayers().length > 0) {
+        map.fitBounds(boundingBoxLayer.getBounds());
+      }
+    }
+  </script>
+</body>
+
+</html>
