@@ -1,7 +1,8 @@
 package marshal
 
 import (
-	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/paulmach/osm"
 )
@@ -11,16 +12,19 @@ func WayNodes(wayNodes osm.WayNodes) string {
 		return "[]"
 	}
 
-	payload := "["
+	builder := &strings.Builder{}
+
+	builder.WriteByte('[')
 
 	for count, value := range wayNodes {
-		payload += fmt.Sprintf("%d", value.ID)
+		builder.WriteString(strconv.FormatInt(int64(value.ID), 10))
+
 		if count < len(wayNodes)-1 {
-			payload += ","
+			builder.WriteByte(',')
 		}
 	}
 
-	payload += "]"
+	builder.WriteByte(']')
 
-	return payload
+	return builder.String()
 }

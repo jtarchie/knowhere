@@ -1,7 +1,8 @@
 package marshal
 
 import (
-	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/paulmach/osm"
 )
@@ -11,7 +12,9 @@ func Members(members osm.Members) string {
 		return "[]"
 	}
 
-	payload := "["
+	builder := &strings.Builder{}
+
+	builder.WriteByte('[')
 
 	index := 0
 
@@ -19,16 +22,22 @@ func Members(members osm.Members) string {
 		switch member.Type {
 		case osm.TypeNode, osm.TypeWay, osm.TypeRelation:
 			if 0 < index {
-				payload += ","
+				builder.WriteByte(',')
 			}
 
-			payload += fmt.Sprintf("[%d,%q,%q]", member.Ref, member.Type, member.Role)
+			builder.WriteByte('[')
+			builder.WriteString(strconv.FormatInt(member.Ref, 10))
+			builder.WriteByte(',')
+			marshalString(builder, string(member.Type))
+			builder.WriteByte(',')
+			marshalString(builder, member.Role)
+			builder.WriteByte(']')
 			index++
 		case osm.TypeChangeset, osm.TypeNote, osm.TypeUser, osm.TypeBounds:
 		}
 	}
 
-	payload += "]"
+	builder.WriteByte(']')
 
-	return payload
+	return builder.String()
 }
