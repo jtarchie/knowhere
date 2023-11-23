@@ -23,17 +23,17 @@ type Result struct {
 
 func routeSearch(client *sql.DB) func(echo.Context) error {
 	return func(ctx echo.Context) error {
-		search := ctx.FormValue("search")
-		if search == "" {
+		searchString := ctx.FormValue("search")
+		if searchString == "" {
 			//nolint: wrapcheck
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": "Required to have a `search` for the query",
 			})
 		}
 
-		sql, err := query.ToSQL(search)
+		sql, err := query.ToSQL(searchString)
 		if err != nil {
-			slog.Error("parse.error", slog.String("search", search), slog.String("error", err.Error()))
+			slog.Error("parse.error", slog.String("search", searchString), slog.String("error", err.Error()))
 
 			//nolint: wrapcheck
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
@@ -45,7 +45,7 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 
 		rows, err := client.Query(sql)
 		if rows.Err() != nil {
-			slog.Error("query.error", slog.String("search", search), slog.String("error", err.Error()))
+			slog.Error("query.error", slog.String("search", searchString), slog.String("error", err.Error()))
 
 			//nolint: wrapcheck
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
@@ -54,7 +54,7 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 		}
 
 		if err != nil {
-			slog.Error("query.error", slog.String("search", search), slog.String("error", err.Error()))
+			slog.Error("query.error", slog.String("search", searchString), slog.String("error", err.Error()))
 
 			//nolint: wrapcheck
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
@@ -73,7 +73,7 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 
 		results, err := scan.All(rows, columns)
 		if err != nil {
-			slog.Info("scan.error", slog.String("search", search), slog.String("error", err.Error()))
+			slog.Info("scan.error", slog.String("search", searchString), slog.String("error", err.Error()))
 
 			//nolint: wrapcheck
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
@@ -83,7 +83,7 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 
 		slog.Info(
 			"query.complete",
-			slog.String("search", search),
+			slog.String("search", searchString),
 			slog.String("sql", sql),
 			slog.Duration("took", time.Since(start)),
 		)
