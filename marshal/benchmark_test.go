@@ -1,6 +1,7 @@
 package marshal_test
 
 import (
+	"encoding/json"
 	"testing"
 
 	"github.com/jtarchie/knowhere/marshal"
@@ -8,20 +9,30 @@ import (
 )
 
 //nolint: gochecknoglobals
-var json string
+var payload string
+
+func BenchmarkControlTags(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		//nolint: errchkjson
+		_, _ = json.Marshal(map[string]string{
+			"amenity": "cafe",
+			"name":    "Starbucks",
+		})
+	}
+}
 
 func BenchmarkTags(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		json = marshal.Tags(map[string]string{
-			"a": "b",
-			"c": "d",
+		payload = marshal.Tags(map[string]string{
+			"amenity": "cafe",
+			"name":    "Starbucks",
 		})
 	}
 }
 
 func BenchmarkMembers(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		json = marshal.Members(osm.Members{
+		payload = marshal.Members(osm.Members{
 			osm.Member{
 				Type: osm.TypeNode,
 				Ref:  1,
@@ -38,7 +49,7 @@ func BenchmarkMembers(b *testing.B) {
 
 func BenchmarkWayNodes(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		json = marshal.WayNodes(osm.WayNodes{
+		payload = marshal.WayNodes(osm.WayNodes{
 			osm.WayNode{ID: 1},
 			osm.WayNode{ID: 2},
 		})
