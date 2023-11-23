@@ -23,6 +23,7 @@ func New(
 	}
 
 	handler := echo.New()
+	handler.JSONSerializer = DefaultJSONSerializer{}
 
 	setupMiddleware(handler)
 

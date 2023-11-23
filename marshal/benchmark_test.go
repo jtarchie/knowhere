@@ -2,11 +2,9 @@ package marshal_test
 
 import (
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"github.com/jtarchie/knowhere/marshal"
-	"github.com/jtarchie/knowhere/query"
 	"github.com/paulmach/osm"
 )
 
@@ -55,20 +53,5 @@ func BenchmarkWayNodes(b *testing.B) {
 			osm.WayNode{ID: 1},
 			osm.WayNode{ID: 2},
 		})
-	}
-}
-
-//nolint: gochecknoglobals
-var builder = &strings.Builder{}
-
-func BenchmarkResults(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		_ = marshal.Results(builder, []query.Result{
-			{},
-			{},
-			{},
-		})
-
-		builder.Reset()
 	}
 }
