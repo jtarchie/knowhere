@@ -17,11 +17,11 @@ func WayNodes(wayNodes osm.WayNodes) string {
 	builder.WriteByte('[')
 
 	for count, value := range wayNodes {
-		builder.WriteString(strconv.FormatInt(int64(value.ID), 10))
-
-		if count < len(wayNodes)-1 {
+		if 0 < count {
 			builder.WriteByte(',')
 		}
+
+		builder.WriteString(strconv.FormatInt(int64(value.ID), 10))
 	}
 
 	builder.WriteByte(']')
