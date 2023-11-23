@@ -18,8 +18,8 @@ const (
 type OpType uint
 
 const (
-	OpEquals    OpType = iota
-	OpNotEquals OpType = iota
+	OpEquals OpType = iota
+	OpNotEquals
 	OpExists
 	OpNotExists
 )
