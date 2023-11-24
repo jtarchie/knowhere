@@ -15,7 +15,6 @@ linters:
   - funlen
   - cyclop
   - gocognit
-  - nestif
   - gocyclo
   - maintidx
 
