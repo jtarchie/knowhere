@@ -28,37 +28,33 @@ func ToSQL(query string) (string, error) {
 
 	builder.WriteString(" WHERE ")
 
-	if 0 < len(ast.Types) {
-		builder.WriteString("s.osm_type MATCH '")
+	builder.WriteString("s.osm_type MATCH '")
 
-		for index, t := range ast.Types {
-			if 0 < index {
-				builder.WriteString(" OR ")
-			}
-
-			switch t {
-			case NodeFilter:
-				builder.WriteString("node")
-			case AreaFilter:
-				builder.WriteString("area")
-			case WayFilter:
-				builder.WriteString("way")
-			case RelationFilter:
-				builder.WriteString("relation")
-			}
+	for index, t := range ast.Types {
+		if 0 < index {
+			builder.WriteString(" OR ")
 		}
 
-		builder.WriteString("' ")
+		switch t {
+		case NodeFilter:
+			builder.WriteString("node")
+		case AreaFilter:
+			builder.WriteString("area")
+		case WayFilter:
+			builder.WriteString("way")
+		case RelationFilter:
+			builder.WriteString("relation")
+		}
 	}
 
-	if 0 < len(ast.Tags) {
-		exists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
-			return tag.Op == OpEquals || tag.Op == OpExists
-		})
+	builder.WriteString("' ")
 
-		if exists {
-			builder.WriteString("AND s.tags MATCH '")
-		}
+	exists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+		return tag.Op == OpEquals || tag.Op == OpExists
+	})
+
+	if exists {
+		builder.WriteString("AND s.tags MATCH '")
 
 		index := 0
 
@@ -100,19 +96,17 @@ func ToSQL(query string) (string, error) {
 			}
 		}
 
-		if exists {
-			builder.WriteString("'")
-		}
+		builder.WriteString("'")
+	}
 
-		notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
-			return tag.Op == OpNotEquals || tag.Op == OpNotExists
-		})
+	notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+		return tag.Op == OpNotEquals || tag.Op == OpNotExists
+	})
 
-		if notExists {
-			builder.WriteString(" AND s.tags MATCH NOT '")
-		}
+	if notExists {
+		builder.WriteString(" AND s.tags MATCH NOT '")
 
-		index = 0
+		index := 0
 
 		for _, tag := range ast.Tags {
 			switch tag.Op {
@@ -146,9 +140,7 @@ func ToSQL(query string) (string, error) {
 			}
 		}
 
-		if notExists {
-			builder.WriteString("'")
-		}
+		builder.WriteString("'")
 	}
 
 	return builder.String(), nil
