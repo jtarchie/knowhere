@@ -23,11 +23,11 @@ func Execute(client *sql.DB, search string) ([]Result, error) {
 	}
 
 	rows, err := client.Query(sql)
-	if rows.Err() != nil {
+	if err != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
 	}
 
-	if err != nil {
+	if rows.Err() != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
 	}
 
