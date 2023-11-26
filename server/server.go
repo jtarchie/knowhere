@@ -42,7 +42,7 @@ func New(
 }
 
 func (s *Server) Start() error {
-	err := s.handler.Start(fmt.Sprintf(":%d", s.port))
+	err := s.handler.Start(fmt.Sprintf("0.0.0.0:%d", s.port))
 	if err != nil {
 		return fmt.Errorf("could not start http server: %w", err)
 	}
