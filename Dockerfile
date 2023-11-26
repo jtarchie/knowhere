@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN CGO_ENABLED=1 go build -o knowhere
+RUN CGO_ENABLED=1 go build -tags "fts5" -o knowhere
 
 FROM --platform=linux/amd64 alpine:latest
 
