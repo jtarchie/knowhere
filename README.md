@@ -20,11 +20,4 @@ To run the tests:
 ```bash
 brew bundle
 task
-<<<<<<< Updated upstream
-```
-
-=======
-
-```
->>>>>>> Stashed changes
 ```
