@@ -27,11 +27,6 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         binaries-location: golangci-lint-1.55.2-linux-amd64
         tag: v1.55.2
-    - name: Install golangci-lint
-      uses: jaxxstorm/action-install-gh-release@v1.10.0
-      with: # Grab the latest version
-        repo: golangci/golangci-lint
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install Task
       uses: arduino/setup-task@v1
       with:
