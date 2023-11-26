@@ -37,6 +37,7 @@ jobs:
           resourceGroup: knowhere
           imageToBuild: knowhereimages.azurecr.io/knowhere-dev:${{ github.sha }}
           dockerfilePath: Dockerfile
+          disableTelemetry: true
 
      
 
