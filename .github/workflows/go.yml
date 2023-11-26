@@ -32,4 +32,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Task
-      run: task
+      run: task test
