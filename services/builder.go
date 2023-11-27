@@ -270,7 +270,7 @@ func (b *Builder) Execute() error {
 		CREATE VIRTUAL TABLE
 			search
 		USING
-			fts5(osm_type, tags, content = 'entries');
+			fts5(osm_type, tags, content = 'entries', tokenize="trigram");
 
 		WITH tags AS (
 			SELECT
