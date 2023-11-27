@@ -22,3 +22,6 @@ dist/
 .idea/
 
 .build/
+config/
+bin/
+.kamal/

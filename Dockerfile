@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 golang:alpine AS builder
+FROM golang:alpine AS builder
 
 RUN apk add --no-cache zlib-dev sqlite-dev pkgconfig build-base
 
@@ -10,9 +10,9 @@ COPY . .
 
 RUN CGO_ENABLED=1 go build -tags "fts5" -o knowhere
 
-FROM --platform=linux/amd64 alpine:latest
+FROM alpine:latest
 
-RUN apk add --no-cache openssh sqlite
+RUN apk add --no-cache openssh sqlite curl
 
 WORKDIR /app
 COPY --from=builder /app/knowhere .

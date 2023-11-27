@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-brew 'azcopy'
-brew 'azure-cli'
+brew 'docker'
 brew 'go'
 brew 'golangci-lint'
 brew 'goreleaser'

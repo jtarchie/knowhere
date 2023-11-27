@@ -1,0 +1,35 @@
+# Name of your application. Used to uniquely configure containers.
+service: knowhere
+
+# Name of the container image.
+image: deployer-registry/knowhere
+
+# Deploy to these servers.
+servers:
+  - 167.71.181.242
+
+# Credentials for your image host.
+registry:
+  # Specify the registry server, if you're not using Docker Hub
+  server: registry.digitalocean.com
+  username:
+    - DIGITALOCEAN_ACCESS_TOKEN
+
+  # Always use an access token rather than real password when possible.
+  password:
+    - DIGITALOCEAN_ACCESS_TOKEN
+
+healthcheck:
+  path: /
+  port: 3000
+
+volumes:
+  - "/var/osm:/var/osm"
+
+builder:
+#   local:
+#     arch: arm64
+#     # host: unix:///Users/<%= `whoami`.strip %>/.docker/run/docker.sock
+  remote:
+    arch: amd64
+    host: ssh://root@167.71.181.242
