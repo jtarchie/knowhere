@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/goccy/go-json v0.10.2
-	github.com/imroc/req/v3 v3.42.1
+	github.com/imroc/req/v3 v3.42.2
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.3
 	github.com/mattn/go-sqlite3 v1.14.18

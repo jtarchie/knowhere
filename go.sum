@@ -44,8 +44,8 @@ github.com/hashicorp/go-multierror v1.1.1 h1:H5DkEtf6CXdFp0N0Em5UCwQpXMWke8IA0+l
 github.com/hashicorp/go-multierror v1.1.1/go.mod h1:iw975J/qwKPdAO1clOe2L8331t/9/fmwbPZ6JB6eMoM=
 github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUqJM=
 github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSow5/V2vxeg=
-github.com/imroc/req/v3 v3.42.1 h1:g82SouLvX7pqwqJjpQJYrVvuI+LOycWhyuwxtLlyQJk=
-github.com/imroc/req/v3 v3.42.1/go.mod h1:W7dOrfQORA9nFoj+CafIZ6P5iyk+rWdbp2sffOAvABU=
+github.com/imroc/req/v3 v3.42.2 h1:/BwrKXGR7X1/ptccaQAiziDCeZ7T6ye55g3ZhiLy1fc=
+github.com/imroc/req/v3 v3.42.2/go.mod h1:W7dOrfQORA9nFoj+CafIZ6P5iyk+rWdbp2sffOAvABU=
 github.com/jmoiron/sqlx v1.3.5 h1:vFFPA71p1o5gAeqtEAwLU4dnX2napprKtHr7PYIcN3g=
 github.com/jmoiron/sqlx v1.3.5/go.mod h1:nRVWtLre0KfCLJvgxzCsLVMogSvQ1zNJtpYr2Ccp0mQ=
 github.com/k0kubun/go-ansi v0.0.0-20180517002512-3bf9e2903213/go.mod h1:vNUNkEQ1e29fT/6vq2aBdFsgNPmy8qMdSay1npru+Sw=
