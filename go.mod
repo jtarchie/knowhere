@@ -4,6 +4,7 @@ go 1.21.4
 
 require (
 	github.com/alecthomas/kong v0.8.1
+	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.42.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.3
@@ -25,7 +26,6 @@ require (
 	github.com/gaukas/godicttls v0.0.4 // indirect
 	github.com/go-logr/logr v1.3.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
-	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20231101202521-4ca4178f5c7a // indirect
