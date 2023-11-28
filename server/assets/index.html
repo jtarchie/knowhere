@@ -5,10 +5,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@next/css/pico.min.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
   <title>Knowhere</title>
   <style>
     #map {
@@ -60,36 +58,103 @@
       searchInput.addEventListener('keypress', handleKeyPress);
     });
 
-    var map = L.map('map').setView([51.505, -0.09], 13);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // Layer group to hold all your bounding box layers
-    var boundingBoxLayer = L.featureGroup().addTo(map);
+    mapboxgl.accessToken = 'pk.eyJ1IjoianRhcmNoaSIsImEiOiJjbHBobmx0YWQwOG01MmlxeDAydGxlN2c5In0.o3yTh6k7uo_e3CBi_32R9Q';
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11', // Choose your style
+      bounds: [
+        [-125.0011, 24.9493], // Southwest coordinates (longitude, latitude)
+        [-66.9326, 49.5904]   // Northeast coordinates
+      ]
+    });
 
     function displayBoundingBoxes(data) {
-      // Clear existing bounding boxes
-      boundingBoxLayer.clearLayers();
-
-      // Iterate through the data to create and add bounding boxes
-      data.forEach(box => {
+      var features = data.flatMap(box => {
         if (box.minLat === box.maxLat && box.minLon === box.maxLon) {
-          // It's a single point
-          L.marker([box.minLat, box.minLon])
-            .addTo(boundingBoxLayer);
+          return {
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [box.minLon, box.minLat]
+            }
+          };
         } else {
-          // It's a bounding box
-          var bounds = [[box.minLat, box.minLon], [box.maxLat, box.maxLon]];
-          L.rectangle(bounds, { color: 'blue', weight: 1, opacity: 0.5, fillOpacity: 0.2 })
-            .addTo(boundingBoxLayer);
+          return [{
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [box.minLon, box.minLat]
+            }
+          }, {
+            type: 'Feature',
+            geometry: {
+              type: 'Polygon',
+              coordinates: [
+                [
+                  [box.minLon, box.minLat],
+                  [box.maxLon, box.minLat],
+                  [box.maxLon, box.maxLat],
+                  [box.minLon, box.maxLat],
+                  [box.minLon, box.minLat]
+                ]
+              ]
+            }
+          }];
         }
       });
 
-      // Fit the map to the bounding box layer bounds
-      if (boundingBoxLayer.getLayers().length > 0) {
-        map.fitBounds(boundingBoxLayer.getBounds());
+      var source = map.getSource('results');
+      if (source) {
+        source.setData({
+          type: 'FeatureCollection',
+          features: features // Your new features
+        });
+      } else {
+        map.addSource('results', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': features
+          }
+        });
+      }
+
+      map.addLayer({
+        id: 'boundaries',
+        type: 'fill',
+        source: 'results',
+        paint: {
+          'fill-color': '#B42222',
+        },
+        'filter': ['==', '$type', 'Polygon']
+      });
+
+      map.addLayer({
+        id: 'points',
+        type: 'circle',
+        source: 'results',
+        paint: {
+          'circle-radius': 6,
+          'circle-color': '#B42222'
+        },
+        'filter': ['==', '$type', 'Point']
+      });
+
+      var bounds = new mapboxgl.LngLatBounds();
+      features.forEach(feature => {
+        if (feature.geometry.type === 'Point') {
+          bounds.extend(feature.geometry.coordinates);
+        } else if (feature.geometry.type === 'Polygon') {
+          feature.geometry.coordinates[0].forEach(coord => {
+            bounds.extend(coord);
+          });
+        }
+      });
+
+      if (features.length > 0) {
+        map.fitBounds(bounds, {
+          padding: 20
+        });
       }
     }
   </script>
