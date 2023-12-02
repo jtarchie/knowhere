@@ -17,6 +17,7 @@ type Server struct {
 func New(
 	port int,
 	dbFilename string,
+	cors []string,
 ) (*Server, error) {
 	client, err := sql.Open("sqlite3", fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename))
 	if err != nil {
@@ -33,7 +34,7 @@ func New(
 	handler.HideBanner = true
 	handler.JSONSerializer = DefaultJSONSerializer{}
 
-	setupMiddleware(handler)
+	setupMiddleware(handler, cors)
 
 	err = setupAssets(handler)
 	if err != nil {

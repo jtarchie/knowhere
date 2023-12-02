@@ -13,9 +13,16 @@ import (
 	slogecho "github.com/samber/slog-echo"
 )
 
-func setupMiddleware(handler *echo.Echo) {
+func setupMiddleware(handler *echo.Echo, cors []string) {
 	handler.Use(slogecho.New(slog.Default()))
 	handler.Use(middleware.Recover())
+
+	if 0 < len(cors) {
+		handler.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins: cors,
+			AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		}))
+	}
 }
 
 //go:embed assets/*
