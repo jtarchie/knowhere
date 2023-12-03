@@ -35,7 +35,7 @@ func setupAssets(handler *echo.Echo) error {
 	}
 
 	assetHandler := http.FileServer(http.FS(fsys))
-	handler.GET("/", echo.WrapHandler(assetHandler))
+	handler.GET("/*", echo.WrapHandler(assetHandler))
 
 	return nil
 }

@@ -8,6 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+//go:generate go run github.com/evanw/esbuild/cmd/esbuild --bundle assets/javascript/index.ts --outfile=assets/index.js --platform=browser --minify
+
 type Server struct {
 	port    int
 	client  *sql.DB
