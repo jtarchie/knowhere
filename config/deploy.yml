@@ -27,9 +27,6 @@ volumes:
   - "/var/osm:/var/osm"
 
 builder:
-#   local:
-#     arch: arm64
-#     # host: unix:///Users/<%= `whoami`.strip %>/.docker/run/docker.sock
   remote:
     arch: amd64
     host: ssh://root@167.71.181.242
