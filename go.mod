@@ -16,7 +16,7 @@ require (
 	github.com/paulmach/osm v0.7.1
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/samber/lo v1.39.0
-	github.com/samber/slog-echo v1.9.0
+	github.com/samber/slog-echo v1.9.1
 	github.com/schollz/progressbar/v3 v3.14.1
 	github.com/wroge/scan v0.0.8
 )
@@ -55,7 +55,7 @@ require (
 	go.opentelemetry.io/otel v1.21.0 // indirect
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/mock v0.3.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
