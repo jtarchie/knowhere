@@ -5,18 +5,18 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/bokwoon95/wgo v0.5.4
-	github.com/evanw/esbuild v0.19.9
+	github.com/evanw/esbuild v0.19.10
 	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.42.2
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/labstack/echo/v4 v4.11.3
-	github.com/mattn/go-sqlite3 v1.14.18
+	github.com/labstack/echo/v4 v4.11.4
+	github.com/mattn/go-sqlite3 v1.14.19
 	github.com/onsi/ginkgo/v2 v2.13.2
 	github.com/onsi/gomega v1.30.0
 	github.com/paulmach/osm v0.7.1
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/samber/lo v1.39.0
-	github.com/samber/slog-echo v1.9.0
+	github.com/samber/slog-echo v1.9.1
 	github.com/schollz/progressbar/v3 v3.14.1
 	github.com/wroge/scan v0.0.8
 )
@@ -26,17 +26,16 @@ require (
 	github.com/cloudflare/circl v1.3.6 // indirect
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
-	github.com/gaukas/godicttls v0.0.4 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20231205033806-a5a03c77bf08 // indirect
+	github.com/google/pprof v0.0.0-20231212022811-ec68065c825e // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.4 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
-	github.com/labstack/gommon v0.4.1 // indirect
+	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -45,8 +44,8 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
-	github.com/quic-go/quic-go v0.40.0 // indirect
-	github.com/refraction-networking/utls v1.5.4 // indirect
+	github.com/quic-go/quic-go v0.40.1 // indirect
+	github.com/refraction-networking/utls v1.6.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
@@ -54,17 +53,17 @@ require (
 	go.mongodb.org/mongo-driver v1.13.1 // indirect
 	go.opentelemetry.io/otel v1.21.0 // indirect
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
-	go.uber.org/mock v0.3.0 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
-	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb // indirect
+	go.uber.org/mock v0.4.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
+	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/mod v0.14.0 // indirect
 	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/term v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
-	golang.org/x/tools v0.16.0 // indirect
-	google.golang.org/protobuf v1.31.0 // indirect
+	golang.org/x/tools v0.16.1 // indirect
+	google.golang.org/protobuf v1.32.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
