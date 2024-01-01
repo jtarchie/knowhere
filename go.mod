@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/bokwoon95/wgo v0.5.4
-	github.com/evanw/esbuild v0.19.10
+	github.com/evanw/esbuild v0.19.11
 	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.42.2
 	github.com/jmoiron/sqlx v1.3.5
