@@ -18,7 +18,7 @@ require (
 	github.com/samber/lo v1.39.0
 	github.com/samber/slog-echo v1.9.1
 	github.com/schollz/progressbar/v3 v3.14.1
-	github.com/wroge/scan v0.0.8
+	github.com/wroge/scan v0.0.11
 )
 
 require (
