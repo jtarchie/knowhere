@@ -16,7 +16,7 @@ require (
 	github.com/paulmach/osm v0.7.1
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/samber/lo v1.39.0
-	github.com/samber/slog-echo v1.9.1
+	github.com/samber/slog-echo v1.11.0
 	github.com/schollz/progressbar/v3 v3.14.1
 	github.com/wroge/scan v0.0.8
 )
