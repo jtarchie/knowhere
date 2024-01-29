@@ -10,7 +10,7 @@ require (
 	github.com/imroc/req/v3 v3.42.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/mattn/go-sqlite3 v1.14.19
+	github.com/mattn/go-sqlite3 v1.14.20
 	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.31.1
 	github.com/paulmach/osm v0.8.0
@@ -43,7 +43,6 @@ require (
 	github.com/paulmach/orb v0.11.0 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
 	github.com/refraction-networking/utls v1.6.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
