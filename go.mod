@@ -5,7 +5,7 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/evanw/esbuild v0.19.11
+	github.com/evanw/esbuild v0.20.0
 	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.42.3
 	github.com/jmoiron/sqlx v1.3.5
@@ -43,7 +43,6 @@ require (
 	github.com/paulmach/orb v0.11.0 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
 	github.com/refraction-networking/utls v1.6.1 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
