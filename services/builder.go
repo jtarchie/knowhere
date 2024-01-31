@@ -48,8 +48,8 @@ func (b *Builder) Execute() error {
 			maxLat   FLOAT,
 			minLon   FLOAT,
 			maxLon   FLOAT,
-			tags     JSON,
-			refs     JSON
+			tags     JSONB,
+			refs     JSONB
 		);
 
 		CREATE TABLE refs (
