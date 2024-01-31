@@ -5,12 +5,12 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.8.1
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/evanw/esbuild v0.19.11
+	github.com/evanw/esbuild v0.20.0
 	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.42.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.4
-	github.com/mattn/go-sqlite3 v1.14.19
+	github.com/mattn/go-sqlite3 v1.14.21
 	github.com/onsi/ginkgo/v2 v2.15.0
 	github.com/onsi/gomega v1.31.1
 	github.com/paulmach/osm v0.8.0
@@ -30,23 +30,22 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240117000934-35fc243c5815 // indirect
+	github.com/google/pprof v0.0.0-20240130152714-0ed6a68c8d9e // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/klauspost/compress v1.17.4 // indirect
+	github.com/klauspost/compress v1.17.5 // indirect
 	github.com/kr/pretty v0.3.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
-	github.com/paulmach/orb v0.11.0 // indirect
+	github.com/paulmach/orb v0.11.1 // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/qtls-go1-20 v0.4.1 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
-	github.com/refraction-networking/utls v1.6.1 // indirect
-	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/refraction-networking/utls v1.6.2 // indirect
+	github.com/rivo/uniseg v0.4.6 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
