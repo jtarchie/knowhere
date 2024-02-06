@@ -56,7 +56,7 @@ func Parse(data string) (*AST, error) {
     type  = ("a" >area) | ("n" >node) | ("r" >relation) | ("w" >way);
     types = (type+ | ("*" >all)) %!type_error;
     
-    tag_name = alnum+ >mark %tag_name;
+    tag_name = (alnum+ >mark %tag_name) | "*";
     tag_value_unquoted = [^,\"\]]+ >mark %tag_value;
     tag_value_quoted   = '"' ([^"]+ >mark %tag_value) '"';
     tag_value = tag_value_quoted | tag_value_unquoted;

@@ -39,6 +39,7 @@ var _ = Describe("Build SQL from a query", func() {
 		Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
 	},
 		Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node' AND s.tags MATCH '( ("amenity restaurant") )'`),
+		Entry("all tags", `narw[*="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area OR way OR relation' AND s.tags MATCH '( ("*King*") OR ("*Queen*") )'`),
 		Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node' AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )'`),
 		Entry("single tag with multiple values", "na[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area' AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
 		Entry("single tag that exists", "na[amenity]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area' AND s.tags MATCH '( "amenity" )'`),

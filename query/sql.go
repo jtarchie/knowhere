@@ -73,8 +73,12 @@ func ToSQL(query string) (string, error) {
 					}
 
 					builder.WriteString(`("`)
-					builder.WriteString(tag.Name)
-					builder.WriteString(" ")
+
+					if tag.Name != "" {
+						builder.WriteString(tag.Name)
+						builder.WriteString(" ")
+					}
+
 					builder.WriteString(lookup)
 					builder.WriteString(`")`)
 				}
@@ -123,8 +127,12 @@ func ToSQL(query string) (string, error) {
 					}
 
 					builder.WriteString(`("`)
-					builder.WriteString(tag.Name)
-					builder.WriteString(" ")
+
+					if tag.Name != "" {
+						builder.WriteString(tag.Name)
+						builder.WriteString(" ")
+					}
+
 					builder.WriteString(lookup)
 					builder.WriteString(`")`)
 				}
