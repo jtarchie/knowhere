@@ -53,9 +53,15 @@ func ToSQL(query string) (string, error) {
 		return tag.Op == OpEquals || tag.Op == OpExists
 	})
 
-	if exists {
-		builder.WriteString("AND s.tags MATCH '")
+	notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+		return tag.Op == OpNotEquals || tag.Op == OpNotExists
+	})
 
+	if exists || notExists {
+		builder.WriteString("AND s.tags MATCH '")
+	}
+
+	if exists {
 		index := 0
 
 		for _, tag := range ast.Tags {
@@ -99,16 +105,10 @@ func ToSQL(query string) (string, error) {
 			case OpNotEquals, OpNotExists:
 			}
 		}
-
-		builder.WriteString("'")
 	}
 
-	notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
-		return tag.Op == OpNotEquals || tag.Op == OpNotExists
-	})
-
 	if notExists {
-		builder.WriteString(" AND s.tags MATCH NOT '")
+		builder.WriteString(" NOT ")
 
 		index := 0
 
@@ -147,7 +147,9 @@ func ToSQL(query string) (string, error) {
 			case OpEquals, OpExists:
 			}
 		}
+	}
 
+	if exists || notExists {
 		builder.WriteString("'")
 	}
 
