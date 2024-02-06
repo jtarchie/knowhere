@@ -16,6 +16,7 @@ import (
 func setupMiddleware(handler *echo.Echo, cors []string) {
 	handler.Use(slogecho.New(slog.Default()))
 	handler.Use(middleware.Recover())
+	handler.Use(middleware.Gzip())
 
 	if 0 < len(cors) {
 		handler.Use(middleware.CORSWithConfig(middleware.CORSConfig{
