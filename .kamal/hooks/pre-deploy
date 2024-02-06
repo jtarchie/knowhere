@@ -41,7 +41,7 @@ on(hosts, in: :sequence)do |host|
   puts "uploading test database"
   
   execute("mkdir", "-p", "/var/osm")
-  unless test("[ -f /var/osm/test.db ]")
-    upload! 'test.db', '/var/osm/'
+  unless test("[ -f /var/osm/colorado.db ]")
+    upload! 'colorado.db', '/var/osm/'
   end
 end

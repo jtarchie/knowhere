@@ -19,5 +19,5 @@ tasks:
   develop:
     cmds:
     - go generate ./...
-    - go run -tags fts5 -race github.com/jtarchie/knowhere server --db test.db
+    - go run -tags fts5 -race github.com/jtarchie/knowhere server --db colorado.db
   reload: go run github.com/bokwoon95/wgo -file '.html' -file '.ts' task develop

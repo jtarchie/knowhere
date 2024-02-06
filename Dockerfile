@@ -18,4 +18,4 @@ WORKDIR /app
 COPY --from=builder /app/knowhere .
 
 EXPOSE 3000
-ENTRYPOINT ["/app/knowhere", "server", "--port", "3000", "--db", "/var/osm/test.db" ]
+ENTRYPOINT ["/app/knowhere", "server", "--port", "3000", "--db", "/var/osm/colorado.db" ]
