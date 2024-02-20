@@ -95,6 +95,7 @@ func (b *Builder) Execute() error {
 	err = importer.Execute(
 		func(node *osm.Node) error {
 			tags := marshal.Tags(node.TagMap())
+
 			_, err := insert.Exec(
 				node.ID,
 				osm.TypeNode,

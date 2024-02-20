@@ -32,6 +32,7 @@ func Members(members osm.Members) string {
 			builder.WriteByte(',')
 			marshalString(builder, member.Role)
 			builder.WriteByte(']')
+
 			index++
 		case osm.TypeChangeset, osm.TypeNote, osm.TypeUser, osm.TypeBounds:
 		}
