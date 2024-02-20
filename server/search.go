@@ -7,9 +7,10 @@ import (
 
 	"github.com/jtarchie/knowhere/query"
 	"github.com/labstack/echo/v4"
+	"github.com/paulmach/orb/geojson"
 )
 
-func routeSearch(client *sql.DB) func(echo.Context) error {
+func locationSearch(client *sql.DB) func(echo.Context) error {
 	return func(ctx echo.Context) error {
 		search := ctx.FormValue("search")
 		if search == "" {
@@ -19,7 +20,7 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		results, err := query.Execute(client, search)
+		features, err := query.Execute(client, search)
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 
@@ -30,6 +31,9 @@ func routeSearch(client *sql.DB) func(echo.Context) error {
 		}
 
 		//nolint: wrapcheck
-		return ctx.JSON(http.StatusOK, results)
+		return ctx.JSON(http.StatusOK, geojson.FeatureCollection{
+			Type:     "FeatureCollection",
+			Features: features,
+		})
 	}
 }
