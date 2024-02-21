@@ -42,5 +42,5 @@ func setupAssets(handler *echo.Echo) error {
 }
 
 func setupRoutes(handler *echo.Echo, client *sql.DB) {
-	handler.POST("/api/search", locationSearch(client))
+	handler.GET("/api/search", locationSearch(client))
 }
