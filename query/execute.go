@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	// "github.com/wroge/scan".
 	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
 )
