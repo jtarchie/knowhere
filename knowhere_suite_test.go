@@ -2,10 +2,12 @@ package main_test
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/imroc/req/v3"
@@ -60,7 +62,7 @@ var _ = Describe("Running the application", func() {
 
 		session = cli(
 			"query",
-			"n[name=Starbucks]",
+			`n[name="Hatfield Tunnel"][prefix="test"]`,
 		)
 
 		Eventually(session, "5s").Should(gexec.Exit(0))
@@ -83,5 +85,39 @@ var _ = Describe("Running the application", func() {
 			//nolint: wrapcheck
 			return err
 		}).ShouldNot(HaveOccurred())
+
+		By("hitting API endpoint")
+
+		response, err := client.R().
+			SetRetryCount(3).
+			AddQueryParam("search", `nw[name="Hatfield Tunnel"][prefix="test"]`).
+			Get(fmt.Sprintf("http://localhost:%d/api/search", port))
+
+		Expect(err).NotTo(HaveOccurred())
+
+		payload := &strings.Builder{}
+
+		_, err = io.Copy(payload, response.Body)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(payload.String()).To(MatchJSON(`
+			{
+				"features": [
+					{
+						"id": 294,
+						"type": "Feature",
+						"geometry": {
+							"type": "Point",
+							"coordinates": [
+								-0.24155770000000001,
+								51.7600489
+							]
+						},
+						"properties": null
+					}
+				],
+				"type": "FeatureCollection"
+			}
+		`))
 	})
 })

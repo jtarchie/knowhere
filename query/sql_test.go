@@ -49,5 +49,6 @@ var _ = Describe("Build SQL from a query", func() {
 		Entry("tag with not matcher", "na[amenity=coffee][name!=Starbucks]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area' AND s.tags MATCH '( ("amenity coffee") ) NOT ( ("name Starbucks") )'`),
 		Entry("tag should not exist", "na[amenity=coffee][!name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area' AND s.tags MATCH '( ("amenity coffee") ) NOT ( "name" )'`),
 		Entry("everything", `narw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area OR way OR relation' AND s.tags MATCH '( "name" ) AND ( ("name *King*") OR ("name *Queen*") ) NOT ( "amenity" )'`),
+		Entry("with table prefix", "n[amenity=restaurant][prefix=test]", `SELECT * FROM test_entries e JOIN test_search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node' AND s.tags MATCH '( ("amenity restaurant") )'`),
 	)
 })

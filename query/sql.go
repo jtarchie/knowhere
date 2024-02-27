@@ -15,16 +15,29 @@ func ToSQL(query string) (string, error) {
 
 	var builder strings.Builder
 
-	builder.WriteString(`
+	prefixTag, ok := lo.Find(ast.Tags, func(tag FilterTag) bool {
+		return tag.Name == "prefix" && len(tag.Lookups) == 1
+	})
+
+	prefix := ""
+	if ok {
+		prefix = prefixTag.Lookups[0] + "_"
+	}
+
+	allowedTags := lo.Filter(ast.Tags, func(tag FilterTag, _ int) bool {
+		return tag.Name != "prefix"
+	})
+
+	builder.WriteString(fmt.Sprintf(`
 		SELECT
 			*
 		FROM
-			entries e
-			JOIN
-				search s
-			ON
-				s.rowid = e.id
-	`)
+			%sentries e
+		JOIN
+			%ssearch s
+		ON
+			s.rowid = e.id
+	`, prefix, prefix))
 
 	builder.WriteString(" WHERE ")
 
@@ -49,11 +62,11 @@ func ToSQL(query string) (string, error) {
 
 	builder.WriteString("' ")
 
-	exists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+	exists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
 		return tag.Op == OpEquals || tag.Op == OpExists
 	})
 
-	notExists := lo.ContainsBy(ast.Tags, func(tag FilterTag) bool {
+	notExists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
 		return tag.Op == OpNotEquals || tag.Op == OpNotExists
 	})
 
@@ -64,7 +77,7 @@ func ToSQL(query string) (string, error) {
 	if exists {
 		index := 0
 
-		for _, tag := range ast.Tags {
+		for _, tag := range allowedTags {
 			switch tag.Op {
 			case OpEquals:
 				if 0 < index {
@@ -112,7 +125,7 @@ func ToSQL(query string) (string, error) {
 
 		index := 0
 
-		for _, tag := range ast.Tags {
+		for _, tag := range allowedTags {
 			switch tag.Op {
 			case OpNotEquals:
 				if 0 < index {
