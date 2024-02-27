@@ -50,6 +50,7 @@ var _ = Describe("Running the application", func() {
 			"build",
 			"--osm", "./fixtures/sample.pbf",
 			"--db", dbFilename,
+			"--prefix", "test",
 		)
 
 		Eventually(session, "5s").Should(gexec.Exit(0))

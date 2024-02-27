@@ -8,21 +8,33 @@ import (
 	"github.com/jtarchie/knowhere/marshal"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulmach/osm"
+	"github.com/valyala/fasttemplate"
 )
 
 type Builder struct {
-	osmPath string
 	dbPath  string
+	osmPath string
+	prefix  string
 }
 
 func NewBuilder(
 	osmPath string,
 	dbPath string,
+	prefix string,
 ) *Builder {
 	return &Builder{
-		osmPath: osmPath,
 		dbPath:  dbPath,
+		osmPath: osmPath,
+		prefix:  prefix,
 	}
+}
+
+func (b *Builder) Sprintf(template string) string {
+	t := fasttemplate.New(template, "{{", "}}")
+
+	return t.ExecuteString(map[string]interface{}{
+		"prefix": b.prefix,
+	})
 }
 
 func (b *Builder) Execute() error {
@@ -39,8 +51,8 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.schema.create", slog.String("filename", b.dbPath))
 
-	_, err = client.Exec(`
-		CREATE TABLE entries (
+	_, err = client.Exec(b.Sprintf(`
+		CREATE TABLE {{prefix}}_entries (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
 			osm_id   INTEGER NOT NULL,
 			osm_type TEXT NOT NULL,
@@ -52,12 +64,12 @@ func (b *Builder) Execute() error {
 			refs     JSONB
 		);
 
-		CREATE TABLE refs (
+		CREATE TABLE {{prefix}}_refs (
 			parent_id    INTEGER NOT NULL,
 			osm_id 	     INTEGER NOT NULL,
 			osm_type     TEXT NOT NULL
 		);
-	`)
+	`))
 	if err != nil {
 		return fmt.Errorf("could not execute schema: %w", err)
 	}
@@ -75,19 +87,19 @@ func (b *Builder) Execute() error {
 		_ = transaction.Rollback()
 	}()
 
-	insert, err := transaction.Prepare(`
-	INSERT INTO entries
+	insert, err := transaction.Prepare(b.Sprintf(`
+	INSERT INTO {{prefix}}_entries
 		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags, refs)
 			VALUES
 		(?, ?, ?, ?, ?, ?, ?, ?);
-	`)
+	`))
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for insert: %w", err)
 	}
 
-	refInsert, err := transaction.Prepare(`
-		INSERT INTO refs (parent_id, osm_id, osm_type) VALUES (?, ?, ?);
-	`)
+	refInsert, err := transaction.Prepare(b.Sprintf(`
+		INSERT INTO {{prefix}}_refs (parent_id, osm_id, osm_type) VALUES (?, ?, ?);
+	`))
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for ref insert: %w", err)
 	}
@@ -173,15 +185,15 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath))
 
-	_, err = client.Exec(`
-		CREATE INDEX ref_ids ON refs(parent_id);
-		CREATE INDEX osm_types ON entries(osm_type, osm_id);
+	_, err = client.Exec(b.Sprintf(`
+		CREATE INDEX {{prefix}}_ref_ids ON {{prefix}}_refs(parent_id);
+		CREATE INDEX {{prefix}}_osm_types ON {{prefix}}_entries(osm_type, osm_id);
 
 		WITH ways AS (
 			SELECT
 					e.id
 			FROM
-					entries e
+					{{prefix}}_entries e
 			WHERE
 					e.osm_type = 'way'
 		), bb AS (
@@ -194,18 +206,18 @@ func (b *Builder) Execute() error {
 			FROM
 					ways w
 			JOIN
-					refs r
+					{{prefix}}_refs r
 			ON
 					r.parent_id = w.id
 			JOIN
-					entries n
+					{{prefix}}_entries n
 			ON
 					n.osm_type = 'node' AND n.osm_id = r.osm_id
 			GROUP BY
 					w.id
 		)
 		UPDATE
-				entries
+				{{prefix}}_entries
 		SET
 				minLat = bb.minLat,
 				maxLat = bb.maxLat,
@@ -214,13 +226,13 @@ func (b *Builder) Execute() error {
 		FROM
 				bb
 		WHERE
-				entries.id = bb.id;
+				{{prefix}}_entries.id = bb.id;
 
 		WITH relations AS (
 			SELECT
 					e.id
 			FROM
-					entries e
+					{{prefix}}_entries e
 			WHERE
 					e.osm_type = 'relation'
 		), bb AS (
@@ -233,18 +245,18 @@ func (b *Builder) Execute() error {
 			FROM
 					relations w
 			JOIN
-					refs r
+					{{prefix}}_refs r
 			ON
 					r.parent_id = w.id
 			JOIN
-					entries n
+					{{prefix}}_entries n
 			ON
 					n.osm_type = r.osm_type AND n.osm_id = r.osm_id
 			GROUP BY
 					w.id
 		)
 		UPDATE
-				entries
+				{{prefix}}_entries
 		SET
 				minLat = bb.minLat,
 				maxLat = bb.maxLat,
@@ -253,12 +265,12 @@ func (b *Builder) Execute() error {
 		FROM
 				bb
 		WHERE
-				entries.id = bb.id;
+				{{prefix}}_entries.id = bb.id;
 
-		DROP INDEX ref_ids;
-		DROP INDEX osm_types;
-		DROP TABLE refs;
-	`)
+		DROP INDEX {{prefix}}_ref_ids;
+		DROP INDEX {{prefix}}_osm_types;
+		DROP TABLE {{prefix}}_refs;
+	`))
 	if err != nil {
 		return fmt.Errorf("could not add bounding boxes: %w", err)
 	}
@@ -267,23 +279,23 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.fts.init", slog.String("filename", b.dbPath))
 
-	_, err = client.Exec(`
+	_, err = client.Exec(b.Sprintf(`
 		CREATE VIRTUAL TABLE
-			search
+			{{prefix}}_search
 		USING
-			fts5(osm_type, tags, content = 'entries', tokenize="trigram");
+			fts5(osm_type, tags, content = '{{prefix}}_entries', tokenize="trigram");
 
 		WITH tags AS (
 			SELECT
-				entries.id AS id,
-				entries.osm_type AS osm_type,
+				{{prefix}}_entries.id AS id,
+				{{prefix}}_entries.osm_type AS osm_type,
 				json_each.key || ' ' || json_each.value AS kv
 			FROM
-				entries,
-				json_each(entries.tags)
+				{{prefix}}_entries,
+				json_each({{prefix}}_entries.tags)
 		)
 		INSERT INTO
-			search(rowid, osm_type, tags)
+			{{prefix}}_search(rowid, osm_type, tags)
 		SELECT
 			id,
 			osm_type,
@@ -292,7 +304,7 @@ func (b *Builder) Execute() error {
 			tags
 		GROUP BY
 			id, osm_type;
-	`)
+	`))
 	if err != nil {
 		return fmt.Errorf("could build full text: %w", err)
 	}
@@ -301,15 +313,15 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
 
-	_, err = client.Exec(`
+	_, err = client.Exec(b.Sprintf(`
 		INSERT INTO
-			search(search)
+			{{prefix}}_search({{prefix}}_search)
 		VALUES
 			('optimize');
 
 		vacuum;
 		pragma optimize;
-	`)
+	`))
 	if err != nil {
 		return fmt.Errorf("could not optimize: %w", err)
 	}

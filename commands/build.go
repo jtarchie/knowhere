@@ -7,12 +7,13 @@ import (
 )
 
 type Build struct {
-	OSM string `help:"osm pbf file to build the sqlite file from" required:"" type:"existingfile"`
-	DB  string `help:"db filename to import data from"            required:""`
+	OSM    string `help:"osm pbf file to build the sqlite file from" required:"" type:"existingfile"`
+	DB     string `help:"db filename to import data from"            required:""`
+	Prefix string `help:"will add this prefix to all table names"    required:""`
 }
 
 func (b *Build) Run() error {
-	builder := services.NewBuilder(b.OSM, b.DB)
+	builder := services.NewBuilder(b.OSM, b.DB, b.Prefix)
 
 	err := builder.Execute()
 	if err != nil {
