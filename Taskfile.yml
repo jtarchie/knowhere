@@ -5,7 +5,11 @@ tasks:
     cmds:
     - deno fmt README.md
     - gofmt -w .
-  lint: golangci-lint run --fix --timeout "10m"
+    - shfmt -w bin/*.sh
+  lint:
+    cmds:
+    - golangci-lint run --fix --timeout "10m"
+    - shellcheck bin/*.sh
   test: go run github.com/onsi/ginkgo/v2/ginkgo -tags "fts5" -race -r -p
   ci:
     cmds:
@@ -19,5 +23,5 @@ tasks:
   develop:
     cmds:
     - go generate ./...
-    - go run -tags fts5 -race github.com/jtarchie/knowhere server --db colorado.db
+    - go run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
   reload: go run github.com/bokwoon95/wgo -file '.html' -file '.ts' task develop
