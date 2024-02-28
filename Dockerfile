@@ -12,10 +12,12 @@ RUN CGO_ENABLED=1 go build -tags "fts5" -o knowhere
 
 FROM alpine:latest
 
-RUN apk add --no-cache openssh sqlite curl
+RUN apk add --no-cache bash curl openssh sqlite
 
 WORKDIR /app
 COPY --from=builder /app/knowhere .
+COPY --from=builder /app/bin/entrypoint.sh .
 
 EXPOSE 3000
-ENTRYPOINT ["/app/knowhere", "server", "--port", "3000", "--db", "/var/osm/entries.db", "--cors", "*" ]
+ENTRYPOINT [ "bash" ]
+CMD ["/app/entrypoint.sh"]

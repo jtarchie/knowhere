@@ -19,3 +19,5 @@ for state in "${states[@]}"; do
 		--db .build/entries.db \
 		--prefix "$state"
 done
+
+rclone copy .build/entries.db r2:knowhere-sqlite/ -P

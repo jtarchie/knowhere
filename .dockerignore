@@ -23,5 +23,4 @@ dist/
 
 .build/
 config/
-bin/
 .kamal/
