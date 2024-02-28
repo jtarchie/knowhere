@@ -8,7 +8,7 @@ import (
 
 type Server struct {
 	Port int      `default:"8080"                    help:"port for the http server" required:""`
-	DB   string   `help:"sqlite file to server"      required:""                     type:"existingfile"`
+	DB   string   `help:"sqlite file to server"      required:""`
 	Cors []string `help:"list of URLs to allow CORs"`
 }
 

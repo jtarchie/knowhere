@@ -16,9 +16,12 @@ require (
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
+	github.com/psanford/sqlite3vfs v0.0.0-20220823065410-bd28ac7ee3c2
+	github.com/psanford/sqlite3vfshttp v0.0.0-20230409054408-6eccb673c1d1
 	github.com/samber/lo v1.39.0
 	github.com/samber/slog-echo v1.12.2
 	github.com/schollz/progressbar/v3 v3.14.2
+	github.com/valyala/fasttemplate v1.2.2
 )
 
 require (
@@ -41,13 +44,13 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
+	github.com/psanford/httpreadat v0.0.0-20230409005540-005e63deadeb // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.41.0 // indirect
 	github.com/refraction-networking/utls v1.6.3 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	github.com/valyala/fasttemplate v1.2.2 // indirect
 	go.mongodb.org/mongo-driver v1.14.0 // indirect
 	go.opentelemetry.io/otel v1.24.0 // indirect
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect

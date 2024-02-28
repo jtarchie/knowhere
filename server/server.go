@@ -4,8 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/labstack/echo/v4"
+	"github.com/psanford/sqlite3vfs"
+	"github.com/psanford/sqlite3vfshttp"
 )
 
 type Server struct {
@@ -19,7 +22,22 @@ func New(
 	dbFilename string,
 	cors []string,
 ) (*Server, error) {
-	client, err := sql.Open("sqlite3", fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename))
+	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename)
+
+	if strings.HasPrefix(dbFilename, "http") {
+		vfs := sqlite3vfshttp.HttpVFS{
+			URL: dbFilename,
+		}
+
+		err := sqlite3vfs.RegisterVFS("httpvfs", &vfs)
+		if err != nil {
+			return nil, fmt.Errorf("could not register http VFS: %w", err)
+		}
+
+		connectionString = "fake.db?vfs=httpvfs&_query_only=true&immutable=true&mode=ro"
+	}
+
+	client, err := sql.Open("sqlite3", connectionString)
 	if err != nil {
 		return nil, fmt.Errorf("could not open database file: %w", err)
 	}

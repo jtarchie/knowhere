@@ -314,6 +314,9 @@ func (b *Builder) Execute() error {
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
 
 	_, err = client.Exec(b.Sprintf(`
+		PRAGMA page_size = 65536;
+		PRAGMA cache_size = 4096;
+		
 		INSERT INTO
 			{{prefix}}_search({{prefix}}_search)
 		VALUES

@@ -21,3 +21,10 @@ To run the tests:
 brew bundle
 task
 ```
+
+## Build
+
+```bash
+./bin/build.sh
+rclone copy .build/entries.db r2:knowhere-sqlite/ -P
+```
