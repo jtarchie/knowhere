@@ -82,9 +82,9 @@ var _ = Describe("Builder", func() {
 		Expect(points.MinLon.Valid).To(BeTrue())
 		Expect(points.MaxLon.Valid).To(BeTrue())
 
-		Expect(points.MinLat.Float64).To(BeNumerically("~", 51.7659279))
-		Expect(points.MaxLat.Float64).To(BeNumerically("~", 51.7663325))
-		Expect(points.MinLon.Float64).To(BeNumerically("~", -0.2326975))
-		Expect(points.MaxLon.Float64).To(BeNumerically("~", -0.2326806))
+		Expect(points.MinLat.Float64).To(BeNumerically("~", 51.76593))
+		Expect(points.MaxLat.Float64).To(BeNumerically("~", 51.76633))
+		Expect(points.MinLon.Float64).To(BeNumerically("~", -0.2327))
+		Expect(points.MaxLon.Float64).To(BeNumerically("~", -0.23268))
 	})
 })

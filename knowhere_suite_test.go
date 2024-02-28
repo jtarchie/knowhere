@@ -109,8 +109,8 @@ var _ = Describe("Running the application", func() {
 						"geometry": {
 							"type": "Point",
 							"coordinates": [
-								-0.24155770000000001,
-								51.7600489
+                -0.24156,
+                51.76005
 							]
 						},
 						"properties": null

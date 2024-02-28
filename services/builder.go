@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"math"
 
 	"github.com/jtarchie/knowhere/marshal"
 	_ "github.com/mattn/go-sqlite3"
@@ -28,6 +29,8 @@ func NewBuilder(
 		prefix:  prefix,
 	}
 }
+
+const precision = 100_000
 
 func (b *Builder) Sprintf(template string) string {
 	t := fasttemplate.New(template, "{{", "}}")
@@ -111,10 +114,10 @@ func (b *Builder) Execute() error {
 			_, err := insert.Exec(
 				node.ID,
 				osm.TypeNode,
-				node.Lat,
-				node.Lat,
-				node.Lon,
-				node.Lon,
+				math.Round(node.Lat*precision)/precision,
+				math.Round(node.Lat*precision)/precision,
+				math.Round(node.Lon*precision)/precision,
+				math.Round(node.Lon*precision)/precision,
 				tags,
 				nil,
 			)
