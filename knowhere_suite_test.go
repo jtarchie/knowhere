@@ -113,7 +113,9 @@ var _ = Describe("Running the application", func() {
                 51.76005
 							]
 						},
-						"properties": null
+            "properties": {
+              "name": "Hatfield Tunnel"
+            }
 					}
 				],
 				"type": "FeatureCollection"
