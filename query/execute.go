@@ -9,12 +9,12 @@ import (
 )
 
 func Execute(client *sql.DB, search string) ([]*geojson.Feature, error) {
-	sql, err := ToSQL(search)
+	sqlQuery, err := ToSQL(search)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse the query: %w", err)
 	}
 
-	rows, err := client.Query(fmt.Sprintf("SELECT id, minLon, minLat, tags->>'$.name' as name FROM (%s)", sql))
+	rows, err := client.Query(fmt.Sprintf("SELECT id, minLon, minLat, tags->>'$.name' as name FROM (%s)", sqlQuery))
 	if err != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
 	}
@@ -29,7 +29,7 @@ func Execute(client *sql.DB, search string) ([]*geojson.Feature, error) {
 		var (
 			feature geojson.Feature
 			point   orb.Point
-			name    string
+			name    sql.NullString
 		)
 
 		err := rows.Scan(&feature.ID, &point[0], &point[1], &name)
@@ -40,8 +40,11 @@ func Execute(client *sql.DB, search string) ([]*geojson.Feature, error) {
 
 		feature.Geometry = point
 		feature.Type = "Feature"
-		feature.Properties = map[string]interface{}{
-			"name": name,
+
+		if name.Valid {
+			feature.Properties = map[string]interface{}{
+				"name": name.String,
+			}
 		}
 
 		features = append(features, &feature)
