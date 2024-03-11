@@ -3,7 +3,7 @@ module github.com/jtarchie/knowhere
 go 1.21.4
 
 require (
-	github.com/alecthomas/kong v0.8.1
+	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
 	github.com/evanw/esbuild v0.20.1
 	github.com/goccy/go-json v0.10.2
