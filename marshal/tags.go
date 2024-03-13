@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Tags(tags map[string]string) string {
+func Tags(tags map[string]string, allowedTags map[string]struct{}) string {
 	if len(tags) == 0 {
 		return "{}"
 	}
@@ -15,12 +15,21 @@ func Tags(tags map[string]string) string {
 
 	count := 0
 
+	totalCount := len(tags)
+	if len(allowedTags) > 0 {
+		totalCount = len(allowedTags)
+	}
+
 	for key, value := range tags {
+		if _, ok := allowedTags[key]; !ok && len(allowedTags) > 0 {
+			continue
+		}
+
 		marshalString(builder, key)
 		builder.WriteByte(':')
 		marshalString(builder, value)
 
-		if count < len(tags)-1 {
+		if count < totalCount-1 {
 			builder.WriteByte(',')
 		}
 

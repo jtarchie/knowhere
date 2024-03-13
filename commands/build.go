@@ -7,13 +7,14 @@ import (
 )
 
 type Build struct {
-	OSM    string `help:"osm pbf file to build the sqlite file from" required:"" type:"existingfile"`
-	DB     string `help:"db filename to import data from"            required:""`
-	Prefix string `help:"will add this prefix to all table names"    required:""`
+	OSM         string   `help:"osm pbf file to build the sqlite file from" required:""                                               type:"existingfile"`
+	DB          string   `help:"db filename to import data from"            required:""`
+	Prefix      string   `help:"will add this prefix to all table names"    required:""`
+	AllowedTags []string `default:"*"                                       help:"a list of allowed tags, all other will be filtered"`
 }
 
 func (b *Build) Run() error {
-	builder := services.NewBuilder(b.OSM, b.DB, b.Prefix)
+	builder := services.NewBuilder(b.OSM, b.DB, b.Prefix, b.AllowedTags)
 
 	err := builder.Execute()
 	if err != nil {

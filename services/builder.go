@@ -13,20 +13,32 @@ import (
 )
 
 type Builder struct {
-	dbPath  string
-	osmPath string
-	prefix  string
+	allowedTags map[string]struct{}
+	dbPath      string
+	osmPath     string
+	prefix      string
 }
 
 func NewBuilder(
 	osmPath string,
 	dbPath string,
 	prefix string,
+	tags []string,
 ) *Builder {
+	var allowedTags map[string]struct{}
+
+	if len(tags) > 0 && tags[0] != "*" {
+		allowedTags = make(map[string]struct{}, len(tags))
+		for _, tag := range tags {
+			allowedTags[tag] = struct{}{}
+		}
+	}
+
 	return &Builder{
-		dbPath:  dbPath,
-		osmPath: osmPath,
-		prefix:  prefix,
+		allowedTags: allowedTags,
+		dbPath:      dbPath,
+		osmPath:     osmPath,
+		prefix:      prefix,
 	}
 }
 
@@ -109,8 +121,6 @@ func (b *Builder) Execute() error {
 
 	err = importer.Execute(
 		func(node *osm.Node) error {
-			tags := marshal.Tags(node.TagMap())
-
 			_, err := insert.Exec(
 				node.ID,
 				osm.TypeNode,
@@ -118,7 +128,7 @@ func (b *Builder) Execute() error {
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
-				tags,
+				marshal.Tags(node.TagMap(), b.allowedTags),
 				nil,
 			)
 			if err != nil {
@@ -135,7 +145,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				nil,
-				marshal.Tags(way.TagMap()),
+				marshal.Tags(way.TagMap(), b.allowedTags),
 				marshal.WayNodes(way.Nodes),
 			)
 			if err != nil {
@@ -157,7 +167,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				nil,
-				marshal.Tags(relation.TagMap()),
+				marshal.Tags(relation.TagMap(), b.allowedTags),
 				marshal.Members(relation.Members),
 			)
 			if err != nil {

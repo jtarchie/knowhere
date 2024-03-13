@@ -21,12 +21,27 @@ var _ = Describe("Builder", func() {
 		Expect(err).NotTo(HaveOccurred())
 	}
 
+	It("limits tags to a defined set", func() {
+		buildDir, err := os.MkdirTemp("", "")
+		Expect(err).NotTo(HaveOccurred())
+
+		dbPath := filepath.Join(buildDir, "test.db")
+		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "test", []string{"name"})
+
+		err = builder.Execute()
+		Expect(err).NotTo(HaveOccurred())
+
+		var tagCount int64
+		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM test_entries, json_each(test_entries.tags);", &tagCount)
+		Expect(tagCount).To(BeEquivalentTo(1))
+	})
+
 	It("puts nodes, ways, and relations into the entries", func() {
 		buildDir, err := os.MkdirTemp("", "")
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "test")
+		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "test", []string{"*"})
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
@@ -62,6 +77,10 @@ var _ = Describe("Builder", func() {
 		value(dbPath, "SELECT MIN(rowid) FROM test_search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1", &searchID)
 		value(dbPath, "SELECT id FROM test_entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';", &wayID)
 		Expect(searchID).To(BeEquivalentTo(wayID))
+
+		var tagCount int64
+		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM test_entries, json_each(test_entries.tags);", &tagCount)
+		Expect(tagCount).To(BeEquivalentTo(46))
 
 		/*
 			Napkin math for bounding box
