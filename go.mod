@@ -5,18 +5,18 @@ go 1.21.4
 require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/evanw/esbuild v0.20.1
+	github.com/evanw/esbuild v0.20.2
 	github.com/goccy/go-json v0.10.2
 	github.com/imroc/req/v3 v3.43.1
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/onsi/ginkgo/v2 v2.16.0
-	github.com/onsi/gomega v1.31.1
+	github.com/onsi/ginkgo/v2 v2.17.1
+	github.com/onsi/gomega v1.32.0
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
-	github.com/psanford/sqlite3vfs v0.0.0-20231201192653-4c99abef8114
+	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361
 	github.com/psanford/sqlite3vfshttp v0.0.0-20230409054408-6eccb673c1d1
 	github.com/samber/lo v1.39.0
 	github.com/samber/slog-echo v1.12.2
@@ -33,7 +33,7 @@ require (
 	github.com/go-task/slim-sprig v0.0.0-20230315185526-52ccab3ef572 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240227163752-401108e1b7e7 // indirect
+	github.com/google/pprof v0.0.0-20240327155427-868f304927ed // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.7 // indirect
@@ -46,7 +46,7 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/httpreadat v0.1.0 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/quic-go v0.41.0 // indirect
+	github.com/quic-go/quic-go v0.42.0 // indirect
 	github.com/refraction-networking/utls v1.6.3 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
@@ -56,7 +56,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.24.0 // indirect
 	go.uber.org/mock v0.4.0 // indirect
 	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/exp v0.0.0-20240222234643-814bf88cf225 // indirect
+	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8 // indirect
 	golang.org/x/mod v0.16.0 // indirect
 	golang.org/x/net v0.22.0 // indirect
 	golang.org/x/sys v0.18.0 // indirect
