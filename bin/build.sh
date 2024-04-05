@@ -14,10 +14,10 @@ for state in "${states[@]}"; do
 	fi
 	popd
 
-	go run -tags fts5 -race github.com/jtarchie/knowhere build \
+	go run -tags fts5 github.com/jtarchie/knowhere build \
 		--osm ".build/$filename" \
 		--db .build/entries.db \
-		--prefix "$state"
+		--prefix "$state" --allowed-tags "name"
 done
 
 rclone copy .build/entries.db r2:knowhere-sqlite/ -P
