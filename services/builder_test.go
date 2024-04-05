@@ -49,10 +49,10 @@ var _ = Describe("Builder", func() {
 		var result int64
 
 		value(dbPath, "SELECT COUNT(*) FROM test_entries", &result)
-		Expect(result).To(BeEquivalentTo(339))
+		Expect(result).To(BeEquivalentTo(59))
 
 		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'node'", &result)
-		Expect(result).To(BeEquivalentTo(290))
+		Expect(result).To(BeEquivalentTo(10))
 
 		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'way'", &result)
 		Expect(result).To(BeEquivalentTo(44))

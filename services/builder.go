@@ -122,9 +122,6 @@ func (b *Builder) Execute() error {
 			filteredTags := node.TagMap()
 			if 0 < len(b.allowedTags) {
 				filteredTags = lo.PickByKeys(node.TagMap(), b.allowedTags)
-				if len(filteredTags) < len(b.allowedTags) {
-					return nil
-				}
 			}
 
 			_, err := insert.Exec(
@@ -147,9 +144,6 @@ func (b *Builder) Execute() error {
 			filteredTags := way.TagMap()
 			if 0 < len(b.allowedTags) {
 				filteredTags = lo.PickByKeys(way.TagMap(), b.allowedTags)
-				if len(filteredTags) < len(b.allowedTags) {
-					return nil
-				}
 			}
 
 			row, err := insert.Exec(
@@ -177,9 +171,6 @@ func (b *Builder) Execute() error {
 			filteredTags := relation.TagMap()
 			if 0 < len(b.allowedTags) {
 				filteredTags = lo.PickByKeys(relation.TagMap(), b.allowedTags)
-				if len(filteredTags) < len(b.allowedTags) {
-					return nil
-				}
 			}
 
 			row, err := insert.Exec(
@@ -351,6 +342,8 @@ func (b *Builder) Execute() error {
 	_, err = client.Exec(b.Sprintf(`
 		PRAGMA page_size = 65536;
 		PRAGMA cache_size = 4096;
+
+		DELETE FROM {{prefix}}_entries WHERE tags ='{}';
 		
 		INSERT INTO
 			{{prefix}}_search({{prefix}}_search)

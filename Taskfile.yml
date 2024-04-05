@@ -24,4 +24,3 @@ tasks:
     cmds:
     - go generate ./...
     - go run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
-  reload: go run github.com/bokwoon95/wgo -file '.html' -file '.ts' task develop
