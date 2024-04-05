@@ -26,7 +26,7 @@ func BenchmarkTags(b *testing.B) {
 		payload = marshal.Tags(map[string]string{
 			"amenity": "cafe",
 			"name":    "Starbucks",
-		}, nil)
+		})
 	}
 }
 

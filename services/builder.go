@@ -9,11 +9,12 @@ import (
 	"github.com/jtarchie/knowhere/marshal"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulmach/osm"
+	"github.com/samber/lo"
 	"github.com/valyala/fasttemplate"
 )
 
 type Builder struct {
-	allowedTags map[string]struct{}
+	allowedTags []string
 	dbPath      string
 	osmPath     string
 	prefix      string
@@ -25,13 +26,10 @@ func NewBuilder(
 	prefix string,
 	tags []string,
 ) *Builder {
-	var allowedTags map[string]struct{}
+	var allowedTags []string
 
 	if len(tags) > 0 && tags[0] != "*" {
-		allowedTags = make(map[string]struct{}, len(tags))
-		for _, tag := range tags {
-			allowedTags[tag] = struct{}{}
-		}
+		allowedTags = tags
 	}
 
 	return &Builder{
@@ -121,6 +119,14 @@ func (b *Builder) Execute() error {
 
 	err = importer.Execute(
 		func(node *osm.Node) error {
+			filteredTags := node.TagMap()
+			if 0 < len(b.allowedTags) {
+				filteredTags = lo.PickByKeys(node.TagMap(), b.allowedTags)
+				if len(filteredTags) < len(b.allowedTags) {
+					return nil
+				}
+			}
+
 			_, err := insert.Exec(
 				node.ID,
 				osm.TypeNode,
@@ -128,7 +134,7 @@ func (b *Builder) Execute() error {
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
-				marshal.Tags(node.TagMap(), b.allowedTags),
+				marshal.Tags(filteredTags),
 				nil,
 			)
 			if err != nil {
@@ -138,6 +144,14 @@ func (b *Builder) Execute() error {
 			return nil
 		},
 		func(way *osm.Way) error {
+			filteredTags := way.TagMap()
+			if 0 < len(b.allowedTags) {
+				filteredTags = lo.PickByKeys(way.TagMap(), b.allowedTags)
+				if len(filteredTags) < len(b.allowedTags) {
+					return nil
+				}
+			}
+
 			row, err := insert.Exec(
 				way.ID,
 				osm.TypeWay,
@@ -145,7 +159,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				nil,
-				marshal.Tags(way.TagMap(), b.allowedTags),
+				marshal.Tags(filteredTags),
 				marshal.WayNodes(way.Nodes),
 			)
 			if err != nil {
@@ -160,6 +174,14 @@ func (b *Builder) Execute() error {
 			return nil
 		},
 		func(relation *osm.Relation) error {
+			filteredTags := relation.TagMap()
+			if 0 < len(b.allowedTags) {
+				filteredTags = lo.PickByKeys(relation.TagMap(), b.allowedTags)
+				if len(filteredTags) < len(b.allowedTags) {
+					return nil
+				}
+			}
+
 			row, err := insert.Exec(
 				relation.ID,
 				osm.TypeRelation,
@@ -167,7 +189,7 @@ func (b *Builder) Execute() error {
 				nil,
 				nil,
 				nil,
-				marshal.Tags(relation.TagMap(), b.allowedTags),
+				marshal.Tags(filteredTags),
 				marshal.Members(relation.Members),
 			)
 			if err != nil {
