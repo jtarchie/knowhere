@@ -6,9 +6,8 @@ import (
 	"log/slog"
 	"strings"
 
+	"github.com/jtarchie/sqlitezstd"
 	"github.com/labstack/echo/v4"
-	"github.com/psanford/sqlite3vfs"
-	"github.com/psanford/sqlite3vfshttp"
 )
 
 type Server struct {
@@ -24,17 +23,13 @@ func New(
 ) (*Server, error) {
 	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename)
 
-	if strings.HasPrefix(dbFilename, "http") {
-		vfs := sqlite3vfshttp.HttpVFS{
-			URL: dbFilename,
-		}
-
-		err := sqlite3vfs.RegisterVFS("httpvfs", &vfs)
+	if strings.Contains(dbFilename, ".zst") {
+		err := sqlitezstd.Init()
 		if err != nil {
-			return nil, fmt.Errorf("could not register http VFS: %w", err)
+			return nil, fmt.Errorf("could not load sqlite zstd vfs: %w", err)
 		}
 
-		connectionString = "fake.db?vfs=httpvfs&_query_only=true&immutable=true&mode=ro"
+		connectionString += "&vfs=zstd"
 	}
 
 	client, err := sql.Open("sqlite3", connectionString)
