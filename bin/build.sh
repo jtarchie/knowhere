@@ -4,7 +4,9 @@ set -eux
 
 mkdir -p .build/
 
-states=("colorado" "massachusetts")
+states=("california" "colorado" "florida" "massachusetts")
+
+rm -Rf .build/entries.db*
 
 for state in "${states[@]}"; do
 	filename="$state.osm.pbf"
