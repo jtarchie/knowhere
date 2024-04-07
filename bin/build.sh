@@ -8,7 +8,7 @@ states=("alabama" "alaska" "arizona" "arkansas" "california" "colorado" "connect
 
 db_path=.build/entries.db
 
-rm -Rf "$db_path"
+rm -Rf "$db_path"*
 
 for state in "${states[@]}"; do
 	filename="$state.osm.pbf"

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"math"
+	"strings"
 
 	"github.com/iancoleman/strcase"
 	"github.com/jtarchie/knowhere/marshal"
@@ -37,7 +38,7 @@ func NewBuilder(
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
 		osmPath:     osmPath,
-		prefix:      strcase.ToLowerCamel(prefix),
+		prefix:      strcase.ToSnake(strings.ToLower(prefix)),
 	}
 }
 
