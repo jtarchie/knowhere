@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"math"
 
+	"github.com/iancoleman/strcase"
 	"github.com/jtarchie/knowhere/marshal"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulmach/osm"
@@ -36,7 +37,7 @@ func NewBuilder(
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
 		osmPath:     osmPath,
-		prefix:      prefix,
+		prefix:      strcase.ToLowerCamel(prefix),
 	}
 }
 
