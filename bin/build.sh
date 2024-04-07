@@ -31,3 +31,5 @@ go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 
 rclone copy "$db_path" r2:knowhere-sqlite/ -P
 rclone copy "$db_path".zst r2:knowhere-sqlite/ -P
+
+./bin/cleanup.sh
