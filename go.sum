@@ -59,8 +59,8 @@ github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUq
 github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSow5/V2vxeg=
 github.com/iancoleman/strcase v0.3.0 h1:nTXanmYxhfFAMjZL34Ov6gkzEsSJZ5DbhxWjvSASxEI=
 github.com/iancoleman/strcase v0.3.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
-github.com/imroc/req/v3 v3.43.1 h1:tsWAhvxik4egtHAvMlxcjaWJtHlJL8EpBqJMOm5rmyQ=
-github.com/imroc/req/v3 v3.43.1/go.mod h1:SQIz5iYop16MJxbo8ib+4LnostGCok8NQf8ToyQc2xA=
+github.com/imroc/req/v3 v3.43.2 h1:xkm4vjhKC1wUWxDM6TRdQfkj31lHnLDAlZJgxeQK8bI=
+github.com/imroc/req/v3 v3.43.2/go.mod h1:SQIz5iYop16MJxbo8ib+4LnostGCok8NQf8ToyQc2xA=
 github.com/jmoiron/sqlx v1.3.5 h1:vFFPA71p1o5gAeqtEAwLU4dnX2napprKtHr7PYIcN3g=
 github.com/jmoiron/sqlx v1.3.5/go.mod h1:nRVWtLre0KfCLJvgxzCsLVMogSvQ1zNJtpYr2Ccp0mQ=
 github.com/jtarchie/sqlitezstd v0.0.0-20240405135644-627925a1d78e h1:A8sZywM+Hl9NZ0XxeyFaEO3cLdDmv8sP4/lO5T4u/sg=
