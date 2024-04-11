@@ -18,6 +18,7 @@ import (
 type Builder struct {
 	allowedTags []string
 	dbPath      string
+	name        string
 	osmPath     string
 	prefix      string
 }
@@ -39,6 +40,7 @@ func NewBuilder(
 		dbPath:      dbPath,
 		osmPath:     osmPath,
 		prefix:      strcase.ToSnake(strings.ToLower(prefix)),
+		name:        prefix,
 	}
 }
 
@@ -48,6 +50,7 @@ func (b *Builder) Sprintf(template string) string {
 	t := fasttemplate.New(template, "{{", "}}")
 
 	return t.ExecuteString(map[string]interface{}{
+		"name":   b.name,
 		"prefix": b.prefix,
 	})
 }
@@ -83,6 +86,16 @@ func (b *Builder) Execute() error {
 			parent_id    INTEGER NOT NULL,
 			osm_id 	     INTEGER NOT NULL,
 			osm_type     TEXT NOT NULL
+		);
+
+		CREATE TABLE IF NOT EXISTS prefixes (
+			id        INTEGER PRIMARY KEY AUTOINCREMENT,
+			name      TEXT NOT NULL,
+			full_name TEXT NOT NULL,
+			minLat    FLOAT,
+			maxLat    FLOAT,
+			minLon    FLOAT,
+			maxLon    FLOAT
 		);
 	`))
 	if err != nil {
@@ -351,6 +364,16 @@ func (b *Builder) Execute() error {
 			{{prefix}}_search({{prefix}}_search)
 		VALUES
 			('optimize');
+
+		INSERT INTO prefixes(name, full_name, minLat, maxLat, minLon, maxLon)
+			SELECT
+				'{{prefix}}', -- Assuming {{prefix}} is replaced with the actual prefix value you want to insert
+				'{{name}}', -- Assuming {{name}} is replaced with the actual name value you want to insert
+				MIN(minLat),
+				MAX(maxLat),
+				MIN(minLon),
+				MAX(maxLon)
+			FROM {{prefix}}_entries;
 
 		vacuum;
 		pragma optimize;

@@ -86,7 +86,7 @@ var _ = Describe("Running the application", func() {
 			return err
 		}).ShouldNot(HaveOccurred())
 
-		By("hitting API endpoint")
+		By("hitting search API endpoint")
 
 		response, err := client.R().
 			SetRetryCount(3).
@@ -121,5 +121,33 @@ var _ = Describe("Running the application", func() {
 				"type": "FeatureCollection"
 			}
 		`))
+
+		By("hitting prefixes API endpoint")
+
+		response, err = client.R().
+			SetRetryCount(3).
+			Get(fmt.Sprintf("http://localhost:%d/api/prefixes", port))
+
+		Expect(err).NotTo(HaveOccurred())
+
+		payload = &strings.Builder{}
+
+		_, err = io.Copy(payload, response.Body)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(payload.String()).To(MatchJSON(`
+		{
+			"prefixes": [
+				{
+					"name": "test",
+					"full_name": "test",
+					"min_lat": 51.76005,
+					"max_lat": 51.77425,
+					"min_lon": -0.24156,
+					"max_lon": -0.21629
+				}
+			]
+		}
+	`))
 	})
 })

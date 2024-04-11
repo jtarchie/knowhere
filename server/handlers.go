@@ -25,4 +25,5 @@ func setupMiddleware(handler *echo.Echo, cors []string) {
 
 func setupRoutes(handler *echo.Echo, client *sql.DB) {
 	handler.GET("/api/search", locationSearch(client))
+	handler.GET("/api/prefixes", prefixes(client))
 }
