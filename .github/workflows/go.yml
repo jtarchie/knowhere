@@ -27,6 +27,10 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         binaries-location: golangci-lint-1.55.2-linux-amd64
         tag: v1.55.2
+    - name: install shellfmt
+      uses: jaxxstorm/action-install-gh-release@v1.10.0
+      with:
+        repo: mvdan/sh
     - name: Install Task
       uses: arduino/setup-task@v1
       with:
