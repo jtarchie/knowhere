@@ -13,7 +13,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.43.2
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/jtarchie/sqlitezstd v0.0.0-20240405135644-627925a1d78e
+	github.com/jtarchie/sqlitezstd v0.0.0-20240412003849-8a24b888e0bd
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/onsi/ginkgo/v2 v2.17.1
@@ -57,7 +57,7 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.8.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	go.mongodb.org/mongo-driver v1.14.0 // indirect
+	go.mongodb.org/mongo-driver v1.15.0 // indirect
 	go.opentelemetry.io/otel v1.25.0 // indirect
 	go.opentelemetry.io/otel/trace v1.25.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
