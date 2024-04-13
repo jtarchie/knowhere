@@ -17,20 +17,20 @@ jobs:
     - uses: denoland/setup-deno@v1
     - uses: actions/setup-go@v3
       with:
-        go-version: '1.21'
+        go-version: '1.22'
         check-latest: true
         cache: true
-    - name: Install golangci-lint
-      uses: jaxxstorm/action-install-gh-release@v1.10.0
-      with: # Grab the latest version
-        repo: golangci/golangci-lint
-        token: ${{ secrets.GITHUB_TOKEN }}
-        binaries-location: golangci-lint-1.55.2-linux-amd64
-        tag: v1.55.2
+    - name: install golangci-lint
+      run: |
+        go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
     - name: install shellfmt
-      uses: jaxxstorm/action-install-gh-release@v1.10.0
+      uses: taiki-e/install-action@v2
       with:
-        repo: mvdan/sh
+        tool: shfmt
+    - name: install shellfmt
+      uses: taiki-e/install-action@v2
+      with:
+        tool: shellcheck
     - name: Install Task
       uses: arduino/setup-task@v1
       with:
