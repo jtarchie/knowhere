@@ -22,7 +22,7 @@ require (
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/samber/lo v1.39.0
-	github.com/samber/slog-echo v1.12.3
+	github.com/samber/slog-echo v1.12.4
 	github.com/schollz/progressbar/v3 v3.14.2
 	github.com/valyala/fasttemplate v1.2.2
 )
