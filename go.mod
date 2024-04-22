@@ -14,7 +14,7 @@ require (
 	github.com/imroc/req/v3 v3.43.2
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/jtarchie/sqlitezstd v0.0.0-20240412003849-8a24b888e0bd
-	github.com/labstack/echo/v4 v4.11.4
+	github.com/labstack/echo/v4 v4.12.0
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/onsi/ginkgo/v2 v2.17.1
 	github.com/onsi/gomega v1.32.0
