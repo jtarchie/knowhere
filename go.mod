@@ -11,7 +11,7 @@ require (
 	github.com/evanw/esbuild v0.20.2
 	github.com/goccy/go-json v0.10.2
 	github.com/iancoleman/strcase v0.3.0
-	github.com/imroc/req/v3 v3.43.2
+	github.com/imroc/req/v3 v3.43.3
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/jtarchie/sqlitezstd v0.0.0-20240412003849-8a24b888e0bd
 	github.com/labstack/echo/v4 v4.11.4
