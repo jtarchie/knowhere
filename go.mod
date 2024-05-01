@@ -13,11 +13,11 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.43.3
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20240425131913-f29ea1c5b5db
+	github.com/jtarchie/sqlitezstd v0.0.0-20240429171040-c82729a58e20
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/onsi/ginkgo/v2 v2.17.2
-	github.com/onsi/gomega v1.33.0
+	github.com/onsi/gomega v1.33.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
@@ -39,7 +39,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240424215950-a892ee059fd6 // indirect
+	github.com/google/pprof v0.0.0-20240430035430-e4905b036c4e // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
@@ -72,7 +72,7 @@ require (
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.20.0 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
+	google.golang.org/protobuf v1.34.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/ranger v0.0.0-20171016084633-e2e137620847 // indirect
