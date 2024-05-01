@@ -56,7 +56,7 @@ func (b *Builder) Sprintf(template string) string {
 }
 
 func (b *Builder) Execute() error {
-	slog.Info("db.open", slog.String("filename", b.dbPath))
+	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	// open the sql database
 	client, err := sql.Open("sqlite3", b.dbPath)
@@ -67,7 +67,7 @@ func (b *Builder) Execute() error {
 
 	client.SetMaxOpenConns(1)
 
-	slog.Info("db.schema.create", slog.String("filename", b.dbPath))
+	slog.Info("db.schema.create", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	_, err = client.Exec(b.Sprintf(`
 		CREATE TABLE {{prefix}}_entries (
@@ -97,6 +97,14 @@ func (b *Builder) Execute() error {
 			minLon    FLOAT,
 			maxLon    FLOAT
 		);
+
+		CREATE VIRTUAL TABLE IF NOT EXISTS {{prefix}}_rtree USING rtree(
+			id INTEGER PRIMARY KEY,
+			minLon REAL,
+			maxLon REAL,
+			minLat REAL,
+			maxLat REAL
+	);
 	`))
 	if err != nil {
 		return fmt.Errorf("could not execute schema: %w", err)
@@ -104,7 +112,7 @@ func (b *Builder) Execute() error {
 
 	importer := NewImporter(b.osmPath)
 
-	slog.Info("db.import.init", slog.String("filename", b.dbPath))
+	slog.Info("db.import.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	transaction, err := client.Begin()
 	if err != nil {
@@ -222,9 +230,9 @@ func (b *Builder) Execute() error {
 		return fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	slog.Info("db.import.complete", slog.String("filename", b.dbPath))
+	slog.Info("db.import.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath))
+	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	_, err = client.Exec(b.Sprintf(`
 		CREATE INDEX {{prefix}}_ref_ids ON {{prefix}}_refs(parent_id);
@@ -308,6 +316,9 @@ func (b *Builder) Execute() error {
 		WHERE
 				{{prefix}}_entries.id = bb.id;
 
+		-- useful for calculating boundaries,
+		-- not useful for searching against
+		DELETE FROM {{prefix}}_entries WHERE tags ='{}';
 		DROP INDEX {{prefix}}_ref_ids;
 		DROP INDEX {{prefix}}_osm_types;
 		DROP TABLE {{prefix}}_refs;
@@ -316,9 +327,9 @@ func (b *Builder) Execute() error {
 		return fmt.Errorf("could not add bounding boxes: %w", err)
 	}
 
-	slog.Info("db.bounding_boxes.complete", slog.String("filename", b.dbPath))
+	slog.Info("db.bounding_boxes.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	slog.Info("db.fts.init", slog.String("filename", b.dbPath))
+	slog.Info("db.fts.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	_, err = client.Exec(b.Sprintf(`
 		CREATE VIRTUAL TABLE
@@ -350,15 +361,31 @@ func (b *Builder) Execute() error {
 		return fmt.Errorf("could build full text: %w", err)
 	}
 
-	slog.Info("db.fts.complete", slog.String("filename", b.dbPath))
+	slog.Info("db.fts.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
+	slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+
+	_, err = client.Exec(b.Sprintf(`
+		INSERT INTO
+			{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
+		SELECT
+			id,
+			minLon, maxLon,
+			minLat, maxLat
+		FROM
+		{{prefix}}_entries;
+	`))
+	if err != nil {
+		return fmt.Errorf("could build full text: %w", err)
+	}
+
+	slog.Info("db.rtree.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+
+	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	_, err = client.Exec(b.Sprintf(`
 		PRAGMA page_size = 65536;
 		PRAGMA cache_size = 4096;
-
-		DELETE FROM {{prefix}}_entries WHERE tags ='{}';
 		
 		INSERT INTO
 			{{prefix}}_search({{prefix}}_search)
@@ -382,7 +409,7 @@ func (b *Builder) Execute() error {
 		return fmt.Errorf("could not optimize: %w", err)
 	}
 
-	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath))
+	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	return nil
 }
