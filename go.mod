@@ -16,7 +16,7 @@ require (
 	github.com/jtarchie/sqlitezstd v0.0.0-20240429171040-c82729a58e20
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/onsi/ginkgo/v2 v2.17.2
+	github.com/onsi/ginkgo/v2 v2.17.3
 	github.com/onsi/gomega v1.33.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
