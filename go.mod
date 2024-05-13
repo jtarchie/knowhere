@@ -8,7 +8,7 @@ require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/evanw/esbuild v0.20.2
+	github.com/evanw/esbuild v0.21.2
 	github.com/goccy/go-json v0.10.2
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.43.3
