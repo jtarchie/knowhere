@@ -34,6 +34,7 @@ require (
 	github.com/cloudflare/circl v1.3.8 // indirect
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/georgysavva/scany/v2 v2.1.3 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
@@ -54,7 +55,7 @@ require (
 	github.com/quic-go/quic-go v0.43.0 // indirect
 	github.com/refraction-networking/utls v1.6.4 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/rogpeppe/go-internal v1.8.1 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.15.0 // indirect
 	go.opentelemetry.io/otel v1.26.0 // indirect
