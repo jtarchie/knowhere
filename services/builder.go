@@ -55,6 +55,26 @@ func (b *Builder) Sprintf(template string) string {
 	})
 }
 
+func (b *Builder) clientExecute(client *sql.DB, statement string) error {
+	queries := strings.Split(statement, ";\n")
+
+	for _, query := range queries {
+		query = strings.TrimSpace(b.Sprintf(query))
+		if query == "" {
+			continue
+		}
+
+		slog.Info("db.execute", slog.String("filename", b.dbPath), slog.String("query", query))
+
+		_, err := client.Exec(query)
+		if err != nil {
+			return fmt.Errorf("could execute query: %w", err)
+		}
+	}
+
+	return nil
+}
+
 func (b *Builder) Execute() error {
 	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
@@ -69,7 +89,7 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.schema.create", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	_, err = client.Exec(b.Sprintf(`
+	err = b.clientExecute(client, `
 		CREATE TABLE {{prefix}}_entries (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
 			osm_id   INTEGER NOT NULL,
@@ -105,7 +125,7 @@ func (b *Builder) Execute() error {
 			minLat REAL,
 			maxLat REAL
 	);
-	`))
+	`)
 	if err != nil {
 		return fmt.Errorf("could not execute schema: %w", err)
 	}
@@ -234,7 +254,7 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	_, err = client.Exec(b.Sprintf(`
+	err = b.clientExecute(client, `
 		CREATE INDEX {{prefix}}_ref_ids ON {{prefix}}_refs(parent_id);
 		CREATE INDEX {{prefix}}_osm_types ON {{prefix}}_entries(osm_type, osm_id);
 
@@ -322,7 +342,7 @@ func (b *Builder) Execute() error {
 		DROP INDEX {{prefix}}_ref_ids;
 		DROP INDEX {{prefix}}_osm_types;
 		DROP TABLE {{prefix}}_refs;
-	`))
+	`)
 	if err != nil {
 		return fmt.Errorf("could not add bounding boxes: %w", err)
 	}
@@ -331,7 +351,7 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.fts.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	_, err = client.Exec(b.Sprintf(`
+	err = b.clientExecute(client, `
 		CREATE VIRTUAL TABLE
 			{{prefix}}_search
 		USING
@@ -356,7 +376,7 @@ func (b *Builder) Execute() error {
 			tags
 		GROUP BY
 			id, osm_type;
-	`))
+	`)
 	if err != nil {
 		return fmt.Errorf("could build full text: %w", err)
 	}
@@ -365,7 +385,7 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	_, err = client.Exec(b.Sprintf(`
+	err = b.clientExecute(client, `
 		INSERT INTO
 			{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
 		SELECT
@@ -374,7 +394,7 @@ func (b *Builder) Execute() error {
 			minLat, maxLat
 		FROM
 		{{prefix}}_entries;
-	`))
+	`)
 	if err != nil {
 		return fmt.Errorf("could build full text: %w", err)
 	}
@@ -383,7 +403,7 @@ func (b *Builder) Execute() error {
 
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	_, err = client.Exec(b.Sprintf(`
+	err = b.clientExecute(client, `
 		PRAGMA page_size = 65536;
 		PRAGMA cache_size = 4096;
 		
@@ -404,7 +424,7 @@ func (b *Builder) Execute() error {
 
 		vacuum;
 		pragma optimize;
-	`))
+	`)
 	if err != nil {
 		return fmt.Errorf("could not optimize: %w", err)
 	}
