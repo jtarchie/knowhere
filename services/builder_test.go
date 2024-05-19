@@ -26,13 +26,13 @@ var _ = Describe("Builder", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "test", []string{"name"})
+		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "united_states", []string{"name"})
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
 
 		var tagCount int64
-		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM test_entries, json_each(test_entries.tags);", &tagCount)
+		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM united_states_entries, json_each(united_states_entries.tags);", &tagCount)
 		Expect(tagCount).To(BeEquivalentTo(1))
 	})
 
@@ -41,45 +41,45 @@ var _ = Describe("Builder", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "test", []string{"*"})
+		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "united_states", []string{"*"})
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
 
 		var result int64
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries", &result)
 		Expect(result).To(BeEquivalentTo(59))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'node'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'node'", &result)
 		Expect(result).To(BeEquivalentTo(10))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'way'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'relation'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'way' AND tags <> '{}'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way' AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'way' AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way' AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'relation' AND tags <> '{}'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation' AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		value(dbPath, "SELECT COUNT(*) FROM test_entries WHERE osm_type = 'relation' AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation' AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
 		// checking the id of full text search matches the id in the entries table
 		var searchID, wayID int64
-		value(dbPath, "SELECT MIN(rowid) FROM test_search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1", &searchID)
-		value(dbPath, "SELECT id FROM test_entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';", &wayID)
+		value(dbPath, "SELECT MIN(rowid) FROM united_states_search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1", &searchID)
+		value(dbPath, "SELECT id FROM united_states_entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';", &wayID)
 		Expect(searchID).To(BeEquivalentTo(wayID))
 
 		var tagCount int64
-		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM test_entries, json_each(test_entries.tags);", &tagCount)
+		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM united_states_entries, json_each(united_states_entries.tags);", &tagCount)
 		Expect(tagCount).To(BeEquivalentTo(46))
 
 		/*
@@ -95,7 +95,7 @@ var _ = Describe("Builder", func() {
 			MinLon sql.NullFloat64 `db:"minLon"`
 			MaxLon sql.NullFloat64 `db:"maxLon"`
 		}
-		value(dbPath, "SELECT minLat, maxLat, minLon, maxLon FROM test_entries WHERE id = 330;", &points)
+		value(dbPath, "SELECT minLat, maxLat, minLon, maxLon FROM united_states_entries WHERE id = 330;", &points)
 		Expect(points.MinLat.Valid).To(BeTrue())
 		Expect(points.MaxLat.Valid).To(BeTrue())
 		Expect(points.MinLon.Valid).To(BeTrue())
@@ -105,5 +105,12 @@ var _ = Describe("Builder", func() {
 		Expect(points.MaxLat.Float64).To(BeNumerically("~", 51.76633))
 		Expect(points.MinLon.Float64).To(BeNumerically("~", -0.2327))
 		Expect(points.MaxLon.Float64).To(BeNumerically("~", -0.23268))
+
+		var prefix string
+		value(dbPath, "SELECT name FROM prefixes", &prefix)
+		Expect(prefix).To(Equal("united_states"))
+
+		value(dbPath, "SELECT full_name FROM prefixes", &prefix)
+		Expect(prefix).To(Equal("United States"))
 	})
 })

@@ -13,6 +13,8 @@ import (
 	"github.com/paulmach/osm"
 	"github.com/samber/lo"
 	"github.com/valyala/fasttemplate"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 type Builder struct {
@@ -35,12 +37,15 @@ func NewBuilder(
 		allowedTags = tags
 	}
 
+	caser := cases.Title(language.English, cases.NoLower)
+	name := caser.String(strings.ReplaceAll(prefix, "_", " "))
+
 	return &Builder{
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
 		osmPath:     osmPath,
 		prefix:      strcase.ToSnake(strings.ToLower(prefix)),
-		name:        prefix,
+		name:        name,
 	}
 }
 
