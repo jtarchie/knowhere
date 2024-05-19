@@ -139,12 +139,18 @@ var _ = Describe("Running the application", func() {
 		{
 			"prefixes": [
 				{
-					"name": "test",
-					"full_name": "Test",
-					"min_lat": 51.76005,
-					"max_lat": 51.77425,
-					"min_lon": -0.24156,
-					"max_lon": -0.21629
+					"name": "Test",
+					"slug": "test",
+					"bounds": [
+						[
+							-0.24156,
+							51.76005
+						],
+						[
+							-0.21629,
+							51.77425
+						]
+					]
 				}
 			]
 		}
