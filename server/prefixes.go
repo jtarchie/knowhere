@@ -15,10 +15,10 @@ import (
 type Prefix struct {
 	Name     string  `db:"name"`
 	FullName string  `db:"full_name"`
-	MinLat   float32 `db:"minLat"`
-	MaxLat   float32 `db:"maxLat"`
-	MinLon   float32 `db:"minLon"`
-	MaxLon   float32 `db:"maxLon"`
+	MinLat   float64 `db:"minLat"`
+	MaxLat   float64 `db:"maxLat"`
+	MinLon   float64 `db:"minLon"`
+	MaxLon   float64 `db:"maxLon"`
 }
 
 func (p *Prefix) MarshalJSON() ([]byte, error) {
