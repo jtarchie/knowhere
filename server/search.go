@@ -7,6 +7,7 @@ import (
 
 	"github.com/jtarchie/knowhere/query"
 	"github.com/labstack/echo/v4"
+	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
 )
 
@@ -19,13 +20,29 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		features, err := query.Execute(client, search)
+		results, err := query.Execute(client, search)
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": "Results could not be processed",
 			})
+		}
+
+		features := []*geojson.Feature{}
+
+		for _, result := range results {
+			var feature geojson.Feature
+
+			feature.ID = result.ID
+			feature.Geometry = orb.Point{result.MinLon, result.MinLat}
+			feature.Type = "Feature"
+
+			feature.Properties = map[string]interface{}{
+				"name": result.Name,
+			}
+
+			features = append(features, &feature)
 		}
 
 		return ctx.JSON(http.StatusOK, geojson.FeatureCollection{
