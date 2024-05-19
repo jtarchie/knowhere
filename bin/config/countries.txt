@@ -1,0 +1,2 @@
+https://download.geofabrik.de/north-america/us-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada-latest.osm.pbf
