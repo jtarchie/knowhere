@@ -17,7 +17,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-type Builder struct {
+type Converter struct {
 	allowedTags []string
 	dbPath      string
 	name        string
@@ -25,12 +25,12 @@ type Builder struct {
 	prefix      string
 }
 
-func NewBuilder(
+func NewConverter(
 	osmPath string,
 	dbPath string,
 	prefix string,
 	tags []string,
-) *Builder {
+) *Converter {
 	var allowedTags []string
 
 	if len(tags) > 0 && tags[0] != "*" {
@@ -40,7 +40,7 @@ func NewBuilder(
 	caser := cases.Title(language.English, cases.NoLower)
 	name := caser.String(strings.ReplaceAll(prefix, "_", " "))
 
-	return &Builder{
+	return &Converter{
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
 		osmPath:     osmPath,
@@ -51,7 +51,7 @@ func NewBuilder(
 
 const precision = 100_000
 
-func (b *Builder) Sprintf(template string) string {
+func (b *Converter) Sprintf(template string) string {
 	t := fasttemplate.New(template, "{{", "}}")
 
 	return t.ExecuteString(map[string]interface{}{
@@ -60,7 +60,7 @@ func (b *Builder) Sprintf(template string) string {
 	})
 }
 
-func (b *Builder) clientExecute(client *sql.DB, statement string) error {
+func (b *Converter) clientExecute(client *sql.DB, statement string) error {
 	queries := strings.Split(statement, ";\n")
 
 	for _, query := range queries {
@@ -80,7 +80,7 @@ func (b *Builder) clientExecute(client *sql.DB, statement string) error {
 	return nil
 }
 
-func (b *Builder) Execute() error {
+func (b *Converter) Execute() error {
 	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	// open the sql database

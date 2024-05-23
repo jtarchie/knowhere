@@ -49,7 +49,7 @@ var _ = Describe("Running the application", func() {
 		dbFilename := filepath.Join(buildPath, "test.sqlite")
 
 		session := cli(
-			"build",
+			"convert",
 			"--osm", "./fixtures/sample.pbf",
 			"--db", dbFilename,
 			"--prefix", "test",

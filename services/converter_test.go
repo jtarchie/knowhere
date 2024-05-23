@@ -12,7 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Builder", func() {
+var _ = Describe("Converter", func() {
 	value := func(dbPath string, query string, result any) {
 		client, err := sqlx.Open("sqlite3", dbPath)
 		Expect(err).NotTo(HaveOccurred())
@@ -26,7 +26,7 @@ var _ = Describe("Builder", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "united_states", []string{"name"})
+		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"name"})
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
@@ -41,7 +41,7 @@ var _ = Describe("Builder", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewBuilder("../fixtures/sample.pbf", dbPath, "united_states", []string{"*"})
+		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"*"})
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
