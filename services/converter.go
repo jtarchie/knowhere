@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"math"
+	"regexp"
 	"strings"
 
 	"github.com/iancoleman/strcase"
@@ -25,6 +26,8 @@ type Converter struct {
 	prefix      string
 }
 
+var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
+
 func NewConverter(
 	osmPath string,
 	dbPath string,
@@ -38,7 +41,7 @@ func NewConverter(
 	}
 
 	caser := cases.Title(language.English, cases.NoLower)
-	name := caser.String(strings.ReplaceAll(prefix, "_", " "))
+	name := caser.String(nonAlphanumericRegex.ReplaceAllString(prefix, " "))
 
 	return &Converter{
 		allowedTags: allowedTags,

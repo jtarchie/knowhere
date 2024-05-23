@@ -19,6 +19,7 @@ linters:
   - gocyclo
   - maintidx
   - mnd
+  - gosec
 
   # linters deprecated
   - deadcode

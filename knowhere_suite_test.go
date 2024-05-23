@@ -3,6 +3,7 @@ package main_test
 import (
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -43,12 +44,31 @@ var _ = Describe("Running the application", func() {
 	})
 
 	It("can build sqlite file from osm pbf", func() {
+		go func() {
+			defer GinkgoRecover()
+
+			http.Handle("/", http.FileServer(http.Dir("./fixtures")))
+			err := http.ListenAndServe(":8848", nil)
+			Expect(err).NotTo(HaveOccurred())
+		}()
+
 		buildPath, err := os.MkdirTemp("", "")
 		Expect(err).NotTo(HaveOccurred())
 
 		dbFilename := filepath.Join(buildPath, "test.sqlite")
 
+		By("building all the things")
+
 		session := cli(
+			"build",
+			"--config", "./fixtures/config.txt",
+			"--db", dbFilename,
+		)
+
+		Eventually(session, "5s").Should(gexec.Exit(0))
+		Expect(dbFilename).To(BeAnExistingFile())
+
+		session = cli(
 			"convert",
 			"--osm", "./fixtures/sample.pbf",
 			"--db", dbFilename,
@@ -138,6 +158,34 @@ var _ = Describe("Running the application", func() {
 		Expect(payload.String()).To(MatchJSON(`
 		{
 			"prefixes": [
+				{
+					"name": "Sample Some Long Name",
+					"slug": "sample_some_long_name",
+					"bounds": [
+						[
+							-0.24156,
+							51.76005
+						],
+						[
+							-0.21629,
+							51.77425
+						]
+					]
+				},
+				{
+					"name": "Sample",
+					"slug": "sample",
+					"bounds": [
+						[
+							-0.24156,
+							51.76005
+						],
+						[
+							-0.21629,
+							51.77425
+						]
+					]
+				},
 				{
 					"name": "Test",
 					"slug": "test",
