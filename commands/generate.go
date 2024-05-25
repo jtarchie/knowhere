@@ -11,7 +11,7 @@ type Query struct {
 }
 
 func (q *Query) Run() error {
-	sqlQuery, err := query.ToSQL(q.Value)
+	sqlQuery, err := query.ToIndexedSQL(q.Value)
 	if err != nil {
 		return fmt.Errorf("could not parse query: %w", err)
 	}

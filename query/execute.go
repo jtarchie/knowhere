@@ -17,8 +17,8 @@ type Result struct {
 	Name   string  `db:"name"`
 }
 
-func Execute(client *sql.DB, search string) ([]Result, error) {
-	sqlQuery, err := ToSQL(search)
+func Execute(client *sql.DB, search string, fun func(string) (string, error)) ([]Result, error) {
+	sqlQuery, err := fun(search)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse the query: %w", err)
 	}

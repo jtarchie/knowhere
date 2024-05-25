@@ -59,7 +59,7 @@ func runtime(client *sql.DB) func(echo.Context) error {
 		defer vmPool.Put(vm)
 
 		err = vm.Set("execute", func(qs string) interface{} {
-			results, err := query.Execute(client, qs)
+			results, err := query.Execute(client, qs, query.ToIndexedSQL)
 			if err != nil {
 				return map[string]string{
 					"error": "The query could not be executed.",

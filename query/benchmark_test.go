@@ -29,6 +29,6 @@ func BenchmarkParseRegex(b *testing.B) {
 
 func BenchmarkToSQL(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		_, _ = query.ToSQL(search)
+		_, _ = query.ToIndexedSQL(search)
 	}
 }

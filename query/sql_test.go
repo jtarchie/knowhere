@@ -17,7 +17,7 @@ var _ = Describe("Build SQL from a query", func() {
 	}
 
 	DescribeTable("query with filters", func(q string, expectedSQL string) {
-		actualSQL, err := query.ToSQL(q)
+		actualSQL, err := query.ToIndexedSQL(q)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
@@ -33,7 +33,7 @@ var _ = Describe("Build SQL from a query", func() {
 	)
 
 	DescribeTable("query with tags", func(q string, expectedSQL string) {
-		actualSQL, err := query.ToSQL(q)
+		actualSQL, err := query.ToIndexedSQL(q)
 		Expect(err).NotTo(HaveOccurred())
 
 		Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))

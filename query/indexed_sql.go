@@ -7,7 +7,7 @@ import (
 	"github.com/samber/lo"
 )
 
-func ToSQL(query string) (string, error) {
+func ToIndexedSQL(query string) (string, error) {
 	ast, err := Parse(query)
 	if err != nil {
 		return "", fmt.Errorf("could not parse query into SQL: %w", err)
