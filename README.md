@@ -26,6 +26,5 @@ task
 
 ```bash
 ./bin/build.sh
-rclone copy .build/entries.db r2:knowhere-sqlite/ -P
 fly deploy
 ```

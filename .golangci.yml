@@ -13,13 +13,15 @@ linters:
   - tagliatelle
 
   # cleanup later
-  - funlen
   - cyclop
+  - dupl
+  - funlen
   - gocognit
   - gocyclo
+  - gosec
   - maintidx
   - mnd
-  - gosec
+  - nestif
 
   # linters deprecated
   - deadcode

@@ -1,8 +1,9 @@
 package commands
 
 type CLI struct {
-	Build   Build   `cmd:""`
-	Convert Convert `cmd:""`
-	Query   Query   `cmd:""`
-	Server  Server  `cmd:""`
+	Build     Build     `cmd:""`
+	Convert   Convert   `cmd:""`
+	Integrity Integrity `cmd:""`
+	Query     Query     `cmd:""`
+	Server    Server    `cmd:""`
 }
