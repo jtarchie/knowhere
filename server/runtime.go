@@ -2,17 +2,36 @@ package server
 
 import (
 	"database/sql"
+	_ "embed"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"strings"
+	"sync"
 
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
 	"github.com/labstack/echo/v4"
 )
 
+//go:embed turf.js
+var turfJSSource string
+
 func runtime(client *sql.DB) func(echo.Context) error {
+	vmPool := sync.Pool{
+		New: func() any {
+			vm := goja.New() //nolint: varnamelen
+
+			_, err := vm.RunString(turfJSSource)
+			if err != nil {
+				panic(fmt.Sprintf("could not warmup the VM: %s", err))
+			}
+
+			return vm
+		},
+	}
+
 	return func(ctx echo.Context) error {
 		body := &strings.Builder{}
 
@@ -36,7 +55,8 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		vm := goja.New() //nolint: varnamelen
+		vm := vmPool.Get().(*goja.Runtime) //nolint
+		defer vmPool.Put(vm)
 
 		err = vm.Set("execute", func(qs string) interface{} {
 			results, err := query.Execute(client, qs)
@@ -57,7 +77,11 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		value, err := vm.RunString(source)
+		value, err := vm.RunString(fmt.Sprintf(`
+			(function() {
+				%s
+			})()
+		`, source))
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 
@@ -66,13 +90,6 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		results, ok := value.Export().([]interface{})
-		if !ok {
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "Final evaluation not result object",
-			})
-		}
-
-		return ctx.JSON(http.StatusOK, results)
+		return ctx.JSON(http.StatusOK, value)
 	}
 }

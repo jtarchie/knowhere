@@ -46,7 +46,6 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 		}
 
 		return ctx.JSON(http.StatusOK, geojson.FeatureCollection{
-			Type:     "FeatureCollection",
 			Features: features,
 		})
 	}
