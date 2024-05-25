@@ -16,7 +16,12 @@ func Parse(data string) (*AST, error) {
   // types used for the AST
   foundTypes := []FilterType{}
   tags := []FilterTag{}
-  var tag FilterTag
+  directives := []FilterDirective{}
+  
+  var (
+    tag FilterTag
+    directive FilterDirective
+  )
 
   // set defaults for state machine parsing
   cs, p, pe, eof := 0, 0, len(data), len(data)
@@ -50,6 +55,12 @@ func Parse(data string) (*AST, error) {
     action tag_name  { tag.Name    = data[mark:p] }
     action tag_value { tag.Lookups = append(tag.Lookups, data[mark:p]) }
 
+    action directive_name  { directive.Name    = data[mark:p] }
+    action directive_value { directive.Value = data[mark:p] }
+
+    action create_directive { directive = FilterDirective{} }
+    action append_directive { directives = append(directives, directive) }
+
     action inc_bracket { brackets++ }
     action dec_bracket { brackets-- }
 
@@ -72,7 +83,14 @@ func Parse(data string) (*AST, error) {
     tag    = ("[" %inc_bracket) (tag_eq | tag_ne | tag_exists | tag_not) ("]" %dec_bracket);
     tags   = (tag >create_tag %append_tag)*;
 
-    main := types tags;
+    directive_value_unquoted = [^,\"\]]+ >mark %directive_value;
+    directive_value_quoted   = '"' ([^"]+ >mark %directive_value) '"';
+    directive_value = directive_value_quoted | directive_value_unquoted;
+    directive_name = (alnum+ >mark %directive_name) | "*";
+    directive = ("(" %inc_bracket) (directive_name "=" directive_value ) (")" %dec_bracket);
+    directives = (directive >create_directive %append_directive)*;
+
+    main := types tags directives;
     write init;
     write exec;
   }%%
@@ -92,7 +110,8 @@ func Parse(data string) (*AST, error) {
 	foundTypes = lo.Uniq(foundTypes)
 
 	return &AST{
-		Types: foundTypes,
 		Tags:  tags,
+		Types: foundTypes,
+    Directives: directives,
 	}, nil
 }

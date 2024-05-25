@@ -82,7 +82,7 @@ var _ = Describe("Running the application", func() {
 
 		session = cli(
 			"query",
-			`n[name="Hatfield Tunnel"][prefix="test"]`,
+			`n[name="Hatfield Tunnel"](prefix="test")`,
 		)
 
 		Eventually(session, "5s").Should(gexec.Exit(0))
@@ -110,7 +110,7 @@ var _ = Describe("Running the application", func() {
 
 		response, err := client.R().
 			SetRetryCount(3).
-			AddQueryParam("search", `nw[name="Hatfield Tunnel"][prefix="test"]`).
+			AddQueryParam("search", `nw[name="Hatfield Tunnel"](prefix="test")`).
 			Get(fmt.Sprintf("http://localhost:%d/api/search", port))
 
 		Expect(err).NotTo(HaveOccurred())

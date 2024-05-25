@@ -15,18 +15,16 @@ func ToSQL(query string) (string, error) {
 
 	var builder strings.Builder
 
-	prefixTag, ok := lo.Find(ast.Tags, func(tag FilterTag) bool {
-		return tag.Name == "prefix" && len(tag.Lookups) == 1
+	prefixDirective, ok := lo.Find(ast.Directives, func(directive FilterDirective) bool {
+		return directive.Name == "prefix" && len(directive.Value) > 0
 	})
 
 	prefix := ""
 	if ok {
-		prefix = prefixTag.Lookups[0] + "_"
+		prefix = prefixDirective.Value + "_"
 	}
 
-	allowedTags := lo.Filter(ast.Tags, func(tag FilterTag, _ int) bool {
-		return tag.Name != "prefix"
-	})
+	allowedTags := ast.Tags
 
 	builder.WriteString(fmt.Sprintf(`
 		SELECT
