@@ -29,7 +29,7 @@ func Execute(client *sql.DB, search string) ([]Result, error) {
 		context.TODO(),
 		client,
 		&results,
-		fmt.Sprintf("SELECT id, minLon, minLat, maxLon, maxLat, tags->>'$.name' as name FROM (%s)", sqlQuery),
+		fmt.Sprintf("SELECT id, minLon, minLat, maxLon, maxLat, IFNULL(tags->>'$.name', 'Unknown') as name FROM (%s)", sqlQuery),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
