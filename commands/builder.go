@@ -77,7 +77,6 @@ func (b *Build) Run() error {
 			}
 
 			if response.StatusCode == http.StatusNotFound {
-				//nolint
 				return fmt.Errorf("could find url %q to download", url)
 			}
 

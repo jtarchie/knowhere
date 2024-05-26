@@ -3,34 +3,17 @@ package server
 import (
 	"database/sql"
 	_ "embed"
-	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"strings"
-	"sync"
 
-	"github.com/dop251/goja"
-	"github.com/jtarchie/knowhere/query"
+	"github.com/jtarchie/knowhere/services"
 	"github.com/labstack/echo/v4"
 )
 
-//go:embed turf.js
-var turfJSSource string
-
 func runtime(client *sql.DB) func(echo.Context) error {
-	vmPool := sync.Pool{
-		New: func() any {
-			vm := goja.New() //nolint: varnamelen
-
-			_, err := vm.RunString(turfJSSource)
-			if err != nil {
-				panic(fmt.Sprintf("could not warmup the VM: %s", err))
-			}
-
-			return vm
-		},
-	}
+	runtime := services.NewRuntime(client)
 
 	return func(ctx echo.Context) error {
 		body := &strings.Builder{}
@@ -55,20 +38,6 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		vm := vmPool.Get().(*goja.Runtime) //nolint
-		defer vmPool.Put(vm)
-
-		err = vm.Set("execute", func(qs string) interface{} {
-			results, err := query.Execute(client, qs, query.ToIndexedSQL)
-			if err != nil {
-				return map[string]string{
-					"error": "The query could not be executed.",
-				}
-			}
-
-			return results
-		})
-
 		if source == "" {
 			slog.Error("search.error", slog.String("error", err.Error()))
 
@@ -77,11 +46,7 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		value, err := vm.RunString(fmt.Sprintf(`
-			(function() {
-				%s
-			})()
-		`, source))
+		value, err := runtime.Execute(source)
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 

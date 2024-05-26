@@ -22,6 +22,8 @@ linters:
   - maintidx
   - mnd
   - nestif
+  - err113
+  - varnamelen
 
   # linters deprecated
   - deadcode
