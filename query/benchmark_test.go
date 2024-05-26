@@ -27,8 +27,14 @@ func BenchmarkParseRegex(b *testing.B) {
 	}
 }
 
-func BenchmarkToSQL(b *testing.B) {
+func BenchmarkToIndexedSQL(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		_, _ = query.ToIndexedSQL(search)
+	}
+}
+
+func BenchmarkToExactSQL(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		_, _ = query.ToExactSQL(search)
 	}
 }

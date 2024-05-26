@@ -30,13 +30,10 @@ type FilterTag struct {
 	Op      OpType
 }
 
-type FilterDirective struct {
-	Name  string
-	Value string
-}
+type FilterDirective []string
 
 type AST struct {
-	Directives []FilterDirective
+	Directives map[string]FilterDirective
 	Tags       []FilterTag
 	Types      []FilterType
 }

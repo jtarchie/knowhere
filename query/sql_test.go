@@ -51,6 +51,7 @@ var _ = Describe("Build SQL from a query", func() {
 			Entry("tag should not exist", "na[amenity=coffee][!name]", `SELECT * FROM entries e WHERE ( e.osm_type = 'node' OR e.osm_type = 'area' ) AND ( e.tags->>'$.amenity' GLOB 'coffee' ) AND NOT ( ( e.tags->>'$.name' IS NOT NULL ) )`),
 			Entry("everything", `narw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e WHERE ( e.osm_type = 'node' OR e.osm_type = 'area' OR e.osm_type = 'way' OR e.osm_type = 'relation' ) AND ( e.tags->>'$.name' IS NOT NULL ) AND ( e.tags->>'$.name' GLOB '*King*' OR e.tags->>'$.name' GLOB '*Queen*' ) AND NOT ( ( e.tags->>'$.amenity' IS NOT NULL ) )`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `SELECT * FROM test_entries e WHERE ( e.osm_type = 'node' ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' )`),
+			Entry("with ids", "n(id=1,123,4567)", `SELECT * FROM entries e WHERE ( e.osm_type = 'node' ) AND e.osm_id IN ( 1, 123, 4567 )`),
 		)
 	})
 
@@ -89,6 +90,7 @@ var _ = Describe("Build SQL from a query", func() {
 			Entry("tag should not exist", "na[amenity=coffee][!name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area' AND s.tags MATCH '( ("amenity coffee") ) NOT ( "name" )'`),
 			Entry("everything", `narw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node OR area OR way OR relation' AND s.tags MATCH '( "name" ) AND ( ("name *King*") OR ("name *Queen*") ) NOT ( "amenity" )'`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `SELECT * FROM test_entries e JOIN test_search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node' AND s.tags MATCH '( ("amenity restaurant") )'`),
+			Entry("with ids", "n(id=1,123,4567)", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE s.osm_type MATCH 'node' AND e.osm_id IN ( 1, 123, 4567 )`),
 		)
 	})
 })

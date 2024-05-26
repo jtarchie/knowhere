@@ -14,7 +14,7 @@ var _ = Describe("Building a query", func() {
 		result, err := query.Parse(q)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(result).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      types,
 			Tags:       []query.FilterTag{},
 		}))
@@ -41,7 +41,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("a[amenity=restaurant]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.AreaFilter},
 			Tags: []query.FilterTag{
 				{
@@ -57,7 +57,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types: []query.FilterType{
 				query.NodeFilter,
 				query.AreaFilter,
@@ -81,7 +81,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi][takeaway][website]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types: []query.FilterType{
 				query.NodeFilter,
 				query.AreaFilter,
@@ -115,7 +115,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("w[highway=residential][!oneway]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.WayFilter},
 			Tags: []query.FilterTag{
 				{
@@ -136,7 +136,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("w[amenity=restaurant,pub,cafe]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.WayFilter},
 			Tags: []query.FilterTag{
 				{
@@ -157,7 +157,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("w[highway][highway!=motorway,primary]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.WayFilter},
 			Tags: []query.FilterTag{
 				{
@@ -178,7 +178,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse("*[!name]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter},
 			Tags: []query.FilterTag{
 				{
@@ -194,7 +194,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse(`na[amenity=pub][name="The King's Head"]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
 			Tags: []query.FilterTag{
 				{
@@ -213,7 +213,7 @@ var _ = Describe("Building a query", func() {
 		ast, err = query.Parse(`na[amenity=pub][name="The King's Head","Another Value",Yep]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
 			Tags: []query.FilterTag{
 				{
@@ -234,7 +234,7 @@ var _ = Describe("Building a query", func() {
 		ast, err := query.Parse(`na[amenity=pub][name="*King*"]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Directives: []query.FilterDirective{},
+			Directives: map[string]query.FilterDirective{},
 			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
 			Tags: []query.FilterTag{
 				{
@@ -263,11 +263,8 @@ var _ = Describe("Building a query", func() {
 					Op:      query.OpEquals,
 				},
 			},
-			Directives: []query.FilterDirective{
-				{
-					Name:  "area",
-					Value: "colorado",
-				},
+			Directives: map[string]query.FilterDirective{
+				"area": []string{"colorado"},
 			},
 		}))
 	})

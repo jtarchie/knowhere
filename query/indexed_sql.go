@@ -13,15 +13,14 @@ func ToIndexedSQL(query string) (string, error) {
 		return "", fmt.Errorf("could not parse query into SQL: %w", err)
 	}
 
-	var builder strings.Builder
+	var (
+		builder strings.Builder
+		prefix  string
+	)
 
-	prefixDirective, ok := lo.Find(ast.Directives, func(directive FilterDirective) bool {
-		return directive.Name == "prefix" && len(directive.Value) > 0
-	})
-
-	prefix := ""
-	if ok {
-		prefix = prefixDirective.Value + "_"
+	prefixes, ok := ast.Directives["prefix"]
+	if ok && len(prefixes) == 1 {
+		prefix = prefixes[0] + "_"
 	}
 
 	allowedTags := ast.Tags
@@ -162,6 +161,20 @@ func ToIndexedSQL(query string) (string, error) {
 
 	if exists || notExists {
 		builder.WriteString("'")
+	}
+
+	if ids, ok := ast.Directives["id"]; ok {
+		builder.WriteString(` AND e.osm_id IN ( `)
+
+		for index, id := range ids {
+			if 0 < index {
+				builder.WriteString(", ")
+			}
+
+			builder.WriteString(id)
+		}
+
+		builder.WriteString(` )`)
 	}
 
 	return builder.String(), nil
