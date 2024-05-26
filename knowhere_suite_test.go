@@ -142,6 +142,25 @@ var _ = Describe("Running the application", func() {
 			}
 		`))
 
+		By("hitting the runtime API endpoint")
+
+		response, err = client.R().
+			SetRetryCount(3).
+			SetBodyString(`
+				const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
+				return results.map((result) => result.Name)
+			`).
+			Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
+
+		Expect(err).NotTo(HaveOccurred())
+
+		payload = &strings.Builder{}
+
+		_, err = io.Copy(payload, response.Body)
+		Expect(err).NotTo(HaveOccurred())
+
+		Expect(payload.String()).To(MatchJSON(`["Hatfield Tunnel"]`))
+
 		By("hitting prefixes API endpoint")
 
 		response, err = client.R().
