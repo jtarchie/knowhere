@@ -37,11 +37,10 @@ func Parse(data string) (*AST, error) {
   %%{
     action mark { mark = p}
 
-    action area     { foundTypes = append(foundTypes, AreaFilter) }
     action node     { foundTypes = append(foundTypes, NodeFilter) }
     action relation { foundTypes = append(foundTypes, RelationFilter) }
     action way      { foundTypes = append(foundTypes, WayFilter) }
-    action all      { foundTypes = append(foundTypes, NodeFilter, AreaFilter, WayFilter, RelationFilter) }
+    action all      { foundTypes = append(foundTypes, NodeFilter, WayFilter, RelationFilter) }
     action type_error {
       return nil, fmt.Errorf("an undefined type was specified %c: %w", data[p], ErrUndefinedFilter)
     }
@@ -65,7 +64,7 @@ func Parse(data string) (*AST, error) {
     action inc_bracket { brackets++ }
     action dec_bracket { brackets-- }
 
-    type  = ("a" >area) | ("n" >node) | ("r" >relation) | ("w" >way);
+    type  = ("n" >node) | ("r" >relation) | ("w" >way);
     types = (type+ | ("*" >all)) %!type_error;
     
     tag_name = (alnum+ >mark %tag_name) | "*";

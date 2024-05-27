@@ -48,8 +48,6 @@ func ToIndexedSQL(query string) (string, error) {
 		switch t {
 		case NodeFilter:
 			builder.WriteString("node")
-		case AreaFilter:
-			builder.WriteString("area")
 		case WayFilter:
 			builder.WriteString("way")
 		case RelationFilter:

@@ -42,8 +42,6 @@ func ToExactSQL(query string) (string, error) {
 		switch t {
 		case NodeFilter:
 			builder.WriteString("e.osm_type = 'node'")
-		case AreaFilter:
-			builder.WriteString("e.osm_type = 'area'")
 		case WayFilter:
 			builder.WriteString("e.osm_type = 'way'")
 		case RelationFilter:

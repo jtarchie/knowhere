@@ -21,14 +21,12 @@ var _ = Describe("Building a query", func() {
 	},
 		Entry("nodes", "n", query.NodeFilter),
 		Entry("ways", "w", query.WayFilter),
-		Entry("area", "a", query.AreaFilter),
-		Entry("nodes and area", "na", query.NodeFilter, query.AreaFilter),
-		Entry("area and nodes", "an", query.NodeFilter, query.AreaFilter),
+		Entry("area", "r", query.RelationFilter),
 		Entry("nodes and ways", "nw", query.NodeFilter, query.WayFilter),
 		Entry("ways and nodes", "wn", query.NodeFilter, query.WayFilter),
 		Entry("ways and relations", "wr", query.WayFilter, query.RelationFilter),
-		Entry("all explicit", "nwar", query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter),
-		Entry("all implicit", "*", query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter),
+		Entry("all explicit", "nwr", query.NodeFilter, query.WayFilter, query.RelationFilter),
+		Entry("all implicit", "*", query.NodeFilter, query.WayFilter, query.RelationFilter),
 		Entry("duplicate ways and nodes", "wwnn", query.NodeFilter, query.WayFilter),
 	)
 
@@ -38,11 +36,11 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("can parse a single tag", func() {
-		ast, err := query.Parse("a[amenity=restaurant]")
+		ast, err := query.Parse("n[amenity=restaurant]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
-			Types:      []query.FilterType{query.AreaFilter},
+			Types:      []query.FilterType{query.NodeFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",
@@ -54,13 +52,13 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("can parse multiple tags", func() {
-		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi]")
+		ast, err := query.Parse("nw[amenity=restaurant][cuisine=sushi]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
 			Types: []query.FilterType{
 				query.NodeFilter,
-				query.AreaFilter,
+				query.WayFilter,
 			},
 			Tags: []query.FilterTag{
 				{
@@ -78,13 +76,13 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("can parse tags with values and existence", func() {
-		ast, err := query.Parse("na[amenity=restaurant][cuisine=sushi][takeaway][website]")
+		ast, err := query.Parse("nw[amenity=restaurant][cuisine=sushi][takeaway][website]")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
 			Types: []query.FilterType{
 				query.NodeFilter,
-				query.AreaFilter,
+				query.WayFilter,
 			},
 			Tags: []query.FilterTag{
 				{
@@ -179,7 +177,7 @@ var _ = Describe("Building a query", func() {
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
-			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter, query.WayFilter, query.RelationFilter},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter, query.RelationFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "name",
@@ -191,11 +189,11 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("can support quoted values for a tag", func() {
-		ast, err := query.Parse(`na[amenity=pub][name="The King's Head"]`)
+		ast, err := query.Parse(`nw[amenity=pub][name="The King's Head"]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
-			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",
@@ -210,11 +208,11 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 
-		ast, err = query.Parse(`na[amenity=pub][name="The King's Head","Another Value",Yep]`)
+		ast, err = query.Parse(`nw[amenity=pub][name="The King's Head","Another Value",Yep]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
-			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",
@@ -231,11 +229,11 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("supports options for a globbing syntax", func() {
-		ast, err := query.Parse(`na[amenity=pub][name="*King*"]`)
+		ast, err := query.Parse(`nw[amenity=pub][name="*King*"]`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
 			Directives: map[string]query.FilterDirective{},
-			Types:      []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",
@@ -252,10 +250,10 @@ var _ = Describe("Building a query", func() {
 	})
 
 	It("supports directives for the query", func() {
-		ast, err := query.Parse(`na[amenity=pub](area=colorado)`)
+		ast, err := query.Parse(`nw[amenity=pub](area=colorado)`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(ast).To(Equal(&query.AST{
-			Types: []query.FilterType{query.NodeFilter, query.AreaFilter},
+			Types: []query.FilterType{query.NodeFilter, query.WayFilter},
 			Tags: []query.FilterTag{
 				{
 					Name:    "amenity",

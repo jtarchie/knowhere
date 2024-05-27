@@ -10,7 +10,6 @@ type FilterType uint
 
 const (
 	NodeFilter FilterType = iota
-	AreaFilter
 	WayFilter
 	RelationFilter
 )
