@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
@@ -55,6 +56,11 @@ func (r *Runtime) Execute(
 	switch vm := r.vms.Get().(type) {
 	case *goja.Runtime:
 		defer r.vms.Put(vm)
+
+		timer := time.AfterFunc(time.Second, func() {
+			vm.Interrupt("halt")
+		})
+		defer timer.Stop()
 
 		value, err := vm.RunString(fmt.Sprintf(`
 			(function() {
