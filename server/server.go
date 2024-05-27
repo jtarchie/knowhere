@@ -37,6 +37,16 @@ func New(
 		return nil, fmt.Errorf("could not open database file: %w", err)
 	}
 
+	_, err = client.Exec(`
+		pragma temp_store = memory;
+		pragma mmap_size = 268435456; -- 256 MB
+		PRAGMA cache_size = 2000;
+		PRAGMA busy_timeout = 5000;
+	`)
+	if err != nil {
+		return nil, fmt.Errorf("could not setup pragmas: %w", err)
+	}
+
 	slog.Info(
 		"server.config",
 		slog.Int("port", port),
