@@ -12,7 +12,8 @@ go run -tags fts5 github.com/jtarchie/knowhere build \
 go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 	-f "$db_path" \
 	-o "$db_path".zst \
-	-q 7
+	-q 7 \
+	-c 16:32:64
 
 rclone copy "$db_path" r2:knowhere-sqlite/ -P
 rclone copy "$db_path".zst r2:knowhere-sqlite/ -P
