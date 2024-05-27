@@ -51,31 +51,31 @@ var _ = Describe("Converter", func() {
 		value(dbPath, "SELECT COUNT(*) FROM united_states_entries", &result)
 		Expect(result).To(BeEquivalentTo(59))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'node'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 1", &result)
 		Expect(result).To(BeEquivalentTo(10))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way' AND tags <> '{}'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2 AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'way' AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2 AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation' AND tags <> '{}'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3 AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 'relation' AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3 AND refs <> '[]'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
 		// checking the id of full text search matches the id in the entries table
 		var searchID, wayID int64
 		value(dbPath, "SELECT MIN(rowid) FROM united_states_search WHERE tags MATCH 'Hatfield Tunnel' LIMIT 1", &searchID)
-		value(dbPath, "SELECT id FROM united_states_entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 'way';", &wayID)
+		value(dbPath, "SELECT id FROM united_states_entries WHERE tags->>'name' LIKE 'Hatfield Tunnel' AND osm_type = 2;", &wayID)
 		Expect(searchID).To(BeEquivalentTo(wayID))
 
 		var tagCount int64

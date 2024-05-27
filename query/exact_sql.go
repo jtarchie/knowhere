@@ -41,11 +41,11 @@ func ToExactSQL(query string) (string, error) {
 
 		switch t {
 		case NodeFilter:
-			builder.WriteString("e.osm_type = 'node'")
+			builder.WriteString("e.osm_type = 1")
 		case WayFilter:
-			builder.WriteString("e.osm_type = 'way'")
+			builder.WriteString("e.osm_type = 2")
 		case RelationFilter:
-			builder.WriteString("e.osm_type = 'relation'")
+			builder.WriteString("e.osm_type = 3")
 		}
 	}
 

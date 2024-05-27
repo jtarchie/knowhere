@@ -101,7 +101,7 @@ func (b *Converter) Execute() error {
 		CREATE TABLE {{prefix}}_entries (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
 			osm_id   INTEGER NOT NULL,
-			osm_type TEXT NOT NULL,
+			osm_type INTEGER NOT NULL,
 			minLat   FLOAT,
 			maxLat   FLOAT,
 			minLon   FLOAT,
@@ -177,7 +177,7 @@ func (b *Converter) Execute() error {
 
 			_, err := insert.Exec(
 				node.ID,
-				osm.TypeNode,
+				1, // node
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
@@ -199,7 +199,7 @@ func (b *Converter) Execute() error {
 
 			row, err := insert.Exec(
 				way.ID,
-				osm.TypeWay,
+				2, // way
 				nil,
 				nil,
 				nil,
@@ -226,7 +226,7 @@ func (b *Converter) Execute() error {
 
 			row, err := insert.Exec(
 				relation.ID,
-				osm.TypeRelation,
+				3, // relation
 				nil,
 				nil,
 				nil,
@@ -264,7 +264,7 @@ func (b *Converter) Execute() error {
 
 	err = b.clientExecute(client, `
 		CREATE INDEX {{prefix}}_ref_ids ON {{prefix}}_refs(parent_id);
-		CREATE INDEX {{prefix}}_osm_types ON {{prefix}}_entries(osm_type, osm_id);
+		CREATE UNIQUE INDEX {{prefix}}_osm_types ON {{prefix}}_entries(osm_type, osm_id);
 
 		WITH ways AS (
 			SELECT
@@ -272,7 +272,7 @@ func (b *Converter) Execute() error {
 			FROM
 					{{prefix}}_entries e
 			WHERE
-					e.osm_type = 'way'
+					e.osm_type = 2 -- way
 		), bb AS (
 			SELECT
 					w.id AS id,
@@ -289,7 +289,7 @@ func (b *Converter) Execute() error {
 			JOIN
 					{{prefix}}_entries n
 			ON
-					n.osm_type = 'node' AND n.osm_id = r.osm_id
+					n.osm_type = 1 AND n.osm_id = r.osm_id -- node
 			GROUP BY
 					w.id
 		)
@@ -311,7 +311,7 @@ func (b *Converter) Execute() error {
 			FROM
 					{{prefix}}_entries e
 			WHERE
-					e.osm_type = 'relation'
+					e.osm_type = 3 -- relation
 		), bb AS (
 			SELECT
 					w.id AS id,
@@ -348,7 +348,6 @@ func (b *Converter) Execute() error {
 		-- not useful for searching against
 		DELETE FROM {{prefix}}_entries WHERE tags ='{}';
 		DROP INDEX {{prefix}}_ref_ids;
-		DROP INDEX {{prefix}}_osm_types;
 		DROP TABLE {{prefix}}_refs;
 	`)
 	if err != nil {
@@ -363,27 +362,25 @@ func (b *Converter) Execute() error {
 		CREATE VIRTUAL TABLE
 			{{prefix}}_search
 		USING
-			fts5(osm_type, tags, content = '{{prefix}}_entries', tokenize="trigram");
+			fts5(tags, content = '', tokenize="trigram");
 
 		WITH tags AS (
 			SELECT
 				{{prefix}}_entries.id AS id,
-				{{prefix}}_entries.osm_type AS osm_type,
 				json_each.key || ' ' || json_each.value AS kv
 			FROM
 				{{prefix}}_entries,
 				json_each({{prefix}}_entries.tags)
 		)
 		INSERT INTO
-			{{prefix}}_search(rowid, osm_type, tags)
+			{{prefix}}_search(rowid, tags)
 		SELECT
 			id,
-			osm_type,
 			GROUP_CONCAT(kv, ' ')
 		FROM
 			tags
 		GROUP BY
-			id, osm_type;
+			id;
 	`)
 	if err != nil {
 		return fmt.Errorf("could build full text: %w", err)

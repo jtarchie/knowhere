@@ -36,9 +36,7 @@ func ToIndexedSQL(query string) (string, error) {
 			s.rowid = e.id
 	`, prefix, prefix))
 
-	builder.WriteString(" WHERE ")
-
-	builder.WriteString("s.osm_type MATCH '")
+	builder.WriteString(" WHERE ( ")
 
 	for index, t := range ast.Types {
 		if 0 < index {
@@ -47,15 +45,15 @@ func ToIndexedSQL(query string) (string, error) {
 
 		switch t {
 		case NodeFilter:
-			builder.WriteString("node")
+			builder.WriteString("e.osm_type = 1")
 		case WayFilter:
-			builder.WriteString("way")
+			builder.WriteString("e.osm_type = 2")
 		case RelationFilter:
-			builder.WriteString("relation")
+			builder.WriteString("e.osm_type = 3")
 		}
 	}
 
-	builder.WriteString("' ")
+	builder.WriteString(" ) ")
 
 	exists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
 		return tag.Op == OpEquals || tag.Op == OpExists
