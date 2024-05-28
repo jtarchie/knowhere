@@ -39,7 +39,7 @@ var _ = Describe("Running the application", func() {
 	BeforeEach(func() {
 		var err error
 
-		path, err = gexec.Build("github.com/jtarchie/knowhere", "--tags", "fts5")
+		path, err = gexec.Build("github.com/jtarchie/knowhere", "--tags", "fts5", "-race")
 		Expect(err).NotTo(HaveOccurred())
 	})
 
