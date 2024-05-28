@@ -3,11 +3,14 @@ package server
 import (
 	"database/sql"
 	_ "embed"
+	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"net/http"
 	"strings"
 
+	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/services"
 	"github.com/labstack/echo/v4"
 )
@@ -20,7 +23,7 @@ func runtime(client *sql.DB) func(echo.Context) error {
 
 		_, err := io.Copy(body, ctx.Request().Body)
 		if err != nil {
-			slog.Error("search.error", slog.String("error", err.Error()))
+			slog.Error("runtime.error", slog.String("error", err.Error()))
 
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": "Could not read request body",
@@ -31,27 +34,30 @@ func runtime(client *sql.DB) func(echo.Context) error {
 		source := body.String()
 
 		if source == "" {
-			slog.Error("search.error", slog.String("error", "source was empty"))
+			slog.Error("runtime.error", slog.String("error", "source was empty"))
 
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "source was empty",
-			})
-		}
-
-		if source == "" {
-			slog.Error("search.error", slog.String("error", err.Error()))
-
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "could not execute script",
+				"error": "source not provided in request body",
 			})
 		}
 
 		value, err := runtime.Execute(source)
 		if err != nil {
-			slog.Error("search.error", slog.String("error", err.Error()))
+			slog.Error(
+				"runtime.error",
+				slog.String("error", err.Error()),
+				slog.String("type", fmt.Sprintf("%#v", err)),
+			)
+
+			msg := "evaluation error"
+
+			var exception *goja.Exception
+			if errors.As(err, &exception) {
+				msg += ": " + exception.Error()
+			}
 
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "Could not evaluate script",
+				"error": msg,
 			})
 		}
 

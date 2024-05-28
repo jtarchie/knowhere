@@ -24,7 +24,7 @@ func TestKnowhere(t *testing.T) {
 	RunSpecs(t, "Knowhere Suite")
 }
 
-var _ = Describe("Running the application", func() {
+var _ = Describe("Running the application", Ordered, func() {
 	var path string
 
 	cli := func(args ...string) *gexec.Session {
@@ -36,7 +36,7 @@ var _ = Describe("Running the application", func() {
 		return session
 	}
 
-	BeforeEach(func() {
+	BeforeAll(func() {
 		var err error
 
 		path, err = gexec.Build("github.com/jtarchie/knowhere", "--tags", "fts5", "-race")
@@ -190,6 +190,26 @@ var _ = Describe("Running the application", func() {
 
 				Expect(payload.String()).To(MatchJSON(`["Hatfield Tunnel"]`))
 			})
+
+			DescribeTable("returns error payload on exception", func(source string, errMsg string) {
+				client := req.C()
+				response, err := client.R().
+					SetRetryCount(3).
+					SetBodyString(source).
+					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
+
+				Expect(err).NotTo(HaveOccurred())
+
+				payload := &strings.Builder{}
+
+				_, err = io.Copy(payload, response.Body)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(payload.String()).To(MatchJSON(fmt.Sprintf(`{"error":%q}`, errMsg)))
+			},
+				Entry("no source provided", ``, `source not provided in request body`),
+				Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at \u003ceval\u003e:3:5(1)"),
+			)
 		})
 
 		It("hitting prefixes API endpoint", func() {
