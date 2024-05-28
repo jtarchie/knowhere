@@ -134,7 +134,7 @@ var _ = Describe("Running the application", func() {
 							]
 						},
             "properties": {
-              "name": "Hatfield Tunnel"
+              "title": "Hatfield Tunnel"
             }
 					}
 				],

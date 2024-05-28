@@ -39,7 +39,7 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			feature.Type = "Feature"
 
 			feature.Properties = map[string]interface{}{
-				"name": result.Name,
+				"title": result.Name,
 			}
 
 			features = append(features, &feature)
