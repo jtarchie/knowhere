@@ -55,6 +55,6 @@ func runtime(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		return ctx.JSON(http.StatusOK, value)
+		return ctx.JSON(http.StatusOK, value.Export())
 	}
 }

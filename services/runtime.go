@@ -11,6 +11,7 @@ import (
 
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
+	"github.com/samber/lo"
 	"github.com/tidwall/geojson"
 	"github.com/tidwall/geojson/geometry"
 )
@@ -40,19 +41,32 @@ func NewRuntime(
 				err = vm.Set("execute", func(qs string) any {
 					results, err := query.Execute(client, qs, query.ToIndexedSQL)
 					if err != nil {
-						return fmt.Errorf("could not execute results: %w", err)
+						vm.Interrupt(fmt.Sprintf("could not execute query: %q", qs))
 					}
 
-					return results
+					return lo.Map(results, func(result query.Result, _ int) WrappedResult {
+						return WrappedResult{result}
+					})
 				})
 				if err != nil {
 					return fmt.Errorf("could not setup `execute` VM: %w", err)
 				}
 
-				err = vm.Set("assertGeoJSON", func(payload any) bool {
+				err = vm.Set("assert", func(value bool) {
+					if !value {
+						vm.Interrupt("assertion failed")
+					}
+				})
+				if err != nil {
+					return fmt.Errorf("could not setup `assert` VM: %w", err)
+				}
+
+				err = vm.Set("assertGeoJSON", func(payload any) {
 					contents, err := json.Marshal(payload)
 					if err != nil {
-						return false
+						vm.Interrupt("geojson payload is not JSON")
+
+						return
 					}
 
 					_, err = geojson.Parse(string(contents), &geojson.ParseOptions{
@@ -64,8 +78,11 @@ func NewRuntime(
 						DisableCircleType: false,
 						AllowRects:        false,
 					})
+					if err != nil {
+						vm.Interrupt("assert of geojson failed")
 
-					return err == nil
+						return
+					}
 				})
 				if err != nil {
 					return fmt.Errorf("could not setup `assertGeoJSON` VM: %w", err)
