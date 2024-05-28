@@ -43,6 +43,16 @@ var _ = Describe("Running the application", func() {
 		Expect(err).NotTo(HaveOccurred())
 	})
 
+	It("can generate a query", func() {
+		session := cli(
+			"query",
+			`n[name="Hatfield Tunnel"](prefix="test")`,
+		)
+
+		Eventually(session, "5s").Should(gexec.Exit(0))
+		Eventually(session.Out).Should(gbytes.Say("SELECT"))
+	})
+
 	It("can build sqlite file from osm pbf", func() {
 		go func() {
 			defer GinkgoRecover()
@@ -77,50 +87,67 @@ var _ = Describe("Running the application", func() {
 
 		Eventually(session, "5s").Should(gexec.Exit(0))
 		Expect(dbFilename).To(BeAnExistingFile())
+	})
 
-		By("can generate a query")
-
-		session = cli(
-			"query",
-			`n[name="Hatfield Tunnel"](prefix="test")`,
+	When("serving the HTTP server", Ordered, func() {
+		var (
+			session *gexec.Session
+			port    int
 		)
 
-		Eventually(session, "5s").Should(gexec.Exit(0))
-		Eventually(session.Out).Should(gbytes.Say("SELECT"))
+		BeforeAll(func() {
+			var err error
+			port, err = freeport.GetFreePort()
+			Expect(err).NotTo(HaveOccurred())
 
-		By("serving HTTP")
+			buildPath, err := os.MkdirTemp("", "")
+			Expect(err).NotTo(HaveOccurred())
 
-		port, err := freeport.GetFreePort()
-		Expect(err).NotTo(HaveOccurred())
+			dbFilename := filepath.Join(buildPath, "test.sqlite")
 
-		session = cli("server", "--port", strconv.Itoa(port), "--db", dbFilename)
-		defer session.Kill()
+			session = cli(
+				"convert",
+				"--osm", "./fixtures/sample.pbf",
+				"--db", dbFilename,
+				"--prefix", "test",
+			)
 
-		client := req.C()
-		Eventually(func() error {
-			_, err := client.R().
+			Eventually(session, "5s").Should(gexec.Exit(0))
+			Expect(dbFilename).To(BeAnExistingFile())
+
+			session = cli("server", "--port", strconv.Itoa(port), "--db", dbFilename)
+
+			// wait for it to start
+			client := req.C()
+			Eventually(func() error {
+				_, err := client.R().
+					SetRetryCount(3).
+					Get(fmt.Sprintf("http://localhost:%d/", port))
+
+				//nolint: wrapcheck
+				return err
+			}).ShouldNot(HaveOccurred())
+		})
+
+		AfterAll(func() {
+			session.Kill()
+		})
+
+		It("hitting search API endpoint", func() {
+			client := req.C()
+			response, err := client.R().
 				SetRetryCount(3).
-				Get(fmt.Sprintf("http://localhost:%d/", port))
+				AddQueryParam("search", `nw[name="Hatfield Tunnel"](prefix="test")`).
+				Get(fmt.Sprintf("http://localhost:%d/api/search", port))
 
-			//nolint: wrapcheck
-			return err
-		}).ShouldNot(HaveOccurred())
+			Expect(err).NotTo(HaveOccurred())
 
-		By("hitting search API endpoint")
+			payload := &strings.Builder{}
 
-		response, err := client.R().
-			SetRetryCount(3).
-			AddQueryParam("search", `nw[name="Hatfield Tunnel"](prefix="test")`).
-			Get(fmt.Sprintf("http://localhost:%d/api/search", port))
+			_, err = io.Copy(payload, response.Body)
+			Expect(err).NotTo(HaveOccurred())
 
-		Expect(err).NotTo(HaveOccurred())
-
-		payload := &strings.Builder{}
-
-		_, err = io.Copy(payload, response.Body)
-		Expect(err).NotTo(HaveOccurred())
-
-		Expect(payload.String()).To(MatchJSON(`
+			Expect(payload.String()).To(MatchJSON(`
 			{
 				"features": [
 					{
@@ -141,86 +168,63 @@ var _ = Describe("Running the application", func() {
 				"type": "FeatureCollection"
 			}
 		`))
+		})
 
-		By("hitting the runtime API endpoint")
+		When("hitting the runtime endpoint", func() {
+			It("returns the result in JSON", func() {
+				client := req.C()
+				response, err := client.R().
+					SetRetryCount(3).
+					SetBodyString(`
+						const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
+						return results.map((result) => result.name)
+					`).
+					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
 
-		response, err = client.R().
-			SetRetryCount(3).
-			SetBodyString(`
-				const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
-				return results.map((result) => result.name)
-			`).
-			Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
+				Expect(err).NotTo(HaveOccurred())
 
-		Expect(err).NotTo(HaveOccurred())
+				payload := &strings.Builder{}
 
-		payload = &strings.Builder{}
+				_, err = io.Copy(payload, response.Body)
+				Expect(err).NotTo(HaveOccurred())
 
-		_, err = io.Copy(payload, response.Body)
-		Expect(err).NotTo(HaveOccurred())
+				Expect(payload.String()).To(MatchJSON(`["Hatfield Tunnel"]`))
+			})
+		})
 
-		Expect(payload.String()).To(MatchJSON(`["Hatfield Tunnel"]`))
+		It("hitting prefixes API endpoint", func() {
+			client := req.C()
+			response, err := client.R().
+				SetRetryCount(3).
+				Get(fmt.Sprintf("http://localhost:%d/api/prefixes", port))
 
-		By("hitting prefixes API endpoint")
+			Expect(err).NotTo(HaveOccurred())
 
-		response, err = client.R().
-			SetRetryCount(3).
-			Get(fmt.Sprintf("http://localhost:%d/api/prefixes", port))
+			payload := &strings.Builder{}
 
-		Expect(err).NotTo(HaveOccurred())
+			_, err = io.Copy(payload, response.Body)
+			Expect(err).NotTo(HaveOccurred())
 
-		payload = &strings.Builder{}
-
-		_, err = io.Copy(payload, response.Body)
-		Expect(err).NotTo(HaveOccurred())
-
-		Expect(payload.String()).To(MatchJSON(`
-		{
-			"prefixes": [
-				{
-					"name": "Sample Some Long Name",
-					"slug": "sample_some_long_name",
-					"bounds": [
-						[
-							-0.24156,
-							51.76005
-						],
-						[
-							-0.21629,
-							51.77425
-						]
-					]
-				},
-				{
-					"name": "Sample",
-					"slug": "sample",
-					"bounds": [
-						[
-							-0.24156,
-							51.76005
-						],
-						[
-							-0.21629,
-							51.77425
-						]
-					]
-				},
-				{
-					"name": "Test",
-					"slug": "test",
-					"bounds": [
-						[
-							-0.24156,
-							51.76005
-						],
-						[
-							-0.21629,
-							51.77425
-						]
-					]
-				}
-			]
-		}
-	`))
+			Expect(payload.String()).To(MatchJSON(`
+			{
+        "prefixes": [
+          {
+            "name": "Test",
+            "slug": "test",
+            "bounds": [
+              [
+                -0.24156,
+                51.76005
+              ],
+              [
+                -0.21629,
+                51.77425
+              ]
+            ]
+          }
+        ]
+      }
+		`))
+		})
 	})
 })
