@@ -6,15 +6,18 @@ const results = starbucks.slice(0, 2).concat(coffees.slice(0, 2));
 return {
   type: "FeatureCollection",
   features: results.map((result) => {
-    const payload = turf.bboxPolygon(turf.bbox(turf.point([result.MinLon, result.MinLat])))
+    const payload = turf.bboxPolygon(
+      turf.bbox(turf.point([result.MinLon, result.MinLat])),
+    );
     return {
-      ...payload, ...{
+      ...payload,
+      ...{
         id: result.ID,
         type: "Feature",
         properties: {
           name: result.Name,
-        }
-      }
-    }
-  })
-} as GeoJSON
+        },
+      },
+    };
+  }),
+};
