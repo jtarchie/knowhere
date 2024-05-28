@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	_ "embed"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"sync"
@@ -10,6 +11,8 @@ import (
 
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
+	"github.com/tidwall/geojson"
+	"github.com/tidwall/geojson/geometry"
 )
 
 //go:embed turf.js
@@ -43,7 +46,29 @@ func NewRuntime(
 					return results
 				})
 				if err != nil {
-					return fmt.Errorf("could not setup VM: %w", err)
+					return fmt.Errorf("could not setup `execute` VM: %w", err)
+				}
+
+				err = vm.Set("assertGeoJSON", func(payload any) bool {
+					contents, err := json.Marshal(payload)
+					if err != nil {
+						return false
+					}
+
+					_, err = geojson.Parse(string(contents), &geojson.ParseOptions{
+						IndexChildren:     64,
+						IndexGeometry:     64,
+						IndexGeometryKind: geometry.QuadTree,
+						RequireValid:      true,
+						AllowSimplePoints: false,
+						DisableCircleType: false,
+						AllowRects:        false,
+					})
+
+					return err == nil
+				})
+				if err != nil {
+					return fmt.Errorf("could not setup `assertGeoJSON` VM: %w", err)
 				}
 
 				return vm
@@ -52,9 +77,10 @@ func NewRuntime(
 	}
 }
 
+//nolint: ireturn
 func (r *Runtime) Execute(
 	source string,
-) (any, error) {
+) (goja.Value, error) {
 	switch vm := r.vms.Get().(type) {
 	case *goja.Runtime:
 		defer r.vms.Put(vm)

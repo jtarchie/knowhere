@@ -17,4 +17,4 @@ return {
       }
     }
   })
-}
+} as GeoJSON

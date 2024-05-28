@@ -27,6 +27,7 @@ require (
 	github.com/samber/lo v1.39.0
 	github.com/samber/slog-echo v1.14.1
 	github.com/schollz/progressbar/v3 v3.14.3
+	github.com/tidwall/geojson v1.4.5
 	github.com/valyala/fasttemplate v1.2.2
 	golang.org/x/text v0.15.0
 )
@@ -60,6 +61,12 @@ require (
 	github.com/quic-go/quic-go v0.44.0 // indirect
 	github.com/refraction-networking/utls v1.6.6 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/tidwall/geoindex v1.4.4 // indirect
+	github.com/tidwall/gjson v1.12.1 // indirect
+	github.com/tidwall/match v1.1.1 // indirect
+	github.com/tidwall/pretty v1.2.0 // indirect
+	github.com/tidwall/rtree v1.3.1 // indirect
+	github.com/tidwall/sjson v1.2.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.15.0 // indirect
 	go.opentelemetry.io/otel v1.27.0 // indirect
