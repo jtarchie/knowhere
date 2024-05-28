@@ -148,7 +148,7 @@ var _ = Describe("Running the application", func() {
 			SetRetryCount(3).
 			SetBodyString(`
 				const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
-				return results.map((result) => result.Name)
+				return results.map((result) => result.name)
 			`).
 			Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
 

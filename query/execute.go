@@ -9,14 +9,14 @@ import (
 )
 
 type Result struct {
-	ID      int64   `db:"id"`
-	MaxLat  float64 `db:"maxLat"`
-	MaxLon  float64 `db:"maxLon"`
-	MinLat  float64 `db:"minLat"`
-	MinLon  float64 `db:"minLon"`
-	Name    string  `db:"name"`
-	OsmID   int64   `db:"osm_id"`
-	OsmType int64   `db:"osm_type"`
+	ID      int64   `db:"id"       js:"id"`
+	MaxLat  float64 `db:"maxLat"   js:"max_lat"`
+	MaxLon  float64 `db:"maxLon"   js:"max_lon"`
+	MinLat  float64 `db:"minLat"   js:"min_lat"`
+	MinLon  float64 `db:"minLon"   js:"min_lon"`
+	Name    string  `db:"name"     js:"name"`
+	OsmID   int64   `db:"osm_id"   js:"osm_id"`
+	OsmType int64   `db:"osm_type" js:"osm_type"`
 }
 
 func Execute(client *sql.DB, search string, fun func(string) (string, error)) ([]Result, error) {

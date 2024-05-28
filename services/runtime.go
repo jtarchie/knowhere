@@ -27,6 +27,8 @@ func NewRuntime(
 			New: func() any {
 				vm := goja.New() //nolint: varnamelen
 
+				vm.SetFieldNameMapper(goja.TagFieldNameMapper("js", true))
+
 				_, err := vm.RunString(turfJSSource)
 				if err != nil {
 					return fmt.Errorf("could not warmup the VM: %w", err)
