@@ -8,7 +8,7 @@ import (
 	"github.com/paulmach/osm"
 )
 
-//nolint: gochecknoglobals
+// nolint: gochecknoglobals
 var payload string
 
 func BenchmarkControlTags(b *testing.B) {

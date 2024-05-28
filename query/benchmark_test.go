@@ -7,7 +7,7 @@ import (
 	"github.com/jtarchie/knowhere/query"
 )
 
-//nolint: gochecknoglobals
+// nolint: gochecknoglobals
 var (
 	search = `wn[name="Starbucks"][amenity=cafe]`
 	ast    *query.AST

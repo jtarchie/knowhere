@@ -94,7 +94,7 @@ func NewRuntime(
 	}
 }
 
-//nolint: ireturn
+// nolint: ireturn
 func (r *Runtime) Execute(
 	source string,
 ) (goja.Value, error) {

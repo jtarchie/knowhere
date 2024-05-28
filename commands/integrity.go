@@ -18,7 +18,7 @@ type Integrity struct {
 	Query string `default:"nwr[name=Starbucks]"        help:"query to test against, defaults to all prefixes" required:""`
 }
 
-//nolint: all
+// nolint: all
 func (i *Integrity) Run() error {
 	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", i.DB)
 
