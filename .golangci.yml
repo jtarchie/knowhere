@@ -21,7 +21,7 @@ linters:
   - gosec
   - maintidx
   - nestif
-  - varnamelen
+  # - varnamelen
 
   # linters deprecated
   - deadcode

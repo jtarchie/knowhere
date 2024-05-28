@@ -98,16 +98,16 @@ func NewRuntime(
 func (r *Runtime) Execute(
 	source string,
 ) (goja.Value, error) {
-	switch vm := r.vms.Get().(type) {
+	switch value := r.vms.Get().(type) {
 	case *goja.Runtime:
-		defer r.vms.Put(vm)
+		defer r.vms.Put(value)
 
 		timer := time.AfterFunc(time.Second, func() {
-			vm.Interrupt(ErrVMTimeout)
+			value.Interrupt(ErrVMTimeout)
 		})
 		defer timer.Stop()
 
-		value, err := vm.RunString(fmt.Sprintf(`
+		returnValue, err := value.RunString(fmt.Sprintf(`
 			(function() {
 				%s
 			})()
@@ -116,9 +116,9 @@ func (r *Runtime) Execute(
 			return nil, fmt.Errorf("could not run program: %w", err)
 		}
 
-		return value, nil
+		return returnValue, nil
 	case error:
-		return nil, fmt.Errorf("could not get vm: %w", vm)
+		return nil, fmt.Errorf("could not get vm: %w", value)
 	default:
 		return nil, ErrVMUnavailable
 	}
