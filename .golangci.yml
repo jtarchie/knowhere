@@ -18,10 +18,8 @@ linters:
   - funlen
   - gocognit
   - gocyclo
-  - gomnd
   - gosec
   - maintidx
-  - mnd
   - nestif
   - varnamelen
 

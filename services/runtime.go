@@ -75,13 +75,8 @@ func NewRuntime(
 					}
 
 					_, err = geojson.Parse(string(contents), &geojson.ParseOptions{
-						IndexChildren:     64,
-						IndexGeometry:     64,
 						IndexGeometryKind: geometry.QuadTree,
 						RequireValid:      true,
-						AllowSimplePoints: false,
-						DisableCircleType: false,
-						AllowRects:        false,
 					})
 					if err != nil {
 						vm.Interrupt("assert of geojson failed")

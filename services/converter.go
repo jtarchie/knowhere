@@ -10,6 +10,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/jtarchie/knowhere/marshal"
+	"github.com/jtarchie/knowhere/query"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/paulmach/osm"
 	"github.com/samber/lo"
@@ -177,7 +178,7 @@ func (b *Converter) Execute() error {
 
 			_, err := insert.Exec(
 				node.ID,
-				1, // node
+				query.NodeFilter, // node
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lat*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
@@ -199,7 +200,7 @@ func (b *Converter) Execute() error {
 
 			row, err := insert.Exec(
 				way.ID,
-				2, // way
+				query.WayFilter, // way
 				nil,
 				nil,
 				nil,
@@ -226,7 +227,7 @@ func (b *Converter) Execute() error {
 
 			row, err := insert.Exec(
 				relation.ID,
-				3, // relation
+				query.RelationFilter, // relation
 				nil,
 				nil,
 				nil,

@@ -9,9 +9,9 @@ import (
 type FilterType uint
 
 const (
-	NodeFilter FilterType = iota
-	WayFilter
-	RelationFilter
+	NodeFilter     FilterType = 1
+	WayFilter      FilterType = 2
+	RelationFilter FilterType = 3
 )
 
 type OpType uint

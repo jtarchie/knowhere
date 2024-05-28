@@ -52,8 +52,8 @@ func marshalString(builder *strings.Builder, str string) {
 		case '\f':
 			builder.WriteString("\\f")
 		default:
-			//nolint: gomnd
-			if char < 0x20 {
+			const unicodeThreshold = 0x20
+			if char < unicodeThreshold {
 				builder.WriteString(fmt.Sprintf("\\u%04x", char))
 			} else {
 				builder.WriteByte(char)
