@@ -9,12 +9,14 @@ import (
 )
 
 type Result struct {
-	ID     int64   `db:"id"`
-	MinLon float64 `db:"minLon"`
-	MaxLon float64 `db:"maxLon"`
-	MinLat float64 `db:"minLat"`
-	MaxLat float64 `db:"maxLat"`
-	Name   string  `db:"name"`
+	ID      int64   `db:"id"`
+	MaxLat  float64 `db:"maxLat"`
+	MaxLon  float64 `db:"maxLon"`
+	MinLat  float64 `db:"minLat"`
+	MinLon  float64 `db:"minLon"`
+	Name    string  `db:"name"`
+	OsmID   int64   `db:"osm_id"`
+	OsmType int64   `db:"osm_type"`
 }
 
 func Execute(client *sql.DB, search string, fun func(string) (string, error)) ([]Result, error) {
@@ -29,7 +31,7 @@ func Execute(client *sql.DB, search string, fun func(string) (string, error)) ([
 		context.TODO(),
 		client,
 		&results,
-		fmt.Sprintf("SELECT id, minLon, minLat, maxLon, maxLat, IFNULL(tags->>'$.name', 'Unknown') as name FROM (%s)", sqlQuery),
+		fmt.Sprintf("SELECT id, osm_id, osm_type, minLon, minLat, maxLon, maxLat, IFNULL(tags->>'$.name', 'Unknown') as name FROM (%s)", sqlQuery),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
