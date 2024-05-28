@@ -20,6 +20,8 @@ type Build struct {
 	AllowedTags []string `default:"*"                                                   help:"a list of allowed tags, all other will be filtered"`
 }
 
+var ErrSourceNotAvailable = errors.New("source unavailable")
+
 func (b *Build) Run() error {
 	config, err := os.Open(b.Config)
 	if err != nil {
@@ -77,7 +79,7 @@ func (b *Build) Run() error {
 			}
 
 			if response.StatusCode == http.StatusNotFound {
-				return fmt.Errorf("could find url %q to download", url)
+				return fmt.Errorf("could find url %q to download: %w", url, ErrSourceNotAvailable)
 			}
 
 			_ = bar.Finish()

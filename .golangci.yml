@@ -18,13 +18,12 @@ linters:
   - funlen
   - gocognit
   - gocyclo
+  - gomnd
   - gosec
   - maintidx
   - mnd
   - nestif
-  - err113
   - varnamelen
-  - gomnd
 
   # linters deprecated
   - deadcode

@@ -23,6 +23,11 @@ type Runtime struct {
 	vms sync.Pool
 }
 
+var (
+	ErrVMUnavailable = errors.New("could not get vm")
+	ErrVMTimeout     = errors.New("vm timed out")
+)
+
 func NewRuntime(
 	client *sql.DB,
 ) *Runtime {
@@ -103,7 +108,7 @@ func (r *Runtime) Execute(
 		defer r.vms.Put(vm)
 
 		timer := time.AfterFunc(time.Second, func() {
-			vm.Interrupt("halt")
+			vm.Interrupt(ErrVMTimeout)
 		})
 		defer timer.Stop()
 
@@ -120,6 +125,6 @@ func (r *Runtime) Execute(
 	case error:
 		return nil, fmt.Errorf("could not get vm: %w", vm)
 	default:
-		return nil, errors.New("could get vm")
+		return nil, ErrVMUnavailable
 	}
 }
