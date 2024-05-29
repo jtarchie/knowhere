@@ -56,6 +56,11 @@ func runtime(client *sql.DB) func(echo.Context) error {
 				msg += ": " + exception.Error()
 			}
 
+			var interrupted *goja.InterruptedError
+			if errors.As(err, &interrupted) {
+				msg += ": " + interrupted.Error()
+			}
+
 			return ctx.JSON(http.StatusBadRequest, map[string]string{
 				"error": msg,
 			})

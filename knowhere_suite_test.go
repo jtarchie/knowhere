@@ -209,6 +209,7 @@ var _ = Describe("Running the application", Ordered, func() {
 			},
 				Entry("no source provided", ``, `source not provided in request body`),
 				Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at \u003ceval\u003e:3:5(1)"),
+				Entry("assertion fail", `assert(false)`, "evaluation error: assertion failed at \u003ceval\u003e:3:11(4)"),
 			)
 		})
 
