@@ -51,6 +51,8 @@ func (r *Runtime) Execute(
 			})()
 		`, source))
 	if err != nil {
+		defer jsRuntime.ClearInterrupt()
+
 		return nil, fmt.Errorf("could not run program: %w", err)
 	}
 
