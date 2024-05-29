@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -246,6 +247,50 @@ var _ = Describe("Running the application", Ordered, func() {
         ]
       }
 		`))
+		})
+	})
+
+	When("using the examples", func() {
+		var (
+			session *gexec.Session
+			port    int
+		)
+
+		BeforeEach(func() {
+			var err error
+			port, err = freeport.GetFreePort()
+			Expect(err).NotTo(HaveOccurred())
+
+			dbFilename := "./.build/entries.db"
+			if _, err := os.Stat(dbFilename); errors.Is(err, os.ErrNotExist) {
+				Skip(".build/entries.db does not exist")
+			}
+
+			session = cli("server", "--port", strconv.Itoa(port), "--db", dbFilename)
+		})
+
+		AfterEach(func() {
+			session.Kill()
+		})
+
+		It("ensures that they all pass", func() {
+			matches, err := filepath.Glob("./examples/*.js")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(len(matches)).To(BeNumerically(">", 0))
+
+			for _, match := range matches {
+				contents, err := os.ReadFile(match)
+				Expect(err).NotTo(HaveOccurred())
+
+				client := req.C()
+				response, err := client.R().
+					SetRetryCount(3).
+					SetBodyString(string(contents)).
+					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
+
+				Expect(err).NotTo(HaveOccurred())
+				Expect(response.StatusCode).To(Equal(http.StatusOK))
+			}
 		})
 	})
 })
