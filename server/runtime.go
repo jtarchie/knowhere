@@ -9,14 +9,18 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/services"
 	"github.com/labstack/echo/v4"
 )
 
-func runtime(client *sql.DB) func(echo.Context) error {
-	runtime := services.NewRuntime(client)
+func runtime(
+	client *sql.DB,
+	timeout time.Duration,
+) func(echo.Context) error {
+	runtime := services.NewRuntime(client, timeout)
 
 	return func(ctx echo.Context) error {
 		source := ctx.FormValue("source")

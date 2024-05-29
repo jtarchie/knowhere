@@ -12,7 +12,8 @@ import (
 )
 
 type Runtime struct {
-	vms *runtime.Pool
+	timeout time.Duration
+	vms     *runtime.Pool
 }
 
 var (
@@ -21,9 +22,11 @@ var (
 
 func NewRuntime(
 	client *sql.DB,
+	timeout time.Duration,
 ) *Runtime {
 	return &Runtime{
-		vms: runtime.NewPool(client),
+		vms:     runtime.NewPool(client, timeout),
+		timeout: timeout,
 	}
 }
 
@@ -37,7 +40,7 @@ func (r *Runtime) Execute(
 	}
 	defer r.vms.Put(jsRuntime)
 
-	timer := time.AfterFunc(time.Second, func() {
+	timer := time.AfterFunc(r.timeout, func() {
 		jsRuntime.Interrupt(ErrVMTimeout)
 	})
 	defer timer.Stop()

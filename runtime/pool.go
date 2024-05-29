@@ -29,7 +29,7 @@ var (
 	ErrVMUnavailable = errors.New("could not get vm")
 )
 
-func NewPool(client *sql.DB) *Pool {
+func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 	return &Pool{
 		pool: sync.Pool{
 			New: func() any {
@@ -43,7 +43,7 @@ func NewPool(client *sql.DB) *Pool {
 				}
 
 				err = vm.Set("execute", func(qs string) any {
-					ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+					ctx, cancel := context.WithTimeout(context.TODO(), timeout)
 					defer cancel()
 
 					results, err := query.Execute(ctx, client, qs, query.ToIndexedSQL)

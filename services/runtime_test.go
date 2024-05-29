@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/jtarchie/knowhere/services"
 	. "github.com/onsi/ginkgo/v2"
@@ -34,7 +35,7 @@ var _ = Describe("When using the runtime", func() {
 	})
 
 	It("can run hello world", func() {
-		runtime := services.NewRuntime(client)
+		runtime := services.NewRuntime(client, time.Second)
 		value, err := runtime.Execute(`
 			return "Hello, World"
 		`)
@@ -44,7 +45,7 @@ var _ = Describe("When using the runtime", func() {
 
 	When("using the bounding box", func() {
 		It("returns the original", func() {
-			runtime := services.NewRuntime(client)
+			runtime := services.NewRuntime(client, time.Second)
 			value, err := runtime.Execute(`
 				const results = execute('nw[name="Hatfield Tunnel"](prefix=test)');
 				assert(results.length == 1);
@@ -66,7 +67,7 @@ var _ = Describe("When using the runtime", func() {
 	})
 
 	It("asserts valid GeoJSON", func() {
-		runtime := services.NewRuntime(client)
+		runtime := services.NewRuntime(client, time.Second)
 		_, err := runtime.Execute(`
 			const payload = {};
 			assertGeoJSON(payload);

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -23,8 +24,12 @@ func setupMiddleware(handler *echo.Echo, cors []string) {
 	}
 }
 
-func setupRoutes(handler *echo.Echo, client *sql.DB) {
+func setupRoutes(
+	handler *echo.Echo,
+	client *sql.DB,
+	timeout time.Duration,
+) {
 	handler.GET("/api/search", locationSearch(client))
 	handler.GET("/api/prefixes", prefixes(client))
-	handler.GET("/api/runtime", runtime(client))
+	handler.GET("/api/runtime", runtime(client, timeout))
 }

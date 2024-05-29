@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"time"
 
 	"github.com/jtarchie/sqlitezstd"
 	"github.com/labstack/echo/v4"
@@ -20,6 +21,7 @@ func New(
 	port int,
 	dbFilename string,
 	cors []string,
+	timeout time.Duration,
 ) (*Server, error) {
 	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename)
 
@@ -58,7 +60,7 @@ func New(
 	handler.JSONSerializer = DefaultJSONSerializer{}
 
 	setupMiddleware(handler, cors)
-	setupRoutes(handler, client)
+	setupRoutes(handler, client, timeout)
 
 	return &Server{
 		client:  client,
