@@ -70,24 +70,24 @@ var _ = Describe("Build SQL from a query", func() {
 			Entry("all implicit", "*", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 OR e.osm_type = 3 )`),
 		)
 
-		DescribeTable("query with tags", func(q string, expectedSQL string) {
+		DescribeTable("query with tags and directives", func(q string, expectedSQL string) {
 			actualSQL, err := query.ToIndexedSQL(q)
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
 		},
-			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") )'`),
-			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 OR e.osm_type = 3 ) AND s.tags MATCH '( ("*King*") OR ("*Queen*") )'`),
-			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("cafe") ) NOT ( ("Starbucks") )'`),
-			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )'`),
-			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )'`),
-			Entry("single tag that exists", "nw[amenity]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( "amenity" )'`),
-			Entry("multiple tag that exists", "r[route][ref][network]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 3 ) AND s.tags MATCH '( "route" ) AND ( "ref" ) AND ( "network" )'`),
-			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 3 ) AND s.tags MATCH '( ("amenity restaurant") ) AND ( "name" )'`),
-			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity coffee") ) NOT ( ("name Starbucks") )'`),
-			Entry("tag should not exist", "nw[amenity=coffee][!name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity coffee") ) NOT ( "name" )'`),
-			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 OR e.osm_type = 3 ) AND s.tags MATCH '( "name" ) AND ( ("name *King*") OR ("name *Queen*") ) NOT ( "amenity" )'`),
-			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `SELECT * FROM test_entries e JOIN test_search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") )'`),
+			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") )' ORDER BY rank`),
+			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 OR e.osm_type = 3 ) AND s.tags MATCH '( ("*King*") OR ("*Queen*") )' ORDER BY rank`),
+			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("cafe") ) NOT ( ("Starbucks") )' ORDER BY rank`),
+			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") ) AND ( ("cuisine sushi") )' ORDER BY rank`),
+			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity restaurant") OR ("amenity pub") OR ("amenity cafe") )' ORDER BY rank`),
+			Entry("single tag that exists", "nw[amenity]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( "amenity" )' ORDER BY rank`),
+			Entry("multiple tag that exists", "r[route][ref][network]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 3 ) AND s.tags MATCH '( "route" ) AND ( "ref" ) AND ( "network" )' ORDER BY rank`),
+			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 3 ) AND s.tags MATCH '( ("amenity restaurant") ) AND ( "name" )' ORDER BY rank`),
+			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity coffee") ) NOT ( ("name Starbucks") )' ORDER BY rank`),
+			Entry("tag should not exist", "nw[amenity=coffee][!name]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 ) AND s.tags MATCH '( ("amenity coffee") ) NOT ( "name" )' ORDER BY rank`),
+			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 OR e.osm_type = 2 OR e.osm_type = 3 ) AND s.tags MATCH '( "name" ) AND ( ("name *King*") OR ("name *Queen*") ) NOT ( "amenity" )' ORDER BY rank`),
+			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `SELECT * FROM test_entries e JOIN test_search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND s.tags MATCH '( ("amenity restaurant") )' ORDER BY rank`),
 			Entry("with ids", "n(id=1,123,4567)", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type = 1 ) AND e.osm_id IN ( 1, 123, 4567 )`),
 		)
 	})

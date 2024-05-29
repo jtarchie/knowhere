@@ -173,5 +173,9 @@ func ToIndexedSQL(query string) (string, error) {
 		builder.WriteString(` )`)
 	}
 
+	if exists || notExists {
+		builder.WriteString(` ORDER BY rank`)
+	}
+
 	return builder.String(), nil
 }
