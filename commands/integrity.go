@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log/slog"
@@ -47,14 +48,14 @@ func (i *Integrity) Run() error {
 
 	slog.Info("querying")
 
-	exactResults, err := query.Execute(client, i.Query, query.ToExactSQL)
+	exactResults, err := query.Execute(context.TODO(), client, i.Query, query.ToExactSQL)
 	if err != nil {
 		return fmt.Errorf("could not get exact results: %w", err)
 	}
 
 	slog.Info("exact.done")
 
-	indexResults, err := query.Execute(client, i.Query, query.ToIndexedSQL)
+	indexResults, err := query.Execute(context.TODO(), client, i.Query, query.ToIndexedSQL)
 	if err != nil {
 		return fmt.Errorf("could not get index results: %w", err)
 	}

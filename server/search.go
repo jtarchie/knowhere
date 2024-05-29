@@ -20,7 +20,7 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		results, err := query.Execute(client, search, query.ToIndexedSQL)
+		results, err := query.Execute(ctx.Request().Context(), client, search, query.ToIndexedSQL)
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 

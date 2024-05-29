@@ -1,13 +1,16 @@
 package runtime
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	_ "embed"
+
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
 	"github.com/samber/lo"
@@ -40,7 +43,10 @@ func NewPool(client *sql.DB) *Pool {
 				}
 
 				err = vm.Set("execute", func(qs string) any {
-					results, err := query.Execute(client, qs, query.ToIndexedSQL)
+					ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+					defer cancel()
+
+					results, err := query.Execute(ctx, client, qs, query.ToIndexedSQL)
 					if err != nil {
 						vm.Interrupt(fmt.Sprintf("could not execute query: %q", qs))
 					}
