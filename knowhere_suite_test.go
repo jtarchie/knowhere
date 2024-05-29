@@ -12,6 +12,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/evanw/esbuild/pkg/api"
 	"github.com/imroc/req/v3"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -282,10 +283,18 @@ var _ = Describe("Running the application", Ordered, func() {
 				contents, err := os.ReadFile(match)
 				Expect(err).NotTo(HaveOccurred())
 
+				result := api.Transform(string(contents), api.TransformOptions{
+					MinifyWhitespace:  true,
+					MinifyIdentifiers: true,
+					MinifySyntax:      true,
+					Sourcemap:         api.SourceMapInline,
+				})
+				Expect(result.Errors).To(HaveLen(0))
+
 				client := req.C()
 				response, err := client.R().
 					SetRetryCount(3).
-					SetBodyString(string(contents)).
+					SetBodyString(string(result.Code)).
 					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
 
 				Expect(err).NotTo(HaveOccurred())
