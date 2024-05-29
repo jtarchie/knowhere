@@ -24,4 +24,4 @@ tasks:
   develop:
     cmds:
     - go generate ./...
-    - go run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
+    - go run github.com/bokwoon95/wgo run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
