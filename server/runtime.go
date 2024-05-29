@@ -19,19 +19,22 @@ func runtime(client *sql.DB) func(echo.Context) error {
 	runtime := services.NewRuntime(client)
 
 	return func(ctx echo.Context) error {
-		body := &strings.Builder{}
+		source := ctx.FormValue("source")
+		if source == "" {
+			body := &strings.Builder{}
 
-		_, err := io.Copy(body, ctx.Request().Body)
-		if err != nil {
-			slog.Error("runtime.error", slog.String("error", err.Error()))
+			_, err := io.Copy(body, ctx.Request().Body)
+			if err != nil {
+				slog.Error("runtime.error", slog.String("error", err.Error()))
 
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
-				"error": "Could not read request body",
-			})
+				return ctx.JSON(http.StatusBadRequest, map[string]string{
+					"error": "Could not read request body",
+				})
+			}
+			defer ctx.Request().Body.Close()
+
+			source = body.String()
 		}
-		defer ctx.Request().Body.Close()
-
-		source := body.String()
 
 		if source == "" {
 			slog.Error("runtime.error", slog.String("error", "source was empty"))

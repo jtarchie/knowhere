@@ -174,18 +174,33 @@ var _ = Describe("Running the application", Ordered, func() {
 
 		When("hitting the runtime endpoint", func() {
 			It("returns the result in JSON", func() {
+				source := `
+				const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
+				return results.map((result) => result.name)
+				`
 				client := req.C()
 				response, err := client.R().
 					SetRetryCount(3).
-					SetBodyString(`
-						const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
-						return results.map((result) => result.name)
-					`).
+					SetBodyString(source).
 					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
 
 				Expect(err).NotTo(HaveOccurred())
 
 				payload := &strings.Builder{}
+
+				_, err = io.Copy(payload, response.Body)
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(payload.String()).To(MatchJSON(`["Hatfield Tunnel"]`))
+
+				response, err = client.R().
+					SetRetryCount(3).
+					SetQueryParam("source", source).
+					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
+
+				Expect(err).NotTo(HaveOccurred())
+
+				payload = &strings.Builder{}
 
 				_, err = io.Copy(payload, response.Body)
 				Expect(err).NotTo(HaveOccurred())
