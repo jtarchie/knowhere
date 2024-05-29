@@ -3,11 +3,12 @@ version: '3'
 tasks:
   format:
     cmds:
-    - deno fmt README.md
+    - deno fmt README.md examples/
     - gofmt -w .
     - shfmt -w bin/*.sh
   lint:
     cmds:
+    - deno lint examples/
     - golangci-lint run --fix --timeout "10m"
     - shellcheck bin/*.sh
   test: go run github.com/onsi/ginkgo/v2/ginkgo -tags "fts5" -race -r -p
