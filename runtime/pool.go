@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log/slog"
 	"sync"
 	"time"
 
@@ -35,19 +36,29 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 			New: func() any {
 				vm := goja.New() //nolint: varnamelen
 
-				vm.SetFieldNameMapper(goja.TagFieldNameMapper("js", true))
+				vm.SetFieldNameMapper(&tagFieldNameMapper{
+					cache: map[string]string{},
+				})
 
 				_, err := vm.RunString(turfJSSource)
 				if err != nil {
 					return fmt.Errorf("could not warmup the VM: %w", err)
 				}
 
-				err = vm.Set("execute", func(qs string) any {
+				err = vm.Set("rtree", func() *RTree {
+					return &RTree{}
+				})
+				if err != nil {
+					return fmt.Errorf("could not setup `rtree` VM: %w", err)
+				}
+
+				err = vm.Set("execute", func(qs string) []WrappedResult {
 					ctx, cancel := context.WithTimeout(context.TODO(), timeout)
 					defer cancel()
 
 					results, err := query.Execute(ctx, client, qs, query.ToIndexedSQL)
 					if err != nil {
+						slog.Error("execute.failed", "query", qs, "err", err.Error())
 						vm.Interrupt(fmt.Sprintf("could not execute query: %q", qs))
 					}
 

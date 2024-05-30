@@ -133,7 +133,7 @@ func (b *Converter) Execute() error {
 			maxLon REAL,
 			minLat REAL,
 			maxLat REAL
-	);
+		);
 	`)
 	if err != nil {
 		return fmt.Errorf("could not execute schema: %w", err)
