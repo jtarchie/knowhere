@@ -114,7 +114,7 @@ func (b *Converter) Execute() error {
 		CREATE TABLE {{prefix}}_refs (
 			parent_id    INTEGER NOT NULL,
 			osm_id 	     INTEGER NOT NULL,
-			osm_type     TEXT NOT NULL
+			osm_type     INTEGER NOT NULL
 		);
 
 		CREATE TABLE IF NOT EXISTS prefixes (
@@ -212,8 +212,9 @@ func (b *Converter) Execute() error {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
 
+			id, _ := row.LastInsertId()
+
 			for _, node := range way.Nodes {
-				id, _ := row.LastInsertId()
 				_, _ = refInsert.Exec(id, node.ID, osm.TypeNode)
 			}
 
@@ -239,11 +240,14 @@ func (b *Converter) Execute() error {
 				return fmt.Errorf("could not insert node: %w", err)
 			}
 
+			id, _ := row.LastInsertId()
+
 			for _, member := range relation.Members {
 				switch member.Type { //nolint: exhaustive
-				case osm.TypeNode, osm.TypeWay:
-					id, _ := row.LastInsertId()
-					_, _ = refInsert.Exec(id, member.Ref, member.Type)
+				case osm.TypeNode:
+					_, _ = refInsert.Exec(id, member.Ref, query.NodeFilter)
+				case osm.TypeWay:
+					_, _ = refInsert.Exec(id, member.Ref, query.WayFilter)
 				}
 			}
 

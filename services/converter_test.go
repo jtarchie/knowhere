@@ -112,5 +112,15 @@ var _ = Describe("Converter", func() {
 
 		value(dbPath, "SELECT full_name FROM prefixes", &prefix)
 		Expect(prefix).To(Equal("United States"))
+
+		var fullCount int64
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE minLat IS NULL", &fullCount)
+		Expect(fullCount).To(BeEquivalentTo(0))
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE minLon IS NULL", &fullCount)
+		Expect(fullCount).To(BeEquivalentTo(0))
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE maxLat IS NULL", &fullCount)
+		Expect(fullCount).To(BeEquivalentTo(0))
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE maxLon IS NULL", &fullCount)
+		Expect(fullCount).To(BeEquivalentTo(0))
 	})
 })
