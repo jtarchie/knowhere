@@ -36,7 +36,7 @@ func (wr *WrappedResult) AsFeature(properties map[string]interface{}) *geojson.F
 	return feature
 }
 
-func (wr *WrappedBound) Intersects(bounds WrappedBound) bool {
+func (wr *WrappedBound) Intersects(bounds *WrappedBound) bool {
 	return wr.Bound.Intersects(bounds.Bound)
 }
 
