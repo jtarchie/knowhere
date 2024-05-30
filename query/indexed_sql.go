@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/samber/lo"
@@ -36,24 +37,17 @@ func ToIndexedSQL(query string) (string, error) {
 			s.rowid = e.id
 	`, prefix, prefix))
 
-	builder.WriteString(" WHERE ( ")
+	builder.WriteString(" WHERE ( e.osm_type IN (")
 
 	for index, t := range ast.Types {
 		if 0 < index {
-			builder.WriteString(" OR ")
+			builder.WriteString(",")
 		}
 
-		switch t {
-		case NodeFilter:
-			builder.WriteString("e.osm_type = 1")
-		case WayFilter:
-			builder.WriteString("e.osm_type = 2")
-		case RelationFilter:
-			builder.WriteString("e.osm_type = 3")
-		}
+		builder.WriteString(strconv.Itoa(int(t)))
 	}
 
-	builder.WriteString(" ) ")
+	builder.WriteString(") ) ")
 
 	exists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
 		return tag.Op == OpEquals || tag.Op == OpExists
