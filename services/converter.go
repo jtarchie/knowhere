@@ -215,7 +215,10 @@ func (b *Converter) Execute() error {
 			id, _ := row.LastInsertId()
 
 			for _, node := range way.Nodes {
-				_, _ = refInsert.Exec(id, node.ID, query.NodeFilter)
+				_, err = refInsert.Exec(id, node.ID, query.NodeFilter)
+				if err != nil {
+					return fmt.Errorf("could not create ref for way %d for node %d: %w", id, node.ID, err)
+				}
 			}
 
 			return nil
@@ -245,9 +248,15 @@ func (b *Converter) Execute() error {
 			for _, member := range relation.Members {
 				switch member.Type { //nolint: exhaustive
 				case osm.TypeNode:
-					_, _ = refInsert.Exec(id, member.Ref, query.NodeFilter)
+					_, err = refInsert.Exec(id, member.Ref, query.NodeFilter)
+					if err != nil {
+						return fmt.Errorf("could not create ref for relation %d for node %d: %w", id, member.Ref, err)
+					}
 				case osm.TypeWay:
-					_, _ = refInsert.Exec(id, member.Ref, query.WayFilter)
+					_, err = refInsert.Exec(id, member.Ref, query.WayFilter)
+					if err != nil {
+						return fmt.Errorf("could not create ref for relation %d for way %d: %w", id, member.Ref, err)
+					}
 				}
 			}
 
