@@ -103,29 +103,29 @@ func (b *Converter) Execute() error {
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
 			osm_id   INTEGER NOT NULL,
 			osm_type INTEGER NOT NULL,
-			minLat   FLOAT,
-			maxLat   FLOAT,
-			minLon   FLOAT,
-			maxLon   FLOAT,
-			tags     JSONB,
-			refs     JSONB
-		);
+			minLat   REAL,
+			maxLat   REAL,
+			minLon   REAL,
+			maxLon   REAL,
+			tags     BLOB,
+			refs     BLOB
+		) STRICT;
 
 		CREATE TABLE {{prefix}}_refs (
 			parent_id    INTEGER NOT NULL,
 			osm_id 	     INTEGER NOT NULL,
 			osm_type     INTEGER NOT NULL
-		);
+		) STRICT;
 
 		CREATE TABLE IF NOT EXISTS prefixes (
 			id        INTEGER PRIMARY KEY AUTOINCREMENT,
 			name      TEXT NOT NULL,
 			full_name TEXT NOT NULL,
-			minLat    FLOAT,
-			maxLat    FLOAT,
-			minLon    FLOAT,
-			maxLon    FLOAT
-		);
+			minLat    REAL,
+			maxLat    REAL,
+			minLon    REAL,
+			maxLon    REAL
+		) STRICT;
 
 		CREATE VIRTUAL TABLE IF NOT EXISTS {{prefix}}_rtree USING rtree(
 			id INTEGER PRIMARY KEY,
@@ -156,7 +156,7 @@ func (b *Converter) Execute() error {
 	INSERT INTO {{prefix}}_entries
 		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags, refs)
 			VALUES
-		(?, ?, ?, ?, ?, ?, ?, ?);
+		(?, ?, ?, ?, ?, ?, jsonb(?), jsonb(?));
 	`))
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for insert: %w", err)
@@ -215,7 +215,7 @@ func (b *Converter) Execute() error {
 			id, _ := row.LastInsertId()
 
 			for _, node := range way.Nodes {
-				_, _ = refInsert.Exec(id, node.ID, osm.TypeNode)
+				_, _ = refInsert.Exec(id, node.ID, query.NodeFilter)
 			}
 
 			return nil
@@ -351,7 +351,7 @@ func (b *Converter) Execute() error {
 
 		-- useful for calculating boundaries,
 		-- not useful for searching against
-		DELETE FROM {{prefix}}_entries WHERE tags ='{}';
+		DELETE FROM {{prefix}}_entries WHERE tags = jsonb('{}');
 		DROP INDEX {{prefix}}_ref_ids;
 		DROP TABLE {{prefix}}_refs;
 	`)
