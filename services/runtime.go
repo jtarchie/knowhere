@@ -45,11 +45,16 @@ func (r *Runtime) Execute(
 	})
 	defer timer.Stop()
 
-	returnValue, err := jsRuntime.RunString(fmt.Sprintf(`
-			(function() {
-				%s
-			})()
-		`, source))
+	program, err := goja.Compile(
+		"main.js",
+		fmt.Sprintf(`{(function() {%s}).apply(undefined)}`, source),
+		true,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("could not compile: %w", err)
+	}
+
+	returnValue, err := jsRuntime.RunProgram(program)
 	if err != nil {
 		defer jsRuntime.ClearInterrupt()
 

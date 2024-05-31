@@ -225,8 +225,8 @@ var _ = Describe("Running the application", Ordered, func() {
 				Expect(payload.String()).To(MatchJSON(fmt.Sprintf(`{"error":%q}`, errMsg)))
 			},
 				Entry("no source provided", ``, `source not provided in request body`),
-				Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at \u003ceval\u003e:3:5(1)"),
-				Entry("assertion fail", `assert(false)`, "evaluation error: assertion failed at \u003ceval\u003e:3:11(4)"),
+				Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at main.js:1:15(1)"),
+				Entry("assertion fail", `assert(false)`, "evaluation error: assertion failed at main.js:1:21(4)"),
 			)
 		})
 

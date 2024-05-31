@@ -19,9 +19,6 @@ import (
 	"github.com/tidwall/geojson/geometry"
 )
 
-//go:embed turf.js
-var turfJSSource string
-
 type Pool struct {
 	pool sync.Pool
 }
@@ -40,12 +37,7 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 					cache: map[string]string{},
 				})
 
-				_, err := vm.RunString(turfJSSource)
-				if err != nil {
-					return fmt.Errorf("could not warmup the VM: %w", err)
-				}
-
-				err = vm.Set("rtree", func() *RTree {
+				err := vm.Set("rtree", func() *RTree {
 					return &RTree{}
 				})
 				if err != nil {
