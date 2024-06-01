@@ -7,7 +7,7 @@ db_path=.build/entries.db
 go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$1" \
 	--db "$db_path" \
-	--allowed-tags "name,amenity,shop,leisure,tourism"
+	--allowed-tags "name,amenity,shop,leisure,tourism,boundary,admin_level,waterway"
 
 go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 	-f "$db_path" \
