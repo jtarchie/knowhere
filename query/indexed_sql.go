@@ -72,23 +72,24 @@ func ToIndexedSQL(query string) (string, error) {
 				}
 
 				builder.WriteString("( ")
+				if tag.Name != "" {
+					builder.WriteString(tag.Name)
+					builder.WriteString(" AND ( ")
+				}
 
 				for index, lookup := range tag.Lookups {
 					if 0 < index {
 						builder.WriteString(" OR ")
 					}
 
-					builder.WriteString(`("`)
-
-					if tag.Name != "" {
-						builder.WriteString(tag.Name)
-						builder.WriteString(" ")
-					}
-
+					builder.WriteByte('"')
 					builder.WriteString(lookup)
-					builder.WriteString(`")`)
+					builder.WriteByte('"')
 				}
 
+				if tag.Name != "" {
+					builder.WriteString(" )")
+				}
 				builder.WriteString(" )")
 
 				index++
@@ -120,23 +121,24 @@ func ToIndexedSQL(query string) (string, error) {
 				}
 
 				builder.WriteString("( ")
+				if tag.Name != "" {
+					builder.WriteString(tag.Name)
+					builder.WriteString(" AND ( ")
+				}
 
 				for index, lookup := range tag.Lookups {
 					if 0 < index {
 						builder.WriteString(" OR ")
 					}
 
-					builder.WriteString(`("`)
-
-					if tag.Name != "" {
-						builder.WriteString(tag.Name)
-						builder.WriteString(" ")
-					}
-
+					builder.WriteByte('"')
 					builder.WriteString(lookup)
-					builder.WriteString(`")`)
+					builder.WriteByte('"')
 				}
 
+				if tag.Name != "" {
+					builder.WriteString(" )")
+				}
 				builder.WriteString(" )")
 
 				index++
