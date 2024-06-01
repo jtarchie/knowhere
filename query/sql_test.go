@@ -1,15 +1,45 @@
 package query_test
 
 import (
+	"database/sql"
 	"regexp"
 	"strings"
 
 	"github.com/jtarchie/knowhere/query"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
-var _ = Describe("Build SQL from a query", func() {
+var _ = Describe("Build SQL from a query", Ordered, func() {
+	var client *sql.DB
+
+	BeforeAll(func() {
+		var err error
+
+		client, err = sql.Open("sqlite3", ":memory:")
+		Expect(err).NotTo(HaveOccurred())
+
+		_, err = client.Exec(`
+			CREATE TABLE entries (
+				id, osm_type, osm_id, tags
+			);
+			CREATE VIRTUAL TABLE
+				search
+			USING
+				fts5(tags, content = '', tokenize="trigram");
+			CREATE TABLE test_entries (
+				id, osm_type, osm_id, tags
+			);
+			CREATE VIRTUAL TABLE
+				test_search
+			USING
+				fts5(tags, content = '', tokenize="trigram");
+		`)
+		Expect(err).NotTo(HaveOccurred())
+	})
+
 	pretty := func(sql string) string {
 		space := regexp.MustCompile(`\s+`)
 
@@ -22,6 +52,9 @@ var _ = Describe("Build SQL from a query", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+			
+			_, err = client.Exec(actualSQL)
+			Expect(err).NotTo(HaveOccurred())
 		},
 			Entry("nodes", "n", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) )`),
 			Entry("ways", "w", `SELECT * FROM entries e WHERE ( e.osm_type IN (2) )`),
@@ -37,6 +70,9 @@ var _ = Describe("Build SQL from a query", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+
+			_, err = client.Exec(actualSQL)
+			Expect(err).NotTo(HaveOccurred())
 		},
 			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' )`),
 			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2,3) ) AND ( e.tags GLOB '*King*' OR e.tags GLOB '*Queen*' )`),
@@ -60,6 +96,9 @@ var _ = Describe("Build SQL from a query", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+
+			_, err = client.Exec(actualSQL)
+			Expect(err).NotTo(HaveOccurred())
 		},
 			Entry("nodes", "n", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type IN (1) )`),
 			Entry("ways", "w", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type IN (2) )`),
@@ -75,6 +114,9 @@ var _ = Describe("Build SQL from a query", func() {
 			Expect(err).NotTo(HaveOccurred())
 
 			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+
+			_, err = client.Exec(actualSQL)
+			Expect(err).NotTo(HaveOccurred())
 		},
 			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type IN (1) ) AND s.tags MATCH '( ("amenity restaurant") )' ORDER BY rank`),
 			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `SELECT * FROM entries e JOIN search s ON s.rowid = e.id WHERE ( e.osm_type IN (1,2,3) ) AND s.tags MATCH '( ("*King*") OR ("*Queen*") )' ORDER BY rank`),
