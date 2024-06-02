@@ -376,7 +376,7 @@ func (b *Converter) Execute() error {
 		CREATE VIRTUAL TABLE
 			{{prefix}}_search
 		USING
-			fts5(tags, content = '', tokenize="trigram");
+			fts5(tags, content = '', tokenize="porter");
 
 		WITH tags AS (
 			SELECT

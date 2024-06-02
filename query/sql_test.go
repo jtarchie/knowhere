@@ -28,14 +28,14 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			CREATE VIRTUAL TABLE
 				search
 			USING
-				fts5(tags, content = '', tokenize="trigram");
+				fts5(tags, content = '', tokenize="porter");
 			CREATE TABLE test_entries (
 				id, osm_type, osm_id, tags
 			);
 			CREATE VIRTUAL TABLE
 				test_search
 			USING
-				fts5(tags, content = '', tokenize="trigram");
+				fts5(tags, content = '', tokenize="porter");
 		`)
 		Expect(err).NotTo(HaveOccurred())
 	})

@@ -53,7 +53,7 @@ There will be tables with the prefix of each state:
 - ...
 
 The `entries` table contains (mostly) the original OSM data. The `search` table
-contains FTS5 indexed data for full test search using `trigram` tokenizer. The
+contains FTS5 indexed data for full test search using `porter` tokenizer. The
 `rtree` table optimized indexed table to entries within a bounding box.
 
 ### Deploy
