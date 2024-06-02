@@ -68,6 +68,7 @@ fly deploy
 ```
 
 ## TODO
+
 - identify globbing over exact match
 - support inequalities (>,<,>=,<=) for numbers
 - ensure sql generator is valid
