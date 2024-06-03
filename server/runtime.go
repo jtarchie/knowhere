@@ -14,6 +14,7 @@ import (
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/services"
 	"github.com/labstack/echo/v4"
+	"github.com/paulmach/orb/geojson"
 )
 
 func runtime(
@@ -21,6 +22,8 @@ func runtime(
 	timeout time.Duration,
 ) func(echo.Context) error {
 	runtime := services.NewRuntime(client, timeout)
+
+	geojson.CustomJSONMarshaler = &DefaultJSONSerializer{}
 
 	return func(ctx echo.Context) error {
 		source := ctx.FormValue("source")

@@ -61,7 +61,7 @@ func New(
 
 	handler := echo.New()
 	handler.HideBanner = true
-	handler.JSONSerializer = DefaultJSONSerializer{}
+	handler.JSONSerializer = &DefaultJSONSerializer{}
 
 	setupMiddleware(handler, cors)
 	setupRoutes(handler, client, timeout)
