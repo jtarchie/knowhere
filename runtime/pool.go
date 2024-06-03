@@ -44,6 +44,12 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 					return fmt.Errorf("could not setup `rtree` VM: %w", err)
 				}
 
+				currentTime := time.Now()
+				_ = vm.Set("stab", func(msg string) {
+					slog.Info("stab", slog.String("msg", msg), slog.Duration("time", time.Since(currentTime)))
+					currentTime = time.Now()
+				})
+
 				err = vm.Set("execute", func(qs string) []WrappedResult {
 					ctx, cancel := context.WithTimeout(context.TODO(), timeout)
 					defer cancel()
