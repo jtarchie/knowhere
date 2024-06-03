@@ -13,7 +13,7 @@ require (
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
-	github.com/imroc/req/v3 v3.43.6
+	github.com/imroc/req/v3 v3.43.7
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/jtarchie/sqlitezstd v0.0.0-20240527050927-15d3dee1dc86
 	github.com/labstack/echo/v4 v4.12.0
