@@ -1,18 +1,3 @@
-function cluster(results, radius) {
-  const tree = geo.rtree();
-
-  return results.filter((entry) => {
-    const extended = entry.bbox().extend(radius);
-
-    if (tree.within(extended)) {
-      return false;
-    }
-
-    tree.insert(extended);
-    return true;
-  });
-}
-
 const colorPalette = [
   "#E69F00", // Orange
   "#56B4E9", // Sky Blue
@@ -31,7 +16,7 @@ keywords.forEach((keyword) => {
 
 keywords.sort((a, b) => a.results.length - b.results.length);
 
-const neighbors = cluster(keywords[0].results, keywords[0].radius).map((
+const neighbors = keywords[0].results.cluster(keywords[0].radius).map((
   entry,
 ) => [entry]);
 
