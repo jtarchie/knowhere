@@ -1,10 +1,7 @@
 package runtime
 
 import (
-	"math"
-
 	"github.com/paulmach/orb"
-	"github.com/paulmach/orb/clip"
 	"github.com/paulmach/orb/geo"
 	"github.com/tidwall/rtree"
 )
@@ -34,7 +31,6 @@ func (r *RTree) Nearby(bound *WrappedBound, count uint) []*WrappedResult {
 	results := make([]*WrappedResult, 0, count)
 
 	r.RTreeG.Nearby(
-		// rtree.BoxDist[float64, *WrappedResult](bound.Min, bound.Max, nil),
 		fromWrappedDistOverlap(bound),
 		func(min, max [2]float64, data *WrappedResult, dist float64) bool {
 			results = append(results, data)
@@ -49,20 +45,16 @@ func (r *RTree) Nearby(bound *WrappedBound, count uint) []*WrappedResult {
 }
 
 func fromWrappedDistOverlap(target *WrappedBound) func(min, max [2]float64, data *WrappedResult, item bool) float64 {
-	return func(bMin, bMax [2]float64, _ *WrappedResult, _ bool) float64 {
+	return func(bMin, bMax [2]float64, item *WrappedResult, hasItem bool) float64 {
+		if !hasItem {
+			return rtree.BoxDist[float64, *WrappedResult](target.Min, target.Max, nil)(bMin, bMax, item, hasItem)
+		}
+
 		current := orb.Bound{
 			Min: bMin,
 			Max: bMax,
 		}
-		if target.Contains(current.LeftTop()) && target.Contains(current.RightBottom()) {
-			return geo.Distance(target.Center(), current.Center())
-		}
 
-		clipped := clip.Bound(target.Bound, current)
-		if clipped.IsEmpty() {
-			return math.MaxFloat64
-		}
-
-		return geo.Distance(target.Center(), clipped.Center())
+		return geo.Distance(target.Center(), current.Center())
 	}
 }

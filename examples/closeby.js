@@ -61,7 +61,7 @@ const payload = {
       return;
     }
 
-    return entries.map((entry, index) => {
+    return entries.flatMap((entry, index) => {
       const color = colorPalette[index % entries.length];
 
       const feature = entry.asFeature({

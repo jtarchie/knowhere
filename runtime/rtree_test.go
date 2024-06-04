@@ -46,8 +46,8 @@ var _ = Describe("RTree", func() {
 		tree.Insert(
 			&runtime.WrappedBound{
 				orb.Bound{
-					Min: [2]float64{0, 0},
-					Max: [2]float64{25, 525},
+					Min: [2]float64{0, 25},
+					Max: [2]float64{25, 0},
 				},
 			},
 			actual[0],
@@ -56,8 +56,8 @@ var _ = Describe("RTree", func() {
 		tree.Insert(
 			&runtime.WrappedBound{
 				orb.Bound{
-					Min: [2]float64{25, 0},
-					Max: [2]float64{50, 25},
+					Min: [2]float64{25, 25},
+					Max: [2]float64{50, 0},
 				},
 			},
 			actual[1],
