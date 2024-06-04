@@ -28,7 +28,7 @@ const neighbors = keywords[0].results.cluster(keywords[0].radius).map((
 assert.stab("closeby");
 keywords.slice(1).forEach((keyword) => {
   assert.stab(`tree ${keyword.query}`);
-  const tree = keyword.results.asTree(keyword.radius)
+  const tree = keyword.results.asTree(keyword.radius);
 
   assert.stab(`neighbor ${keyword.query}`);
   neighbors.forEach((entries) => {
