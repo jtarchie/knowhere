@@ -174,7 +174,7 @@ var _ = Describe("Running the application", Ordered, func() {
 		When("hitting the runtime endpoint", func() {
 			It("returns the result in JSON", func() {
 				source := `
-				const results = execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
+				const results = geo.query('nw[name="Hatfield Tunnel"](prefix="test")') ;
 				return results.map((result) => result.name)
 				`
 				client := req.C()

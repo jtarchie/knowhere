@@ -1,19 +1,15 @@
 package runtime
 
 import (
-	"context"
 	"database/sql"
 	"errors"
 	"fmt"
-	"log/slog"
 	"sync"
 	"time"
 
 	_ "embed"
 
 	"github.com/dop251/goja"
-	"github.com/jtarchie/knowhere/query"
-	"github.com/samber/lo"
 )
 
 type Pool struct {
@@ -34,32 +30,16 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 					cache: map[string]string{},
 				})
 
-				err := vm.Set("rtree", func() *RTree {
-					return &RTree{}
-				})
-				if err != nil {
-					return fmt.Errorf("could not setup `rtree` VM: %w", err)
-				}
-
-				err = vm.Set("execute", func(qs string) []WrappedResult {
-					ctx, cancel := context.WithTimeout(context.TODO(), timeout)
-					defer cancel()
-
-					results, err := query.Execute(ctx, client, qs, query.ToIndexedSQL)
-					if err != nil {
-						slog.Error("execute.failed", "query", qs, "err", err.Error())
-						vm.Interrupt(fmt.Sprintf("could not execute query: %q", qs))
-					}
-
-					return lo.Map(results, func(result query.Result, _ int) WrappedResult {
-						return WrappedResult{result}
-					})
+				err := vm.Set("geo", &Geo{
+					vm:      vm,
+					timeout: timeout,
+					client:  client,
 				})
 				if err != nil {
 					return fmt.Errorf("could not setup `execute` VM: %w", err)
 				}
 
-				err = vm.Set("assert", &Assertion{VM: vm})
+				err = vm.Set("assert", &Assertion{vm: vm})
 				if err != nil {
 					return fmt.Errorf("could not setup `assert` VM: %w", err)
 				}

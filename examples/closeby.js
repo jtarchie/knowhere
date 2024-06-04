@@ -1,5 +1,5 @@
 function cluster(results, radius) {
-  const tree = rtree();
+  const tree = geo.rtree();
 
   return results.filter((entry) => {
     const extended = entry.bbox().extend(radius);
@@ -26,7 +26,7 @@ const keywords = [
 ];
 
 keywords.forEach((keyword) => {
-  keyword.results = execute(`nwr[${keyword.query}](prefix=colorado)`);
+  keyword.results = geo.query(`nwr[${keyword.query}](prefix=colorado)`);
 });
 
 keywords.sort((a, b) => a.results.length - b.results.length);
@@ -36,7 +36,7 @@ const neighbors = cluster(keywords[0].results, keywords[0].radius).map((
 ) => [entry]);
 
 keywords.slice(1).forEach((keyword) => {
-  const tree = rtree();
+  const tree = geo.rtree();
 
   keyword.results.forEach((entry) => {
     const extended = entry.bbox().extend(keyword.radius);

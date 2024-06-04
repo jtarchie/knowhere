@@ -12,7 +12,7 @@ import (
 )
 
 type Assertion struct {
-	VM   *goja.Runtime
+	vm   *goja.Runtime
 	time time.Time
 }
 
@@ -27,14 +27,14 @@ func (a *Assertion) Stab(msg string) {
 
 func (a *Assertion) Eq(value bool, msg string) {
 	if !value {
-		a.VM.Interrupt(fmt.Sprintf("assertion failed: %s", msg))
+		a.vm.Interrupt(fmt.Sprintf("assertion failed: %s", msg))
 	}
 }
 
 func (a *Assertion) GeoJSON(payload any) {
 	contents, err := json.Marshal(payload)
 	if err != nil {
-		a.VM.Interrupt("geojson payload is not JSON")
+		a.vm.Interrupt("geojson payload is not JSON")
 
 		return
 	}
@@ -44,6 +44,6 @@ func (a *Assertion) GeoJSON(payload any) {
 		RequireValid:      true,
 	})
 	if err != nil {
-		a.VM.Interrupt(fmt.Sprintf("assert of geojson failed: %s", err))
+		a.vm.Interrupt(fmt.Sprintf("assert of geojson failed: %s", err))
 	}
 }

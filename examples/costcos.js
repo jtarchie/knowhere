@@ -1,4 +1,4 @@
-const allCostcos = execute(`nwr[name=Costco](prefix=colorado)`);
+const allCostcos = geo.query(`nwr[name=Costco](prefix=colorado)`);
 
 const bounds = [];
 
