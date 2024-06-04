@@ -3,7 +3,6 @@ package runtime
 import (
 	"context"
 	"database/sql"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -15,8 +14,6 @@ import (
 	"github.com/dop251/goja"
 	"github.com/jtarchie/knowhere/query"
 	"github.com/samber/lo"
-	"github.com/tidwall/geojson"
-	"github.com/tidwall/geojson/geometry"
 )
 
 type Pool struct {
@@ -44,12 +41,6 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 					return fmt.Errorf("could not setup `rtree` VM: %w", err)
 				}
 
-				currentTime := time.Now()
-				_ = vm.Set("stab", func(msg string) {
-					slog.Info("stab", slog.String("msg", msg), slog.Duration("time", time.Since(currentTime)))
-					currentTime = time.Now()
-				})
-
 				err = vm.Set("execute", func(qs string) []WrappedResult {
 					ctx, cancel := context.WithTimeout(context.TODO(), timeout)
 					defer cancel()
@@ -68,35 +59,9 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 					return fmt.Errorf("could not setup `execute` VM: %w", err)
 				}
 
-				err = vm.Set("assert", func(value bool) {
-					if !value {
-						vm.Interrupt("assertion failed")
-					}
-				})
+				err = vm.Set("assert", &Assertion{VM: vm})
 				if err != nil {
 					return fmt.Errorf("could not setup `assert` VM: %w", err)
-				}
-
-				err = vm.Set("assertGeoJSON", func(payload any) {
-					contents, err := json.Marshal(payload)
-					if err != nil {
-						vm.Interrupt("geojson payload is not JSON")
-
-						return
-					}
-
-					_, err = geojson.Parse(string(contents), &geojson.ParseOptions{
-						IndexGeometryKind: geometry.None,
-						RequireValid:      true,
-					})
-					if err != nil {
-						vm.Interrupt("assert of geojson failed")
-
-						return
-					}
-				})
-				if err != nil {
-					return fmt.Errorf("could not setup `assertGeoJSON` VM: %w", err)
 				}
 
 				return vm

@@ -13,7 +13,7 @@ const entries = allCostcos.filter((costco) => {
   return true;
 });
 
-assert(allCostcos.length > entries.length);
+assert.eq(allCostcos.length > entries.length, "expected fewer entries");
 
 const payload = {
   type: "FeatureCollection",
@@ -22,6 +22,6 @@ const payload = {
   }),
 };
 
-assertGeoJSON(payload);
+assert.geoJSON(payload);
 
 return payload;

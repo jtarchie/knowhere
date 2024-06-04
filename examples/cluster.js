@@ -29,7 +29,10 @@ const clusters = keywords.map((keyword) => {
   return [keyword, cluster(keyword.query, keyword.radius)];
 });
 
-assert(clusters.length === keywords.length);
+assert.eq(
+  clusters.length === keywords.length,
+  "expected same number of clusters",
+);
 
 const payload = {
   type: "FeatureCollection",
@@ -47,6 +50,6 @@ const payload = {
   }),
 };
 
-assertGeoJSON(payload);
+assert.geoJSON(payload);
 
 return payload;

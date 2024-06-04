@@ -48,7 +48,7 @@ var _ = Describe("When using the runtime", func() {
 			runtime := services.NewRuntime(client, time.Second)
 			value, err := runtime.Execute(`
 				const results = execute('nw[name="Hatfield Tunnel"](prefix=test)');
-				assert(results.length == 1);
+				assert.eq(results.length == 1);
 				
 				return results[0].bbox()
 			`)
@@ -70,7 +70,7 @@ var _ = Describe("When using the runtime", func() {
 		runtime := services.NewRuntime(client, time.Second)
 		_, err := runtime.Execute(`
 			const payload = {};
-			assertGeoJSON(payload);
+			assert.geoJSON(payload);
 			return payload;
 		`)
 		Expect(err).To(HaveOccurred())
@@ -86,7 +86,7 @@ var _ = Describe("When using the runtime", func() {
 					name: "Dinagat Islands"
 				}
 			};
-			assertGeoJSON(payload);
+			assert.geoJSON(payload);
 			return payload;
 		`)
 		Expect(err).NotTo(HaveOccurred())

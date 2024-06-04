@@ -74,6 +74,6 @@ const payload = {
   }),
 };
 
-assertGeoJSON(payload);
+assert.geoJSON(payload);
 
 return payload;

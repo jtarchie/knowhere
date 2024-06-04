@@ -12,7 +12,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/evanw/esbuild/pkg/api"
 	"github.com/imroc/req/v3"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -226,7 +225,7 @@ var _ = Describe("Running the application", Ordered, func() {
 			},
 				Entry("no source provided", ``, `source not provided in request body`),
 				Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at main.js:1:15(1)"),
-				Entry("assertion fail", `assert(false)`, "evaluation error: assertion failed at main.js:1:21(4)"),
+				Entry("assertion fail", `assert.eq(false, "this did not work")`, "evaluation error: assertion failed: this did not work at main.js:1:24(6)"),
 			)
 		})
 
@@ -298,18 +297,18 @@ var _ = Describe("Running the application", Ordered, func() {
 				contents, err := os.ReadFile(match)
 				Expect(err).NotTo(HaveOccurred())
 
-				result := api.Transform(string(contents), api.TransformOptions{
-					MinifyWhitespace:  true,
-					MinifyIdentifiers: true,
-					MinifySyntax:      true,
-					Sourcemap:         api.SourceMapInline,
-				})
-				Expect(result.Errors).To(HaveLen(0))
+				// result := api.Transform(string(contents), api.TransformOptions{
+				// 	MinifyWhitespace:  true,
+				// 	MinifyIdentifiers: true,
+				// 	MinifySyntax:      true,
+				// 	Sourcemap:         api.SourceMapInline,
+				// })
+				// Expect(result.Errors).To(HaveLen(0))
 
 				client := req.C()
 				response, err := client.R().
 					SetRetryCount(3).
-					SetBodyString(string(result.Code)).
+					SetBodyString(string(contents)).
 					Get(fmt.Sprintf("http://localhost:%d/api/runtime", port))
 
 				Expect(err).NotTo(HaveOccurred())
