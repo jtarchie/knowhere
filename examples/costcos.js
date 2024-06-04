@@ -3,7 +3,7 @@ const allCostcos = geo.query(`nwr[name=Costco](prefix=colorado)`);
 const bounds = [];
 
 const entries = allCostcos.filter((costco) => {
-  const extended = costco.bbox().extend(2);
+  const extended = costco.bbox().extend(2000);
 
   if (bounds.some((bbox) => bbox.intersects(extended))) {
     return false;

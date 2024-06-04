@@ -13,8 +13,8 @@ func (wr *Bound) Intersects(bounds *Bound) bool {
 	return wr.Bound.Intersects(bounds.Bound)
 }
 
-// Extends a bounding box in kilometers in each direction.
+// Extends a bounding box in meters in each direction.
 // This is for best effort, not exact.
 func (wb *Bound) Extend(radius float64) *Bound {
-	return &Bound{geo.BoundPad(wb.Bound, radius*1000)}
+	return &Bound{geo.BoundPad(wb.Bound, radius)}
 }

@@ -5,9 +5,9 @@ const colorPalette = [
 ];
 
 const keywords = [
-  { query: "name=Costco", radius: 5 },
-  { query: "amenity=cafe", radius: 1 },
-  { query: "amenity=school", radius: 5 },
+  { query: "name=Costco", radius: 5000 },
+  { query: "amenity=cafe", radius: 1000 },
+  { query: "amenity=school", radius: 5000 },
 ];
 
 assert.stab("start");
@@ -21,7 +21,7 @@ assert.stab("sort");
 keywords.sort((a, b) => a.results.length - b.results.length);
 
 assert.stab("cluster");
-const neighbors = keywords[0].results.cluster(keywords[0].radius).map((
+const neighbors = keywords[0].results.cluster(500).map((
   entry,
 ) => [entry]);
 
