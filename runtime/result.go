@@ -6,12 +6,12 @@ import (
 	"github.com/paulmach/orb/geojson"
 )
 
-type WrappedResult struct {
+type Result struct {
 	query.Result
 }
 
-func (wr *WrappedResult) Bbox() *WrappedBound {
-	return &WrappedBound{
+func (wr *Result) Bbox() *Bound {
+	return &Bound{
 		orb.Bound{
 			Min: orb.Point{wr.MinLon, wr.MinLat},
 			Max: orb.Point{wr.MaxLon, wr.MaxLat},
@@ -19,7 +19,7 @@ func (wr *WrappedResult) Bbox() *WrappedBound {
 	}
 }
 
-func (wr *WrappedResult) AsFeature(properties map[string]interface{}) *geojson.Feature {
+func (wr *Result) AsFeature(properties map[string]interface{}) *geojson.Feature {
 	feature := geojson.NewFeature(wr.Bbox().Center())
 
 	feature.Properties["title"] = wr.Name
@@ -29,3 +29,5 @@ func (wr *WrappedResult) AsFeature(properties map[string]interface{}) *geojson.F
 
 	return feature
 }
+
+type Results []Result

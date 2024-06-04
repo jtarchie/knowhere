@@ -13,7 +13,7 @@ var _ = Describe("RTree", func() {
 	It("can lookup if something within bounds", func() {
 		tree := &runtime.RTree{}
 
-		bounds := &runtime.WrappedBound{
+		bounds := &runtime.Bound{
 			orb.Bound{
 				Min: [2]float64{0, 0},
 				Max: [2]float64{100, 100},
@@ -23,13 +23,13 @@ var _ = Describe("RTree", func() {
 		Expect(tree.Within(bounds)).To(BeFalse())
 
 		tree.Insert(
-			&runtime.WrappedBound{
+			&runtime.Bound{
 				orb.Bound{
 					Min: [2]float64{25, 25},
 					Max: [2]float64{50, 50},
 				},
 			},
-			&runtime.WrappedResult{},
+			&runtime.Result{},
 		)
 
 		Expect(tree.Within(bounds)).To(BeTrue())
@@ -38,13 +38,13 @@ var _ = Describe("RTree", func() {
 	It("returns nearby items", func() {
 		tree := &runtime.RTree{}
 
-		actual := []*runtime.WrappedResult{
-			&runtime.WrappedResult{query.Result{Name: "1"}},
-			&runtime.WrappedResult{query.Result{Name: "2"}},
+		actual := []*runtime.Result{
+			&runtime.Result{query.Result{Name: "1"}},
+			&runtime.Result{query.Result{Name: "2"}},
 		}
 
 		tree.Insert(
-			&runtime.WrappedBound{
+			&runtime.Bound{
 				orb.Bound{
 					Min: [2]float64{0, 25},
 					Max: [2]float64{25, 0},
@@ -54,7 +54,7 @@ var _ = Describe("RTree", func() {
 		)
 
 		tree.Insert(
-			&runtime.WrappedBound{
+			&runtime.Bound{
 				orb.Bound{
 					Min: [2]float64{25, 25},
 					Max: [2]float64{50, 0},
@@ -64,7 +64,7 @@ var _ = Describe("RTree", func() {
 		)
 
 		results := tree.Nearby(
-			&runtime.WrappedBound{
+			&runtime.Bound{
 				orb.Bound{
 					Min: [2]float64{10, 10},
 					Max: [2]float64{20, 20},

@@ -22,7 +22,7 @@ func (g *Geo) Rtree() *RTree {
 	return &RTree{}
 }
 
-func (g *Geo) Query(qs string) []WrappedResult {
+func (g *Geo) Query(qs string) Results {
 	ctx, cancel := context.WithTimeout(context.TODO(), g.timeout)
 	defer cancel()
 
@@ -32,7 +32,7 @@ func (g *Geo) Query(qs string) []WrappedResult {
 		g.vm.Interrupt(fmt.Sprintf("could not execute query: %q", qs))
 	}
 
-	return lo.Map(results, func(result query.Result, _ int) WrappedResult {
-		return WrappedResult{result}
+	return lo.Map(results, func(result query.Result, _ int) Result {
+		return Result{result}
 	})
 }
