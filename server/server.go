@@ -3,13 +3,9 @@ package server
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"log/slog"
 	"strings"
 	"time"
-
-	"net/http"
-	_ "net/http/pprof"
 
 	"github.com/jtarchie/sqlitezstd"
 	"github.com/labstack/echo/v4"
@@ -74,10 +70,6 @@ func New(
 }
 
 func (s *Server) Start() error {
-	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
-	}()
-
 	bind := fmt.Sprintf("0.0.0.0:%d", s.port)
 
 	slog.Info("server.started", slog.String("bind", "http://"+bind))
