@@ -10,25 +10,27 @@ const keywords = [
   { query: "amenity=school", radius: 5 },
 ];
 
+assert.stab("start");
+
 keywords.forEach((keyword) => {
   keyword.results = geo.query(`nwr[${keyword.query}](prefix=colorado)`);
+  assert.stab(`query ${keyword.query}`);
 });
 
+assert.stab("sort");
 keywords.sort((a, b) => a.results.length - b.results.length);
 
+assert.stab("cluster");
 const neighbors = keywords[0].results.cluster(keywords[0].radius).map((
   entry,
 ) => [entry]);
 
+assert.stab("closeby");
 keywords.slice(1).forEach((keyword) => {
-  const tree = geo.rtree();
+  assert.stab(`tree ${keyword.query}`);
+  const tree = keyword.results.asTree(keyword.radius)
 
-  keyword.results.forEach((entry) => {
-    const extended = entry.bbox().extend(keyword.radius);
-
-    tree.insert(extended, entry);
-  });
-
+  assert.stab(`neighbor ${keyword.query}`);
   neighbors.forEach((entries) => {
     const extended = entries[0].bbox().extend(keywords[0].radius);
 
@@ -39,6 +41,7 @@ keywords.slice(1).forEach((keyword) => {
   });
 });
 
+assert.stab("payload");
 const payload = {
   type: "FeatureCollection",
   features: neighbors.flatMap((entries) => {
@@ -59,6 +62,8 @@ const payload = {
   }),
 };
 
+assert.stab("assert");
 assert.geoJSON(payload);
 
+assert.stab("return");
 return payload;
