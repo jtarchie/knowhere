@@ -11,7 +11,7 @@ tasks:
     - deno lint examples/
     - golangci-lint run --fix --timeout "10m"
     - shellcheck bin/*.sh
-  test: go run github.com/onsi/ginkgo/v2/ginkgo -tags "fts5" -race -r -p
+  test: go test -tags -race fts5 -bench . -benchmem ./...
   ci:
     cmds:
     - task: format
