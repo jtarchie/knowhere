@@ -36,3 +36,11 @@ func (g *Geo) Query(qs string) Results {
 		return Result{result}
 	})
 }
+
+func (g *Geo) AsResults(results ...Result) Results {
+	return Results(results)
+}
+
+func (g *Geo) AsBounds(bounds ...Bound) Bounds {
+	return Bounds(bounds)
+}

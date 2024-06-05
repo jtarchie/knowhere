@@ -29,6 +29,10 @@ github.com/dlclark/regexp2 v1.11.0 h1:G/nrcoOa7ZXlpoa/91N3X7mM3r8eIlMBBJZvsz/mxK
 github.com/dlclark/regexp2 v1.11.0/go.mod h1:DHkYz0B9wPfa6wondMfaivmHpzrQ3v9q8cnmRbL6yW8=
 github.com/dop251/goja v0.0.0-20240516125602-ccbae20bcec2 h1:OFTHt+yJDo/uaIKMGjEKzc3DGhrpQZoqvMUIloZv6ZY=
 github.com/dop251/goja v0.0.0-20240516125602-ccbae20bcec2/go.mod h1:o31y53rb/qiIAONF7w3FHJZRqqP3fzHUr1HqanthByw=
+github.com/engelsjk/polygol v0.0.3 h1:EG+yyPd/sPLNYUQ1KzlBz6OHfa0+EgAHQYLwsSgxF4k=
+github.com/engelsjk/polygol v0.0.3/go.mod h1:I11mpyToT6JcjiEYf7TtRjX326/rLxSNfT5MI1W6cy4=
+github.com/engelsjk/splay-tree v0.0.1 h1:9jWYhlLxSTubl8+Lgk/4mSe8iMQITwbRu+eVMkNTsUM=
+github.com/engelsjk/splay-tree v0.0.1/go.mod h1:5TalkXJDy1DjM0Dj1g4WcZ5bn1Y3YwUnPYH+XWtAXFY=
 github.com/evanw/esbuild v0.21.4 h1:pe4SEQMoR1maEjhgWPEPWmUy11Jp6nidxd1mOvMrFFU=
 github.com/evanw/esbuild v0.21.4/go.mod h1:D2vIQZqV/vIf/VRHtViaUtViZmG7o+kKmlBfVQuRi48=
 github.com/fsnotify/fsnotify v1.6.0/go.mod h1:sl3t1tCWJFWoRz9R8WJCbQihKKwmorjAbSClcnxKAGw=
