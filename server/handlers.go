@@ -32,4 +32,8 @@ func setupRoutes(
 	handler.GET("/api/search", locationSearch(client))
 	handler.GET("/api/prefixes", prefixes(client))
 	handler.GET("/api/runtime", runtime(client, timeout))
+
+	assetHandler := assetHandler()
+	handler.GET("/", echo.WrapHandler(assetHandler))
+	handler.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", assetHandler)))
 }

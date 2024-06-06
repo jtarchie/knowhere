@@ -6,6 +6,7 @@ tasks:
     - deno fmt README.md examples/
     - gofmt -w .
     - shfmt -w bin/*.sh
+    - tidy -w 0 -i -m server/assets/index.html
   lint:
     cmds:
     - deno lint examples/
@@ -24,4 +25,4 @@ tasks:
   develop:
     cmds:
     - go generate ./...
-    - go run github.com/bokwoon95/wgo run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
+    - go run github.com/bokwoon95/wgo run -file '.go|.html' -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
