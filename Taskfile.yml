@@ -3,7 +3,7 @@ version: '3'
 tasks:
   format:
     cmds:
-    - deno fmt README.md examples/
+    - deno fmt README.md examples/ server/assets/
     - gofmt -w .
     - shfmt -w bin/*.sh
     - tidy -w 0 -i -m server/assets/index.html
@@ -12,7 +12,7 @@ tasks:
     - deno lint examples/
     - golangci-lint run --fix --timeout "10m"
     - shellcheck bin/*.sh
-  test: go test -tags -race fts5 -bench . -benchmem ./...
+  test: go test -tags fts5 -race -bench . -benchmem ./...
   ci:
     cmds:
     - task: format
@@ -25,4 +25,4 @@ tasks:
   develop:
     cmds:
     - go generate ./...
-    - go run github.com/bokwoon95/wgo run -file '.go|.html' -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
+    - go run github.com/bokwoon95/wgo run -file '\.(go|html|js)' -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db

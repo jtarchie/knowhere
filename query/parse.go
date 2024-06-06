@@ -1,14 +1,12 @@
-
 //line parse.rl:1
 package query
 
 import (
-  "sort"
-  "fmt"
+	"fmt"
+	"sort"
 
-  "github.com/samber/lo"
+	"github.com/samber/lo"
 )
-
 
 //line parse.go:14
 const query_start int = 1
@@ -17,118 +15,114 @@ const query_error int = 0
 
 const query_en_main int = 1
 
-
 //line parse.rl:13
 
-
 func Parse(data string) (*AST, error) {
-  // types used for the AST
-  foundTypes := []FilterType{}
-  tags := []FilterTag{}
-  directives := map[string]FilterDirective{}
-  
-  var (
-    tag FilterTag
-    directiveName string
-    directive FilterDirective
-  )
+	// types used for the AST
+	foundTypes := []FilterType{}
+	tags := []FilterTag{}
+	directives := map[string]FilterDirective{}
 
-  // set defaults for state machine parsing
-  cs, p, pe, eof := 0, 0, len(data), len(data)
-  
-  // tracks where the beginning of a word starts
-  mark := 0
-  
-  // keep track of opening and closing brackets
-  brackets := 0
+	var (
+		tag           FilterTag
+		directiveName string
+		directive     FilterDirective
+	)
 
+	// set defaults for state machine parsing
+	cs, p, pe, eof := 0, 0, len(data), len(data)
 
-  
+	// tracks where the beginning of a word starts
+	mark := 0
+
+	// keep track of opening and closing brackets
+	brackets := 0
+
 //line parse.go:48
 	{
-	cs = query_start
+		cs = query_start
 	}
 
 //line parse.go:53
 	{
-	if p == pe {
-		goto _test_eof
-	}
-	switch cs {
-	case 1:
-		goto st_case_1
-	case 0:
-		goto st_case_0
-	case 31:
-		goto st_case_31
-	case 2:
-		goto st_case_2
-	case 3:
-		goto st_case_3
-	case 4:
-		goto st_case_4
-	case 5:
-		goto st_case_5
-	case 32:
-		goto st_case_32
-	case 6:
-		goto st_case_6
-	case 7:
-		goto st_case_7
-	case 8:
-		goto st_case_8
-	case 9:
-		goto st_case_9
-	case 10:
-		goto st_case_10
-	case 11:
-		goto st_case_11
-	case 33:
-		goto st_case_33
-	case 12:
-		goto st_case_12
-	case 13:
-		goto st_case_13
-	case 14:
-		goto st_case_14
-	case 15:
-		goto st_case_15
-	case 16:
-		goto st_case_16
-	case 34:
-		goto st_case_34
-	case 17:
-		goto st_case_17
-	case 18:
-		goto st_case_18
-	case 19:
-		goto st_case_19
-	case 20:
-		goto st_case_20
-	case 21:
-		goto st_case_21
-	case 22:
-		goto st_case_22
-	case 23:
-		goto st_case_23
-	case 24:
-		goto st_case_24
-	case 25:
-		goto st_case_25
-	case 26:
-		goto st_case_26
-	case 27:
-		goto st_case_27
-	case 28:
-		goto st_case_28
-	case 29:
-		goto st_case_29
-	case 30:
-		goto st_case_30
-	case 35:
-		goto st_case_35
-	}
-	goto st_out
+		if p == pe {
+			goto _test_eof
+		}
+		switch cs {
+		case 1:
+			goto st_case_1
+		case 0:
+			goto st_case_0
+		case 31:
+			goto st_case_31
+		case 2:
+			goto st_case_2
+		case 3:
+			goto st_case_3
+		case 4:
+			goto st_case_4
+		case 5:
+			goto st_case_5
+		case 32:
+			goto st_case_32
+		case 6:
+			goto st_case_6
+		case 7:
+			goto st_case_7
+		case 8:
+			goto st_case_8
+		case 9:
+			goto st_case_9
+		case 10:
+			goto st_case_10
+		case 11:
+			goto st_case_11
+		case 33:
+			goto st_case_33
+		case 12:
+			goto st_case_12
+		case 13:
+			goto st_case_13
+		case 14:
+			goto st_case_14
+		case 15:
+			goto st_case_15
+		case 16:
+			goto st_case_16
+		case 34:
+			goto st_case_34
+		case 17:
+			goto st_case_17
+		case 18:
+			goto st_case_18
+		case 19:
+			goto st_case_19
+		case 20:
+			goto st_case_20
+		case 21:
+			goto st_case_21
+		case 22:
+			goto st_case_22
+		case 23:
+			goto st_case_23
+		case 24:
+			goto st_case_24
+		case 25:
+			goto st_case_25
+		case 26:
+			goto st_case_26
+		case 27:
+			goto st_case_27
+		case 28:
+			goto st_case_28
+		case 29:
+			goto st_case_29
+		case 30:
+			goto st_case_30
+		case 35:
+			goto st_case_35
+		}
+		goto st_out
 	st_case_1:
 		switch data[p] {
 		case 42:
@@ -141,21 +135,21 @@ func Parse(data string) (*AST, error) {
 			goto tr4
 		}
 		goto st0
-tr59:
+	tr59:
 //line parse.rl:44
 
-      return nil, fmt.Errorf("an undefined type was specified %c: %w", data[p], ErrUndefinedFilter)
-    
-	goto st0
+		return nil, fmt.Errorf("an undefined type was specified %c: %w", data[p], ErrUndefinedFilter)
+
+		goto st0
 //line parse.go:151
-st_case_0:
+	st_case_0:
 	st0:
 		cs = 0
 		goto _out
-tr0:
+	tr0:
 //line parse.rl:43
- foundTypes = append(foundTypes, NodeFilter, WayFilter, RelationFilter) 
-	goto st31
+		foundTypes = append(foundTypes, NodeFilter, WayFilter, RelationFilter)
+		goto st31
 	st31:
 		if p++; p == pe {
 			goto _test_eof31
@@ -169,26 +163,26 @@ tr0:
 			goto tr61
 		}
 		goto tr59
-tr60:
+	tr60:
 //line parse.rl:61
- directive = FilterDirective{} 
-	goto st2
-tr63:
+		directive = FilterDirective{}
+		goto st2
+	tr63:
 //line parse.rl:65
- brackets-- 
+		brackets--
 //line parse.rl:62
- directives[directiveName] = directive 
+		directives[directiveName] = directive
 //line parse.rl:61
- directive = FilterDirective{} 
-	goto st2
-tr64:
+		directive = FilterDirective{}
+		goto st2
+	tr64:
 //line parse.rl:65
- brackets-- 
+		brackets--
 //line parse.rl:48
- tags = append(tags, tag) 
+		tags = append(tags, tag)
 //line parse.rl:61
- directive = FilterDirective{} 
-	goto st2
+		directive = FilterDirective{}
+		goto st2
 	st2:
 		if p++; p == pe {
 			goto _test_eof2
@@ -211,10 +205,10 @@ tr64:
 			goto tr6
 		}
 		goto st0
-tr5:
+	tr5:
 //line parse.rl:64
- brackets++ 
-	goto st3
+		brackets++
+		goto st3
 	st3:
 		if p++; p == pe {
 			goto _test_eof3
@@ -225,14 +219,14 @@ tr5:
 			goto st4
 		}
 		goto st0
-tr12:
+	tr12:
 //line parse.rl:59
- directive = append(directive, data[mark:p]) 
-	goto st4
-tr24:
+		directive = append(directive, data[mark:p])
+		goto st4
+	tr24:
 //line parse.rl:58
- directiveName  = data[mark:p] 
-	goto st4
+		directiveName = data[mark:p]
+		goto st4
 	st4:
 		if p++; p == pe {
 			goto _test_eof4
@@ -248,10 +242,10 @@ tr24:
 			goto st0
 		}
 		goto tr8
-tr8:
+	tr8:
 //line parse.rl:38
- mark = p
-	goto st5
+		mark = p
+		goto st5
 	st5:
 		if p++; p == pe {
 			goto _test_eof5
@@ -269,16 +263,16 @@ tr8:
 			goto st0
 		}
 		goto st5
-tr11:
+	tr11:
 //line parse.rl:59
- directive = append(directive, data[mark:p]) 
-	goto st32
-tr16:
+		directive = append(directive, data[mark:p])
+		goto st32
+	tr16:
 //line parse.rl:38
- mark = p
+		mark = p
 //line parse.rl:59
- directive = append(directive, data[mark:p]) 
-	goto st32
+		directive = append(directive, data[mark:p])
+		goto st32
 	st32:
 		if p++; p == pe {
 			goto _test_eof32
@@ -298,14 +292,14 @@ tr16:
 			goto st0
 		}
 		goto st5
-tr62:
+	tr62:
 //line parse.rl:65
- brackets-- 
+		brackets--
 //line parse.rl:62
- directives[directiveName] = directive 
+		directives[directiveName] = directive
 //line parse.rl:61
- directive = FilterDirective{} 
-	goto st6
+		directive = FilterDirective{}
+		goto st6
 	st6:
 		if p++; p == pe {
 			goto _test_eof6
@@ -337,10 +331,10 @@ tr62:
 			goto tr14
 		}
 		goto st5
-tr13:
+	tr13:
 //line parse.rl:64
- brackets++ 
-	goto st7
+		brackets++
+		goto st7
 	st7:
 		if p++; p == pe {
 			goto _test_eof7
@@ -360,10 +354,10 @@ tr13:
 			goto st0
 		}
 		goto st5
-tr22:
+	tr22:
 //line parse.rl:58
- directiveName  = data[mark:p] 
-	goto st8
+		directiveName = data[mark:p]
+		goto st8
 	st8:
 		if p++; p == pe {
 			goto _test_eof8
@@ -390,10 +384,10 @@ tr22:
 			goto st0
 		}
 		goto tr17
-tr17:
+	tr17:
 //line parse.rl:38
- mark = p
-	goto st10
+		mark = p
+		goto st10
 	st10:
 		if p++; p == pe {
 			goto _test_eof10
@@ -404,10 +398,10 @@ tr17:
 			goto tr19
 		}
 		goto st10
-tr19:
+	tr19:
 //line parse.rl:59
- directive = append(directive, data[mark:p]) 
-	goto st11
+		directive = append(directive, data[mark:p])
+		goto st11
 	st11:
 		if p++; p == pe {
 			goto _test_eof11
@@ -430,12 +424,12 @@ tr19:
 			goto tr63
 		}
 		goto st0
-tr14:
+	tr14:
 //line parse.rl:64
- brackets++ 
+		brackets++
 //line parse.rl:38
- mark = p
-	goto st12
+		mark = p
+		goto st12
 	st12:
 		if p++; p == pe {
 			goto _test_eof12
@@ -467,12 +461,12 @@ tr14:
 			goto st12
 		}
 		goto st5
-tr6:
+	tr6:
 //line parse.rl:64
- brackets++ 
+		brackets++
 //line parse.rl:38
- mark = p
-	goto st13
+		mark = p
+		goto st13
 	st13:
 		if p++; p == pe {
 			goto _test_eof13
@@ -495,18 +489,18 @@ tr6:
 			goto st13
 		}
 		goto st0
-tr61:
+	tr61:
 //line parse.rl:47
- tag = FilterTag{Lookups: []string{}} 
-	goto st14
-tr65:
+		tag = FilterTag{Lookups: []string{}}
+		goto st14
+	tr65:
 //line parse.rl:65
- brackets-- 
+		brackets--
 //line parse.rl:48
- tags = append(tags, tag) 
+		tags = append(tags, tag)
 //line parse.rl:47
- tag = FilterTag{Lookups: []string{}} 
-	goto st14
+		tag = FilterTag{Lookups: []string{}}
+		goto st14
 	st14:
 		if p++; p == pe {
 			goto _test_eof14
@@ -532,10 +526,10 @@ tr65:
 			goto tr27
 		}
 		goto st0
-tr25:
+	tr25:
 //line parse.rl:64
- brackets++ 
-	goto st15
+		brackets++
+		goto st15
 	st15:
 		if p++; p == pe {
 			goto _test_eof15
@@ -567,46 +561,46 @@ tr25:
 			goto tr30
 		}
 		goto st0
-tr30:
+	tr30:
 //line parse.rl:53
- tag.Op = OpNotExists 
-	goto st34
-tr32:
+		tag.Op = OpNotExists
+		goto st34
+	tr32:
 //line parse.rl:55
- tag.Name    = data[mark:p] 
+		tag.Name = data[mark:p]
 //line parse.rl:53
- tag.Op = OpNotExists 
-	goto st34
-tr35:
+		tag.Op = OpNotExists
+		goto st34
+	tr35:
 //line parse.rl:52
- tag.Op = OpExists 
-	goto st34
-tr41:
+		tag.Op = OpExists
+		goto st34
+	tr41:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
+		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:51
- tag.Op = OpNotEquals 
-	goto st34
-tr45:
+		tag.Op = OpNotEquals
+		goto st34
+	tr45:
 //line parse.rl:51
- tag.Op = OpNotEquals 
-	goto st34
-tr50:
+		tag.Op = OpNotEquals
+		goto st34
+	tr50:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
+		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:50
- tag.Op = OpEquals 
-	goto st34
-tr54:
+		tag.Op = OpEquals
+		goto st34
+	tr54:
 //line parse.rl:50
- tag.Op = OpEquals 
-	goto st34
-tr58:
+		tag.Op = OpEquals
+		goto st34
+	tr58:
 //line parse.rl:55
- tag.Name    = data[mark:p] 
+		tag.Name = data[mark:p]
 //line parse.rl:52
- tag.Op = OpExists 
-	goto st34
+		tag.Op = OpExists
+		goto st34
 	st34:
 		if p++; p == pe {
 			goto _test_eof34
@@ -620,10 +614,10 @@ tr58:
 			goto tr65
 		}
 		goto st0
-tr29:
+	tr29:
 //line parse.rl:38
- mark = p
-	goto st17
+		mark = p
+		goto st17
 	st17:
 		if p++; p == pe {
 			goto _test_eof17
@@ -646,10 +640,10 @@ tr29:
 			goto st17
 		}
 		goto st0
-tr26:
+	tr26:
 //line parse.rl:64
- brackets++ 
-	goto st18
+		brackets++
+		goto st18
 	st18:
 		if p++; p == pe {
 			goto _test_eof18
@@ -665,10 +659,10 @@ tr26:
 			goto tr35
 		}
 		goto st0
-tr55:
+	tr55:
 //line parse.rl:55
- tag.Name    = data[mark:p] 
-	goto st19
+		tag.Name = data[mark:p]
+		goto st19
 	st19:
 		if p++; p == pe {
 			goto _test_eof19
@@ -679,10 +673,10 @@ tr55:
 			goto st20
 		}
 		goto st0
-tr40:
+	tr40:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
-	goto st20
+		tag.Lookups = append(tag.Lookups, data[mark:p])
+		goto st20
 	st20:
 		if p++; p == pe {
 			goto _test_eof20
@@ -698,10 +692,10 @@ tr40:
 			goto st0
 		}
 		goto tr37
-tr37:
+	tr37:
 //line parse.rl:38
- mark = p
-	goto st21
+		mark = p
+		goto st21
 	st21:
 		if p++; p == pe {
 			goto _test_eof21
@@ -726,10 +720,10 @@ tr37:
 			goto st0
 		}
 		goto tr42
-tr42:
+	tr42:
 //line parse.rl:38
- mark = p
-	goto st23
+		mark = p
+		goto st23
 	st23:
 		if p++; p == pe {
 			goto _test_eof23
@@ -740,10 +734,10 @@ tr42:
 			goto tr44
 		}
 		goto st23
-tr44:
+	tr44:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
-	goto st24
+		tag.Lookups = append(tag.Lookups, data[mark:p])
+		goto st24
 	st24:
 		if p++; p == pe {
 			goto _test_eof24
@@ -757,14 +751,14 @@ tr44:
 			goto tr45
 		}
 		goto st0
-tr49:
+	tr49:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
-	goto st25
-tr57:
+		tag.Lookups = append(tag.Lookups, data[mark:p])
+		goto st25
+	tr57:
 //line parse.rl:55
- tag.Name    = data[mark:p] 
-	goto st25
+		tag.Name = data[mark:p]
+		goto st25
 	st25:
 		if p++; p == pe {
 			goto _test_eof25
@@ -780,10 +774,10 @@ tr57:
 			goto st0
 		}
 		goto tr46
-tr46:
+	tr46:
 //line parse.rl:38
- mark = p
-	goto st26
+		mark = p
+		goto st26
 	st26:
 		if p++; p == pe {
 			goto _test_eof26
@@ -808,10 +802,10 @@ tr46:
 			goto st0
 		}
 		goto tr51
-tr51:
+	tr51:
 //line parse.rl:38
- mark = p
-	goto st28
+		mark = p
+		goto st28
 	st28:
 		if p++; p == pe {
 			goto _test_eof28
@@ -822,10 +816,10 @@ tr51:
 			goto tr53
 		}
 		goto st28
-tr53:
+	tr53:
 //line parse.rl:56
- tag.Lookups = append(tag.Lookups, data[mark:p]) 
-	goto st29
+		tag.Lookups = append(tag.Lookups, data[mark:p])
+		goto st29
 	st29:
 		if p++; p == pe {
 			goto _test_eof29
@@ -839,12 +833,12 @@ tr53:
 			goto tr54
 		}
 		goto st0
-tr27:
+	tr27:
 //line parse.rl:64
- brackets++ 
+		brackets++
 //line parse.rl:38
- mark = p
-	goto st30
+		mark = p
+		goto st30
 	st30:
 		if p++; p == pe {
 			goto _test_eof30
@@ -872,18 +866,18 @@ tr27:
 			goto st30
 		}
 		goto st0
-tr2:
+	tr2:
 //line parse.rl:40
- foundTypes = append(foundTypes, NodeFilter) 
-	goto st35
-tr3:
+		foundTypes = append(foundTypes, NodeFilter)
+		goto st35
+	tr3:
 //line parse.rl:41
- foundTypes = append(foundTypes, RelationFilter) 
-	goto st35
-tr4:
+		foundTypes = append(foundTypes, RelationFilter)
+		goto st35
+	tr4:
 //line parse.rl:42
- foundTypes = append(foundTypes, WayFilter) 
-	goto st35
+		foundTypes = append(foundTypes, WayFilter)
+		goto st35
 	st35:
 		if p++; p == pe {
 			goto _test_eof35
@@ -904,81 +898,152 @@ tr4:
 		}
 		goto tr59
 	st_out:
-	_test_eof31: cs = 31; goto _test_eof
-	_test_eof2: cs = 2; goto _test_eof
-	_test_eof3: cs = 3; goto _test_eof
-	_test_eof4: cs = 4; goto _test_eof
-	_test_eof5: cs = 5; goto _test_eof
-	_test_eof32: cs = 32; goto _test_eof
-	_test_eof6: cs = 6; goto _test_eof
-	_test_eof7: cs = 7; goto _test_eof
-	_test_eof8: cs = 8; goto _test_eof
-	_test_eof9: cs = 9; goto _test_eof
-	_test_eof10: cs = 10; goto _test_eof
-	_test_eof11: cs = 11; goto _test_eof
-	_test_eof33: cs = 33; goto _test_eof
-	_test_eof12: cs = 12; goto _test_eof
-	_test_eof13: cs = 13; goto _test_eof
-	_test_eof14: cs = 14; goto _test_eof
-	_test_eof15: cs = 15; goto _test_eof
-	_test_eof16: cs = 16; goto _test_eof
-	_test_eof34: cs = 34; goto _test_eof
-	_test_eof17: cs = 17; goto _test_eof
-	_test_eof18: cs = 18; goto _test_eof
-	_test_eof19: cs = 19; goto _test_eof
-	_test_eof20: cs = 20; goto _test_eof
-	_test_eof21: cs = 21; goto _test_eof
-	_test_eof22: cs = 22; goto _test_eof
-	_test_eof23: cs = 23; goto _test_eof
-	_test_eof24: cs = 24; goto _test_eof
-	_test_eof25: cs = 25; goto _test_eof
-	_test_eof26: cs = 26; goto _test_eof
-	_test_eof27: cs = 27; goto _test_eof
-	_test_eof28: cs = 28; goto _test_eof
-	_test_eof29: cs = 29; goto _test_eof
-	_test_eof30: cs = 30; goto _test_eof
-	_test_eof35: cs = 35; goto _test_eof
+	_test_eof31:
+		cs = 31
+		goto _test_eof
+	_test_eof2:
+		cs = 2
+		goto _test_eof
+	_test_eof3:
+		cs = 3
+		goto _test_eof
+	_test_eof4:
+		cs = 4
+		goto _test_eof
+	_test_eof5:
+		cs = 5
+		goto _test_eof
+	_test_eof32:
+		cs = 32
+		goto _test_eof
+	_test_eof6:
+		cs = 6
+		goto _test_eof
+	_test_eof7:
+		cs = 7
+		goto _test_eof
+	_test_eof8:
+		cs = 8
+		goto _test_eof
+	_test_eof9:
+		cs = 9
+		goto _test_eof
+	_test_eof10:
+		cs = 10
+		goto _test_eof
+	_test_eof11:
+		cs = 11
+		goto _test_eof
+	_test_eof33:
+		cs = 33
+		goto _test_eof
+	_test_eof12:
+		cs = 12
+		goto _test_eof
+	_test_eof13:
+		cs = 13
+		goto _test_eof
+	_test_eof14:
+		cs = 14
+		goto _test_eof
+	_test_eof15:
+		cs = 15
+		goto _test_eof
+	_test_eof16:
+		cs = 16
+		goto _test_eof
+	_test_eof34:
+		cs = 34
+		goto _test_eof
+	_test_eof17:
+		cs = 17
+		goto _test_eof
+	_test_eof18:
+		cs = 18
+		goto _test_eof
+	_test_eof19:
+		cs = 19
+		goto _test_eof
+	_test_eof20:
+		cs = 20
+		goto _test_eof
+	_test_eof21:
+		cs = 21
+		goto _test_eof
+	_test_eof22:
+		cs = 22
+		goto _test_eof
+	_test_eof23:
+		cs = 23
+		goto _test_eof
+	_test_eof24:
+		cs = 24
+		goto _test_eof
+	_test_eof25:
+		cs = 25
+		goto _test_eof
+	_test_eof26:
+		cs = 26
+		goto _test_eof
+	_test_eof27:
+		cs = 27
+		goto _test_eof
+	_test_eof28:
+		cs = 28
+		goto _test_eof
+	_test_eof29:
+		cs = 29
+		goto _test_eof
+	_test_eof30:
+		cs = 30
+		goto _test_eof
+	_test_eof35:
+		cs = 35
+		goto _test_eof
 
-	_test_eof: {}
-	if p == eof {
-		switch cs {
-		case 34:
-//line parse.rl:65
- brackets-- 
-//line parse.rl:48
- tags = append(tags, tag) 
-		case 32, 33:
-//line parse.rl:65
- brackets-- 
-//line parse.rl:62
- directives[directiveName] = directive 
-//line parse.go:956
+	_test_eof:
+		{
 		}
-	}
+		if p == eof {
+			switch cs {
+			case 34:
+//line parse.rl:65
+				brackets--
+//line parse.rl:48
+				tags = append(tags, tag)
+			case 32, 33:
+//line parse.rl:65
+				brackets--
+//line parse.rl:62
+				directives[directiveName] = directive
+//line parse.go:956
+			}
+		}
 
-	_out: {}
+	_out:
+		{
+		}
 	}
 
 //line parse.rl:97
 
+	if cs < query_first_final {
+		return nil, ErrUnparsableQuery
+	}
 
-  if cs < query_first_final {
-    return nil, ErrUnparsableQuery
-  }
+	if brackets != 0 {
+		return nil, fmt.Errorf("tags not enclosed properly (%d): %w", brackets, ErrUnbalancedBrackets)
+	}
 
-  if brackets != 0 {
-    return nil, fmt.Errorf("tags not enclosed properly (%d): %w", brackets, ErrUnbalancedBrackets)
-  }
-
-  sort.Slice(foundTypes, func(i, j int) bool {
+	sort.Slice(foundTypes, func(i, j int) bool {
 		return foundTypes[i] < foundTypes[j]
 	})
 
 	foundTypes = lo.Uniq(foundTypes)
 
 	return &AST{
-		Tags:  tags,
-		Types: foundTypes,
-    Directives: directives,
+		Tags:       tags,
+		Types:      foundTypes,
+		Directives: directives,
 	}, nil
 }

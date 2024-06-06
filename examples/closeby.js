@@ -12,11 +12,11 @@ const colorPalette = [
   "#FFED6F", // Light Yellow
   "#6A3D9A", // Deep Purple
   "#B15928", // Brownish-Orange
-  "#44AA99", // Teal  
+  "#44AA99", // Teal
   "#117733", // Dark Green
   "#999933", // Olive Green
   "#AA4499", // Purple
-  "#DDCC77", // Light Tan 
+  "#DDCC77", // Light Tan
   "#882255", // Dark Red
   "#332288", // Dark Blue
 ];

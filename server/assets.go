@@ -16,5 +16,5 @@ func assetHandler() http.Handler {
 		panic(fmt.Sprintf("could embed files: %s", err))
 	}
 
-	return  http.FileServer(http.FS(fsys))
+	return http.FileServer(http.FS(fsys))
 }
