@@ -23,7 +23,6 @@ tasks:
   build:
     cmds:
     - go generate ./...
-    - esbuild --tree-shaking=true --bundle --minify server/assets/main.ts --outfile=server/assets/main.js --sourcemap=inline
   default:
     cmds:
     - task: build
