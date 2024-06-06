@@ -71,4 +71,5 @@ fly deploy
 
 - identify globbing over exact match
 - support inequalities (>,<,>=,<=) for numbers
-- ensure sql generator is valid
+- add prefix list in runtime
+- add textbox to edit query in page
