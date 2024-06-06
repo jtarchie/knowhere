@@ -1,9 +1,11 @@
 version: '3'
 
+interval: "100ms"
+
 tasks:
   format:
     cmds:
-    - deno fmt README.md examples/ server/assets/
+    - deno fmt README.md examples/ server/assets/*.ts
     - gofmt -w .
     - shfmt -w bin/*.sh
     - tidy -w 0 -i -m server/assets/index.html
@@ -18,11 +20,23 @@ tasks:
     - task: format
     - task: lint
     - task: test
+  build:
+    cmds:
+    - go generate ./...
+    - esbuild --tree-shaking=true --bundle --minify server/assets/main.ts --outfile=server/assets/main.js --sourcemap=inline
   default:
     cmds:
-    - go generate ./...
+    - task: build
     - task: ci
-  develop:
+  watch:
+    watch: true
+    sources:
+    - '**/*.go'
     cmds:
-    - go generate ./...
-    - go run github.com/bokwoon95/wgo run -file '\.(go|html|js)' -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
+    - task: build
+    - task: format
+    - task: lint
+  develop:
+    deps: [watch]
+    cmds:
+    - go run github.com/bokwoon95/wgo run -tags fts5 -race github.com/jtarchie/knowhere server --db .build/entries.db
