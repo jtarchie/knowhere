@@ -376,7 +376,7 @@ func (b *Converter) Execute() error {
 		CREATE VIRTUAL TABLE
 			{{prefix}}_search
 		USING
-			fts5(tags, content = '', tokenize="porter");
+			fts5(tags, osm_id, minLat, maxLat, minLon, maxLon, osm_type, content = '{{prefix}}_entries', tokenize="porter", content_rowid='id');
 
 		WITH tags AS (
 			SELECT
