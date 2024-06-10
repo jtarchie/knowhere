@@ -67,7 +67,7 @@ const payload = {
     }
 
     const features = entries.flatMap((entry, index) => {
-      const color = colorPalette[index % entries.length];
+      const color = colorPalette[index % colorPalette.length];
 
       const feature = entry.asFeature({
         "marker-color": color,
@@ -86,7 +86,7 @@ const payload = {
     return features.concat(
       [
         bounds.asFeature({
-          "fill": colorPalette[index % neighbors.length],
+          "fill": colorPalette[index % colorPalette.length],
           "fill-opacity": 0.5,
         }),
       ],
