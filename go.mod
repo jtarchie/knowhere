@@ -9,7 +9,8 @@ require (
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
 	github.com/dop251/goja v0.0.0-20240516125602-ccbae20bcec2
-	github.com/evanw/esbuild v0.21.4
+	github.com/engelsjk/polygol v0.0.3
+	github.com/evanw/esbuild v0.21.5
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
@@ -40,7 +41,6 @@ require (
 	github.com/cloudflare/circl v1.3.8 // indirect
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
-	github.com/engelsjk/polygol v0.0.3 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
