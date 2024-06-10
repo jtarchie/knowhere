@@ -28,16 +28,12 @@ func ToIndexedSQL(query string) (string, error) {
 
 	builder.WriteString(fmt.Sprintf(`
 		SELECT
-			*
+			rowid AS id, *
 		FROM
-			%sentries e
-		JOIN
 			%ssearch s
-		ON
-			s.rowid = e.id
-	`, prefix, prefix))
+	`, prefix))
 
-	builder.WriteString(" WHERE ( e.osm_type IN (")
+	builder.WriteString(" WHERE ( s.osm_type IN (")
 
 	for index, t := range ast.Types {
 		if 0 < index {
@@ -156,7 +152,7 @@ func ToIndexedSQL(query string) (string, error) {
 	}
 
 	if ids, ok := ast.Directives["id"]; ok {
-		builder.WriteString(` AND e.osm_id IN ( `)
+		builder.WriteString(` AND s.osm_id IN ( `)
 
 		for index, id := range ids {
 			if 0 < index {
