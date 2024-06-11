@@ -8,8 +8,9 @@ require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/dop251/goja v0.0.0-20240516125602-ccbae20bcec2
-	github.com/evanw/esbuild v0.21.4
+	github.com/dop251/goja v0.0.0-20240610225006-393f6d42497b
+	github.com/engelsjk/polygol v0.0.3
+	github.com/evanw/esbuild v0.21.5
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
@@ -26,7 +27,7 @@ require (
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/samber/lo v1.39.0
 	github.com/samber/slog-echo v1.14.2
-	github.com/schollz/progressbar/v3 v3.14.3
+	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
 	github.com/valyala/fasttemplate v1.2.2
@@ -40,7 +41,6 @@ require (
 	github.com/cloudflare/circl v1.3.8 // indirect
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/dlclark/regexp2 v1.11.0 // indirect
-	github.com/engelsjk/polygol v0.0.3 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
@@ -61,7 +61,7 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/quic-go v0.44.0 // indirect
+	github.com/quic-go/quic-go v0.45.0 // indirect
 	github.com/refraction-networking/utls v1.6.6 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/tidwall/geoindex v1.7.0 // indirect
@@ -85,7 +85,7 @@ require (
 	golang.org/x/term v0.21.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.22.0 // indirect
-	google.golang.org/protobuf v1.34.1 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/ranger v0.0.0-20171016084633-e2e137620847 // indirect
