@@ -72,4 +72,4 @@ fly deploy
 - identify globbing over exact match
 - support inequalities (>,<,>=,<=) for numbers
 - add prefix list in runtime
-- add textbox to edit query in page
+- ensure tags names are in alphabetical order when marshalled
