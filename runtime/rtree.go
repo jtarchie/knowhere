@@ -45,9 +45,11 @@ func (r *RTree) Nearby(bound *Bound, count uint) []*Result {
 }
 
 func fromWrappedDistOverlap(target *Bound) func(min, max [2]float64, data *Result, item bool) float64 {
+	callback := rtree.BoxDist[float64, *Result](target.Min, target.Max, nil)
+
 	return func(bMin, bMax [2]float64, item *Result, hasItem bool) float64 {
 		if !hasItem {
-			return rtree.BoxDist[float64, *Result](target.Min, target.Max, nil)(bMin, bMax, item, hasItem)
+			return callback(bMin, bMax, item, hasItem)
 		}
 
 		current := orb.Bound{
