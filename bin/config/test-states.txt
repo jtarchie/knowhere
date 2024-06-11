@@ -1,1 +1,1 @@
-https://download.geofabrik.de/north-america/us/north-carolina-latest.osm.pbf
+https://download.geofabrik.de/north-america/us/wyoming-latest.osm.pbf
