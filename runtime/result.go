@@ -23,6 +23,8 @@ func (wr *Result) AsFeature(properties map[string]interface{}) *geojson.Feature 
 	feature := geojson.NewFeature(wr.Bbox().Center())
 
 	feature.Properties["title"] = wr.Name
+	feature.Properties["id"] = wr.ID
+
 	for name, value := range properties {
 		feature.Properties[name] = value
 	}
