@@ -22,16 +22,20 @@ func (wb *Bound) Extend(radius float64) *Bound {
 
 type Bounds []Bound
 
-func (r Bounds) AsFeature(properties map[string]interface{}) *geojson.Feature {
+func (r Bounds) Union() orb.Geometry {
 	polygons := lo.Map(r, func(result Bound, _ int) orb.Polygon {
 		return result.ToPolygon()
 	})
 	points := lo.Map(polygons, func(polygon orb.Polygon, _ int) polygol.Geom {
 		return g2p(polygon)
 	})
-
 	geoms, _ := polygol.Union(points[0], points[1:]...)
-	feature := geojson.NewFeature(p2g(geoms))
+
+	return p2g(geoms)
+}
+
+func (r Bounds) AsFeature(properties map[string]interface{}) *geojson.Feature {
+	feature := geojson.NewFeature(r.Union())
 
 	for name, value := range properties {
 		feature.Properties[name] = value
