@@ -22,6 +22,15 @@ func (wb *Bound) Extend(radius float64) *Bound {
 
 type Bounds []Bound
 
+func (r Bounds) AsBound() *Bound {
+	union := r[0].Bound
+	for _, bound := range r {
+		union = union.Union(bound.Bound)
+	}
+
+	return &Bound{union}
+}
+
 func (r Bounds) Union() orb.Geometry {
 	polygons := lo.Map(r, func(result Bound, _ int) orb.Polygon {
 		return result.ToPolygon()

@@ -10,6 +10,8 @@ import (
 	_ "embed"
 
 	"github.com/dop251/goja"
+	"github.com/dop251/goja_nodejs/require"
+	"github.com/dop251/goja_nodejs/url"
 )
 
 type Pool struct {
@@ -29,6 +31,9 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 				vm.SetFieldNameMapper(&tagFieldNameMapper{
 					cache: map[string]string{},
 				})
+
+				new(require.Registry).Enable(vm)
+				url.Enable(vm)
 
 				err := vm.Set("geo", &Geo{
 					vm:      vm,
