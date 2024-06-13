@@ -67,6 +67,7 @@ func (b *Build) Run() error {
 
 			response, err := client.R().
 				SetOutputFile(filename).
+				SetRetryCount(3).
 				SetDownloadCallback(func(info req.DownloadInfo) {
 					if info.Response.Response != nil {
 						bar.ChangeMax64(info.Response.ContentLength)
