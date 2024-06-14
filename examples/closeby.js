@@ -42,15 +42,15 @@ const colorPalette = [
 ];
 
 const keywords = [
-  { query: "name=Costco", radius: 5000 },
-  { query: "amenity=cafe", radius: 1000 },
-  { query: "amenity=school", radius: 5000 },
+  { query: "nwr[name=Costco]", radius: 5000 },
+  { query: "nwr[amenity=cafe][name!=Starbucks]", radius: 1000 },
+  { query: "nwr[amenity=school]", radius: 5000 },
 ];
 
 assert.stab("start");
 
 keywords.forEach((keyword) => {
-  keyword.results = geo.query(`nwr[${keyword.query}](prefix=colorado)`);
+  keyword.results = geo.query(`${keyword.query}(prefix=colorado)`);
   assert.stab(`query ${keyword.query}`);
 });
 
