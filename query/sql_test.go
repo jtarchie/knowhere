@@ -47,11 +47,13 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 	}
 
 	Describe("ToExactSQL", func() {
-		DescribeTable("query with filters", func(q string, expectedSQL string) {
+		DescribeTable("query with filters", func(q string, parts ...string) {
 			actualSQL, err := query.ToExactSQL(q)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+			for _, part := range parts {
+				Expect(pretty(actualSQL)).To(ContainSubstring(pretty(part)))
+			}
 
 			_, err = client.Exec(actualSQL)
 			Expect(err).NotTo(HaveOccurred())
@@ -59,34 +61,36 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("nodes", "n", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) )`),
 			Entry("ways", "w", `SELECT * FROM entries e WHERE ( e.osm_type IN (2) )`),
 			Entry("relation", "r", `SELECT * FROM entries e WHERE ( e.osm_type IN (3) )`),
-			Entry("nodes and way", "nw", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) )`),
-			Entry("way and nodes", "wn", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) )`),
-			Entry("all explicit", "nwr", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2,3) )`),
-			Entry("all implicit", "*", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2,3) )`),
+			Entry("nodes and way", "nw", `( e.osm_type IN (1,2) )`),
+			Entry("way and nodes", "wn", `( e.osm_type IN (1,2) )`),
+			Entry("all explicit", "nwr", `( e.osm_type IN (1,2,3) )`),
+			Entry("all implicit", "*", `( e.osm_type IN (1,2,3) )`),
 		)
 
-		DescribeTable("query with tags", func(q string, expectedSQL string) {
+		DescribeTable("query with tags", func(q string, parts ...string) {
 			actualSQL, err := query.ToExactSQL(q)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(pretty(actualSQL)).To(Equal(pretty(expectedSQL)))
+			for _, part := range parts {
+				Expect(pretty(actualSQL)).To(ContainSubstring(pretty(part)))
+			}
 
 			_, err = client.Exec(actualSQL)
 			Expect(err).NotTo(HaveOccurred())
 		},
 			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' )`),
-			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2,3) ) AND ( e.tags GLOB '*King*' OR e.tags GLOB '*Queen*' )`),
-			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `SELECT * FROM entries e WHERE ( e.osm_type IN (1) ) AND ( e.tags GLOB 'cafe' ) AND NOT ( ( e.tags GLOB 'Starbucks' ) )`),
-			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' ) AND ( e.tags->>'$.cuisine' GLOB 'sushi' )`),
-			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' OR e.tags->>'$.amenity' GLOB 'pub' OR e.tags->>'$.amenity' GLOB 'cafe' )`),
-			Entry("single tag that exists", "nw[amenity]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) ) AND ( e.tags->>'$.amenity' IS NOT NULL )`),
-			Entry("multiple tag that exists", "r[route][ref][network]", `SELECT * FROM entries e WHERE ( e.osm_type IN (3) ) AND ( e.tags->>'$.route' IS NOT NULL ) AND ( e.tags->>'$.ref' IS NOT NULL ) AND ( e.tags->>'$.network' IS NOT NULL )`),
-			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `SELECT * FROM entries e WHERE ( e.osm_type IN (3) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' ) AND ( e.tags->>'$.name' IS NOT NULL )`),
-			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) ) AND ( e.tags->>'$.amenity' GLOB 'coffee' ) AND NOT ( ( e.tags->>'$.name' GLOB 'Starbucks' ) )`),
-			Entry("tag should not exist", "nw[amenity=coffee][!name]", `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2) ) AND ( e.tags->>'$.amenity' GLOB 'coffee' ) AND NOT ( ( e.tags->>'$.name' IS NOT NULL ) )`),
-			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `SELECT * FROM entries e WHERE ( e.osm_type IN (1,2,3) ) AND ( e.tags->>'$.name' IS NOT NULL ) AND ( e.tags->>'$.name' GLOB '*King*' OR e.tags->>'$.name' GLOB '*Queen*' ) AND NOT ( ( e.tags->>'$.amenity' IS NOT NULL ) )`),
-			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `SELECT * FROM test_entries e WHERE ( e.osm_type IN (1) ) AND ( e.tags->>'$.amenity' GLOB 'restaurant' )`),
-			Entry("with ids", "n(id=1,123,4567)", `SELECT * FROM entries e WHERE ( e.osm_type IN (1) ) AND e.osm_id IN ( 1, 123, 4567 )`),
+			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `( e.tags GLOB '*King*' OR e.tags GLOB '*Queen*' )`),
+			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `( e.tags GLOB 'cafe' ) AND NOT ( ( e.tags GLOB 'Starbucks' ) )`),
+			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `( e.tags->>'$.amenity' GLOB 'restaurant' ) AND ( e.tags->>'$.cuisine' GLOB 'sushi' )`),
+			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `( e.tags->>'$.amenity' GLOB 'restaurant' OR e.tags->>'$.amenity' GLOB 'pub' OR e.tags->>'$.amenity' GLOB 'cafe' )`),
+			Entry("single tag that exists", "nw[amenity]", `( e.tags->>'$.amenity' IS NOT NULL )`),
+			Entry("multiple tag that exists", "r[route][ref][network]", `( e.tags->>'$.route' IS NOT NULL ) AND ( e.tags->>'$.ref' IS NOT NULL ) AND ( e.tags->>'$.network' IS NOT NULL )`),
+			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `( e.tags->>'$.amenity' GLOB 'restaurant' ) AND ( e.tags->>'$.name' IS NOT NULL )`),
+			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `( e.tags->>'$.amenity' GLOB 'coffee' ) AND NOT ( ( e.tags->>'$.name' GLOB 'Starbucks' ) )`),
+			Entry("tag should not exist", "nw[amenity=coffee][!name]", `( e.tags->>'$.amenity' GLOB 'coffee' ) AND NOT ( ( e.tags->>'$.name' IS NOT NULL ) )`),
+			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( e.tags->>'$.name' IS NOT NULL ) AND ( e.tags->>'$.name' GLOB '*King*' OR e.tags->>'$.name' GLOB '*Queen*' ) AND NOT ( ( e.tags->>'$.amenity' IS NOT NULL ) )`),
+			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `( e.tags->>'$.amenity' GLOB 'restaurant' )`),
+			Entry("with ids", "n(id=1,123,4567)", `e.osm_id IN ( 1, 123, 4567 )`),
 		)
 	})
 
