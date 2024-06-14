@@ -21,6 +21,10 @@ const (
 	OpNotEquals
 	OpExists
 	OpNotExists
+	OpGreaterThan
+	OpGreaterThanEquals
+	OpLessThan
+	OpLessThanEquals
 )
 
 type FilterTag struct {

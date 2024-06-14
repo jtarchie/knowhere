@@ -12,7 +12,7 @@ import (
 var _ = Describe("Assert", func() {
 	It("asserts for equality", func() {
 		pool := runtime.NewPool(nil, time.Second)
-		
+
 		vm, err := pool.Get()
 		Expect(err).NotTo(HaveOccurred())
 		defer pool.Put(vm)
@@ -27,7 +27,7 @@ var _ = Describe("Assert", func() {
 
 	It("asserts valid GeoJSON", func() {
 		pool := runtime.NewPool(nil, time.Second)
-		
+
 		vm, err := pool.Get()
 		Expect(err).NotTo(HaveOccurred())
 		defer pool.Put(vm)

@@ -266,4 +266,62 @@ var _ = Describe("Building a query", func() {
 			},
 		}))
 	})
+
+	It("supports inequalities", func() {
+		ast, err := query.Parse(`nw[pop>0]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "pop",
+					Lookups: []string{"0"},
+					Op:      query.OpGreaterThan,
+				},
+			},
+		}))
+
+		ast, err = query.Parse(`nw[pop>=0]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "pop",
+					Lookups: []string{"0"},
+					Op:      query.OpGreaterThanEquals,
+				},
+			},
+		}))
+
+		ast, err = query.Parse(`nw[pop<0]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "pop",
+					Lookups: []string{"0"},
+					Op:      query.OpLessThan,
+				},
+			},
+		}))
+
+		ast, err = query.Parse(`nw[pop<=0]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "pop",
+					Lookups: []string{"0"},
+					Op:      query.OpLessThanEquals,
+				},
+			},
+		}))
+	})
 })
