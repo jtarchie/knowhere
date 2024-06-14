@@ -31,137 +31,103 @@ func ToExactSQL(query string) (string, error) {
 			*
 		FROM
 			%sentries e
+		WHERE
 	`, prefix))
 
-	builder.WriteString(" WHERE ( e.osm_type IN (")
+	parts := []string{}
 
-	for index, t := range ast.Types {
-		if 0 < index {
-			builder.WriteString(",")
-		}
+	if 0 < len(ast.Types) {
+		asString := lo.Map(ast.Types, func(item FilterType, _ int) string {
+			return strconv.Itoa(int(item))
+		})
 
-		builder.WriteString(strconv.Itoa(int(t)))
+		parts = append(
+			parts,
+			fmt.Sprintf(
+				`e.osm_type IN (%s)`,
+				strings.Join(asString, ","),
+			),
+		)
 	}
 
-	builder.WriteString(") ) ")
-
-	exists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
-		return tag.Op == OpEquals || tag.Op == OpExists
+	groupedTags := lo.GroupBy(allowedTags, func(tag FilterTag) OpType {
+		return tag.Op
 	})
 
-	notExists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
-		return tag.Op == OpNotEquals || tag.Op == OpNotExists
-	})
-
-	if exists {
-		index := 0
-
-		for _, tag := range allowedTags {
-			switch tag.Op {
-			case OpEquals:
-				builder.WriteString(" AND ( ")
-
-				for index, lookup := range tag.Lookups {
-					if 0 < index {
-						builder.WriteString(" OR ")
-					}
-
-					if tag.Name != "" {
-						builder.WriteString("e.tags->>'$.")
-						builder.WriteString(tag.Name)
-						builder.WriteString("' GLOB ")
-					} else {
-						builder.WriteString("e.tags")
-						builder.WriteString(tag.Name)
-						builder.WriteString(" GLOB ")
-					}
-
-					builder.WriteString("'")
-					builder.WriteString(lookup)
-					builder.WriteString("'")
+	for operation, tags := range groupedTags {
+		switch operation {
+		case OpEquals:
+			for _, tag := range tags {
+				tagPart := "e.tags"
+				if tag.Name != "" {
+					tagPart += "->>'$." + tag.Name + "'"
 				}
+				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
+					return fmt.Sprintf(
+						`%s GLOB '%s'`,
+						tagPart,
+						item,
+					)
+				})
 
-				builder.WriteString(" )")
+				parts = append(
+					parts,
+					fmt.Sprintf("( %s )", strings.Join(asString, " OR ")),
+				)
+			}
+		case OpNotEquals:
+			for _, tag := range tags {
+				tagPart := "e.tags"
+				if tag.Name != "" {
+					tagPart += "->>'$." + tag.Name + "'"
+				}
+				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
+					return fmt.Sprintf(
+						`%s NOT GLOB '%s'`,
+						tagPart,
+						item,
+					)
+				})
 
-				index++
-			case OpExists:
-				builder.WriteString(` AND ( e.tags->>'$.`)
-				builder.WriteString(tag.Name)
-				builder.WriteString(`' IS NOT NULL )`)
-
-				index++
-			case OpNotEquals, OpNotExists:
+				parts = append(
+					parts,
+					fmt.Sprintf("( %s )", strings.Join(asString, " OR ")),
+				)
+			}
+		case OpExists:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( e.tags->>'$.%s' IS NOT NULL )",
+						tag.Name,
+					),
+				)
+			}
+		case OpNotExists:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( e.tags->>'$.%s' IS NULL )",
+						tag.Name,
+					),
+				)
 			}
 		}
-	}
-
-	if notExists {
-		builder.WriteString(" AND NOT ( ")
-
-		index := 0
-
-		for _, tag := range allowedTags {
-			switch tag.Op {
-			case OpNotEquals:
-				if 0 < index {
-					builder.WriteString(" AND ")
-				}
-
-				builder.WriteString("( ")
-
-				for index, lookup := range tag.Lookups {
-					if 0 < index {
-						builder.WriteString(" OR ")
-					}
-
-					if tag.Name != "" {
-						builder.WriteString("e.tags->>'$.")
-						builder.WriteString(tag.Name)
-						builder.WriteString("' GLOB ")
-					} else {
-						builder.WriteString("e.tags")
-						builder.WriteString(tag.Name)
-						builder.WriteString(" GLOB ")
-					}
-
-					builder.WriteString("'")
-					builder.WriteString(lookup)
-					builder.WriteString("'")
-				}
-
-				builder.WriteString(" )")
-
-				index++
-			case OpNotExists:
-				if 0 < index {
-					builder.WriteString(" AND ")
-				}
-
-				builder.WriteString(`( e.tags->>'$.`)
-				builder.WriteString(tag.Name)
-				builder.WriteString(`' IS NOT NULL )`)
-
-				index++
-			case OpEquals, OpExists:
-			}
-		}
-
-		builder.WriteString(" )")
 	}
 
 	if ids, ok := ast.Directives["id"]; ok {
-		builder.WriteString(` AND e.osm_id IN ( `)
-
-		for index, id := range ids {
-			if 0 < index {
-				builder.WriteString(", ")
-			}
-
-			builder.WriteString(id)
-		}
-
-		builder.WriteString(` )`)
+		parts = append(
+			parts,
+			fmt.Sprintf(
+				`e.osm_id IN (%s)`,
+				strings.Join(ids, ","),
+			),
+		)
 	}
+
+	builder.WriteString(strings.Join(parts, " AND "))
 
 	return builder.String(), nil
 }
