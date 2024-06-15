@@ -70,6 +70,4 @@ fly deploy
 ## TODO
 
 - identify globbing over exact match
-- support inequalities (>,<,>=,<=) for numbers
 - add prefix list in runtime
-- ensure tags names are in alphabetical order when marshalled
