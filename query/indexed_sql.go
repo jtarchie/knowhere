@@ -31,143 +31,138 @@ func ToIndexedSQL(query string) (string, error) {
 			rowid AS id, *
 		FROM
 			%ssearch s
+		WHERE
 	`, prefix))
 
-	builder.WriteString(" WHERE ( s.osm_type IN (")
+	parts := []string{}
 
-	for index, t := range ast.Types {
-		if 0 < index {
-			builder.WriteString(",")
+	if 0 < len(ast.Types) {
+		asString := lo.Map(ast.Types, func(item FilterType, _ int) string {
+			return strconv.Itoa(int(item))
+		})
+
+		parts = append(
+			parts,
+			fmt.Sprintf(
+				`s.osm_type IN (%s)`,
+				strings.Join(asString, ","),
+			),
+		)
+	}
+
+	groupedTags := lo.GroupBy(allowedTags, func(tag FilterTag) OpType {
+		return tag.Op
+	})
+
+	equalParts := []string{}
+	notParts := []string{}
+
+	for op := range OpLessThanEquals {
+		tags, ok := groupedTags[op]
+		if !ok {
+			continue
 		}
 
-		builder.WriteString(strconv.Itoa(int(t)))
-	}
+		switch op {
+		case OpEquals:
+			for _, tag := range tags {
+				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
+					return fmt.Sprintf("%q", item)
+				})
 
-	builder.WriteString(") ) ")
-
-	exists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
-		return tag.Op == OpEquals || tag.Op == OpExists
-	})
-
-	notExists := lo.ContainsBy(allowedTags, func(tag FilterTag) bool {
-		return tag.Op == OpNotEquals || tag.Op == OpNotExists
-	})
-
-	if exists || notExists {
-		builder.WriteString("AND s.tags MATCH '")
-	}
-
-	if exists {
-		index := 0
-
-		for _, tag := range allowedTags {
-			switch tag.Op {
-			case OpEquals:
-				if 0 < index {
-					builder.WriteString(" AND ")
+				if tag.Name == "" {
+					equalParts = append(
+						equalParts,
+						fmt.Sprintf(
+							"( %s )",
+							strings.Join(asString, " OR "),
+						),
+					)
+				} else {
+					equalParts = append(
+						equalParts,
+						fmt.Sprintf(
+							"( %q AND ( %s ) )",
+							tag.Name,
+							strings.Join(asString, " OR "),
+						),
+					)
 				}
+			}
+		case OpNotEquals:
+			for _, tag := range tags {
+				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
+					return fmt.Sprintf("%q", item)
+				})
 
-				builder.WriteString("( ")
-				if tag.Name != "" {
-					builder.WriteString(tag.Name)
-					builder.WriteString(" AND ( ")
+				if tag.Name == "" {
+					notParts = append(
+						notParts,
+						fmt.Sprintf(
+							"( %s )",
+							strings.Join(asString, " OR "),
+						),
+					)
+				} else {
+					notParts = append(
+						notParts,
+						fmt.Sprintf(
+							"( %q AND ( %s ) )",
+							tag.Name,
+							strings.Join(asString, " OR "),
+						),
+					)
 				}
-
-				for index, lookup := range tag.Lookups {
-					if 0 < index {
-						builder.WriteString(" OR ")
-					}
-
-					builder.WriteByte('"')
-					builder.WriteString(lookup)
-					builder.WriteByte('"')
-				}
-
-				if tag.Name != "" {
-					builder.WriteString(" )")
-				}
-				builder.WriteString(" )")
-
-				index++
-			case OpExists:
-				if 0 < index {
-					builder.WriteString(" AND ")
-				}
-
-				builder.WriteString(`( "`)
-				builder.WriteString(tag.Name)
-				builder.WriteString(`" )`)
-
-				index++
-			case OpNotEquals, OpNotExists:
+			}
+		case OpExists:
+			for _, tag := range tags {
+				equalParts = append(
+					equalParts,
+					fmt.Sprintf(
+						`( "%s" )`,
+						tag.Name,
+					),
+				)
+			}
+		case OpNotExists:
+			for _, tag := range tags {
+				notParts = append(
+					notParts,
+					fmt.Sprintf(
+						`( "%s" )`,
+						tag.Name,
+					),
+				)
 			}
 		}
 	}
 
-	if notExists {
-		builder.WriteString(" NOT ")
-
-		index := 0
-
-		for _, tag := range allowedTags {
-			switch tag.Op {
-			case OpNotEquals:
-				if 0 < index {
-					builder.WriteString(" AND ")
-				}
-
-				builder.WriteString("( ")
-				if tag.Name != "" {
-					builder.WriteString(tag.Name)
-					builder.WriteString(" AND ( ")
-				}
-
-				for index, lookup := range tag.Lookups {
-					if 0 < index {
-						builder.WriteString(" OR ")
-					}
-
-					builder.WriteByte('"')
-					builder.WriteString(lookup)
-					builder.WriteByte('"')
-				}
-
-				if tag.Name != "" {
-					builder.WriteString(" )")
-				}
-				builder.WriteString(" )")
-
-				index++
-			case OpNotExists:
-				builder.WriteString(`( "`)
-				builder.WriteString(tag.Name)
-				builder.WriteString(`" )`)
-			case OpEquals, OpExists:
-			}
+	if 0 < len(equalParts) {
+		equals := strings.Join(equalParts, " AND ")
+		if 0 < len(notParts) {
+			equals += " NOT " + strings.Join(notParts, " AND ")
 		}
-	}
-
-	if exists || notExists {
-		builder.WriteString("'")
+		parts = append(
+			parts,
+			fmt.Sprintf(
+				"s.tags MATCH '%s'",
+				equals,
+			),
+		)
 	}
 
 	if ids, ok := ast.Directives["id"]; ok {
-		builder.WriteString(` AND s.osm_id IN ( `)
-
-		for index, id := range ids {
-			if 0 < index {
-				builder.WriteString(", ")
-			}
-
-			builder.WriteString(id)
-		}
-
-		builder.WriteString(` )`)
+		parts = append(
+			parts,
+			fmt.Sprintf(
+				`s.osm_id IN (%s)`,
+				strings.Join(ids, ","),
+			),
+		)
 	}
 
-	if exists || notExists {
-		builder.WriteString(` ORDER BY rank`)
-	}
+	builder.WriteString(strings.Join(parts, " AND "))
+	builder.WriteString(" ORDER BY rank")
 
 	return builder.String(), nil
 }
