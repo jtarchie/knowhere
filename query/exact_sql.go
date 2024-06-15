@@ -114,6 +114,18 @@ func ToExactSQL(query string) (string, error) {
 					),
 				)
 			}
+		case OpGreaterThan, OpGreaterThanEquals, OpLessThan, OpLessThanEquals:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( e.tags->>'$.%s' %s %s)",
+						tag.Name,
+						operation.String(),
+						tag.Lookups[0],
+					),
+				)
+			}
 		}
 	}
 

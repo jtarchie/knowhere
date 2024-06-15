@@ -27,6 +27,21 @@ const (
 	OpLessThanEquals
 )
 
+func (o OpType) String() string {
+	switch o {
+	case OpGreaterThan:
+		return ">"
+	case OpGreaterThanEquals:
+		return ">="
+	case OpLessThan:
+		return "<"
+	case OpLessThanEquals:
+		return "<="
+	}
+
+	return ""
+}
+
 type FilterTag struct {
 	Name    string
 	Lookups []string

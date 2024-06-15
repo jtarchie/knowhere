@@ -57,13 +57,13 @@ func ToIndexedSQL(query string) (string, error) {
 	equalParts := []string{}
 	notParts := []string{}
 
-	for op := range OpLessThanEquals {
-		tags, ok := groupedTags[op]
+	for operation := range OpLessThanEquals + 1 {
+		tags, ok := groupedTags[operation]
 		if !ok {
 			continue
 		}
 
-		switch op {
+		switch operation {
 		case OpEquals:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
@@ -131,6 +131,18 @@ func ToIndexedSQL(query string) (string, error) {
 					fmt.Sprintf(
 						`( "%s" )`,
 						tag.Name,
+					),
+				)
+			}
+		case OpGreaterThan, OpGreaterThanEquals, OpLessThan, OpLessThanEquals:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( s.tags->>'$.%s' %s %s )",
+						tag.Name,
+						operation.String(),
+						tag.Lookups[0],
 					),
 				)
 			}

@@ -91,6 +91,10 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( e.tags->>'$.name' IS NOT NULL )`, `( e.tags->>'$.name' GLOB '*King*' OR e.tags->>'$.name' GLOB '*Queen*' )`, `( e.tags->>'$.amenity' IS NULL )`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `( e.tags->>'$.amenity' GLOB 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `e.osm_id IN (1,123,4567)`),
+			Entry("with greater than", "n[pop>100]", `e.tags->>'$.pop' > 100`),
+			Entry("with greater than equal", "n[pop>=100]", `e.tags->>'$.pop' >= 100`),
+			Entry("with less than", "n[pop<100]", `e.tags->>'$.pop' < 100`),
+			Entry("with less than equal", "n[pop<=100]", `e.tags->>'$.pop' <= 100`),
 		)
 	})
 
@@ -139,6 +143,10 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `( "amenity" AND ( "restaurant" ) )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
+			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`),
+			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`),
+			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`),
+			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`),
 		)
 	})
 })
