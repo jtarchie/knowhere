@@ -28,7 +28,7 @@ func Execute(ctx context.Context, client *sql.DB, search string, fun func(string
 	var results []Result
 
 	err = sqlscan.Select(
-		context.TODO(),
+		ctx,
 		client,
 		&results,
 		fmt.Sprintf("SELECT id, osm_id, osm_type, minLon, minLat, maxLon, maxLat, IFNULL(tags->>'$.name', 'Unknown') as name FROM (%s)", sqlQuery),
