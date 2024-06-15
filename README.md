@@ -70,4 +70,3 @@ fly deploy
 ## TODO
 
 - identify globbing over exact match
-- add prefix list in runtime
