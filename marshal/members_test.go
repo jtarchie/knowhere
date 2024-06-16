@@ -25,7 +25,7 @@ var _ = Describe("Members", func() {
 			},
 		})
 		Expect(payload).To(MatchJSON(`[
-			[1,"node","donotcare"]
+			[1,1,"donotcare"]
 		]`))
 
 		payload = marshal.Members(osm.Members{
@@ -41,8 +41,8 @@ var _ = Describe("Members", func() {
 			},
 		})
 		Expect(payload).To(MatchJSON(`[
-			[1,"node","donotcare"],
-			[2,"way","donotcare"]
+			[1,1,"donotcare"],
+			[2,2,"donotcare"]
 		]`))
 
 		payload = marshal.Members(osm.Members{
@@ -63,8 +63,8 @@ var _ = Describe("Members", func() {
 			},
 		})
 		Expect(payload).To(MatchJSON(`[
-			[1,"node","donotcare"],
-			[2,"way","donotcare"]
+			[1,1,"donotcare"],
+			[2,2,"donotcare"]
 		]`))
 
 		payload = marshal.Members(osm.Members{
@@ -85,8 +85,8 @@ var _ = Describe("Members", func() {
 			},
 		})
 		Expect(payload).To(MatchJSON(`[
-			[1,"node","donotcare"],
-			[2,"way","donotcare"]
+			[1,1,"donotcare"],
+			[2,2,"donotcare"]
 		]`))
 
 		payload = marshal.Members(osm.Members{
@@ -107,8 +107,8 @@ var _ = Describe("Members", func() {
 			},
 		})
 		Expect(payload).To(MatchJSON(`[
-			[1,"node","donotcare"],
-			[2,"way","donotcare"]
+			[1,1,"donotcare"],
+			[2,2,"donotcare"]
 		]`))
 	})
 })

@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/jtarchie/knowhere/query"
 	"github.com/paulmach/osm"
 )
 
@@ -28,7 +29,14 @@ func Members(members osm.Members) string {
 			builder.WriteByte('[')
 			builder.WriteString(strconv.FormatInt(member.Ref, 10))
 			builder.WriteByte(',')
-			marshalString(builder, string(member.Type))
+			switch member.Type {
+			case osm.TypeNode:
+				builder.WriteString(query.NodeFilter.String())
+			case osm.TypeWay:
+				builder.WriteString(query.WayFilter.String())
+			case osm.TypeRelation:
+				builder.WriteString(query.RelationFilter.String())
+			}
 			builder.WriteByte(',')
 			marshalString(builder, member.Role)
 			builder.WriteByte(']')

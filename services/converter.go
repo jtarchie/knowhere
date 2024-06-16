@@ -345,6 +345,8 @@ func (b *Converter) Execute() error {
 					n.osm_type = r.osm_type AND n.osm_id = r.osm_id
 			GROUP BY
 					w.id
+			ORDER BY
+					w.id
 		)
 		UPDATE
 				{{prefix}}_entries
@@ -360,7 +362,12 @@ func (b *Converter) Execute() error {
 
 		-- useful for calculating boundaries,
 		-- not useful for searching against
-		DELETE FROM {{prefix}}_entries WHERE tags = jsonb('{}');
+		DELETE FROM {{prefix}}_entries WHERE
+			minLon IS NULL OR
+			maxLon IS NULL OR
+			minLat IS NULL OR
+			maxLat IS NULL OR
+			tags = jsonb('{}');
 		DROP INDEX {{prefix}}_ref_ids;
 		DROP TABLE {{prefix}}_refs;
 	`)

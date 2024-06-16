@@ -14,6 +14,19 @@ const (
 	RelationFilter FilterType = 3
 )
 
+func (f FilterType) String() string {
+	switch f {
+	case NodeFilter:
+		return "1"
+	case WayFilter:
+		return "2"
+	case RelationFilter:
+		return "3"
+	}
+
+	return ""
+}
+
 type OpType uint
 
 const (
