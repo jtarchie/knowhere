@@ -27,7 +27,11 @@ func (r *RTree) Within(bound Bound) bool {
 	return contains
 }
 
-func (r *RTree) Nearby(bound Bound, count uint) []Result {
+func (r *RTree) Delete(bound Bound, element Result) {
+	r.RTreeG.Delete(bound.Min, bound.Max, element)
+}
+
+func (r *RTree) Nearby(bound Bound, count uint) Results {
 	results := make([]Result, 0, count)
 
 	r.RTreeG.Nearby(
