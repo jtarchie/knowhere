@@ -54,7 +54,6 @@ func (r Bounds) AsFeature(properties map[string]interface{}) *geojson.Feature {
 }
 
 func g2p(g orb.Geometry) polygol.Geom {
-
 	var p polygol.Geom
 
 	switch v := g.(type) {
