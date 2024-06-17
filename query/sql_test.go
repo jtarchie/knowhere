@@ -141,7 +141,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" AND ( "Starbucks" ) )`),
 			Entry("tag should not exist", "nw[amenity=coffee][!name]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" )`),
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`),
-			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `( "amenity" AND ( "restaurant" ) )`),
+			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
 			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`),
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`),
