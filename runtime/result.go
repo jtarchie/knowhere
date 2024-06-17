@@ -10,7 +10,7 @@ type Result struct {
 	query.Result
 }
 
-func (wr *Result) Bbox() Bound {
+func (wr Result) Bbox() Bound {
 	return Bound{
 		orb.Bound{
 			Min: orb.Point{wr.MinLon, wr.MinLat},
@@ -19,7 +19,7 @@ func (wr *Result) Bbox() Bound {
 	}
 }
 
-func (wr *Result) AsFeature(properties map[string]interface{}) *geojson.Feature {
+func (wr Result) AsFeature(properties map[string]interface{}) *geojson.Feature {
 	feature := geojson.NewFeature(wr.Bbox().Center())
 
 	feature.Properties["title"] = wr.Name
