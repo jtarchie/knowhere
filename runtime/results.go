@@ -1,10 +1,32 @@
 package runtime
 
+import (
+	"slices"
+
+	"github.com/paulmach/orb/geo"
+)
+
 type Results []Result
 
 func (r Results) Cluster(radius float64) Results {
 	results := Results{}
 	tree := &RTree{}
+
+	slices.SortStableFunc(r, func(a Result, b Result) int {
+		areaA := geo.Area(a.Bbox().Bound)
+		areaB := geo.Area(b.Bbox().Bound)
+		
+		// fmt.Printf("a = %f, b = %f\n", areaA, areaB)
+
+		if areaA < areaB {
+			return 1
+		}
+		if areaA > areaB {
+			return -1
+		}
+
+		return 0
+	})
 
 	for _, entry := range r {
 		extended := entry.Bbox().Extend(radius)
