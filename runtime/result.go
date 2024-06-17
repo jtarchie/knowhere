@@ -10,8 +10,8 @@ type Result struct {
 	query.Result
 }
 
-func (wr *Result) Bbox() *Bound {
-	return &Bound{
+func (wr *Result) Bbox() Bound {
+	return Bound{
 		orb.Bound{
 			Min: orb.Point{wr.MinLon, wr.MinLat},
 			Max: orb.Point{wr.MaxLon, wr.MaxLat},

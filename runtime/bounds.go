@@ -12,23 +12,23 @@ type Bound struct {
 	orb.Bound
 }
 
-func (wb *Bound) Intersects(bounds *Bound) bool {
+func (wb Bound) Intersects(bounds Bound) bool {
 	return wb.Bound.Intersects(bounds.Bound)
 }
 
-func (wb *Bound) Extend(radius float64) *Bound {
-	return &Bound{geo.BoundPad(wb.Bound, radius)}
+func (wb Bound) Extend(radius float64) Bound {
+	return Bound{geo.BoundPad(wb.Bound, radius)}
 }
 
 type Bounds []Bound
 
-func (r Bounds) AsBound() *Bound {
+func (r Bounds) AsBound() Bound {
 	union := r[0].Bound
 	for _, bound := range r {
 		union = union.Union(bound.Bound)
 	}
 
-	return &Bound{union}
+	return Bound{union}
 }
 
 func (r Bounds) Union() orb.Geometry {
