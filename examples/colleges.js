@@ -8,8 +8,8 @@ const allColleges = geo.asResults(
   }),
 );
 
-const radius = 500
-const overlap = 2000
+const radius = 500;
+const overlap = 2000;
 
 const clustered = allColleges.cluster(radius);
 const grouped = clustered.overlap(clustered, overlap, 4);
@@ -27,7 +27,7 @@ const payload = {
     });
 
     const bounds = geo.asBounds(
-      ...entries.map((entry, index) => entry.bbox().extend(overlap)),
+      ...entries.map((entry) => entry.bbox().extend(overlap)),
     );
 
     return features.concat(
