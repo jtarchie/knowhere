@@ -15,7 +15,7 @@ func (r Results) Cluster(radius float64) Results {
 	slices.SortStableFunc(r, func(a Result, b Result) int {
 		areaA := geo.Area(a.Bbox().Bound)
 		areaB := geo.Area(b.Bbox().Bound)
-		
+
 		// fmt.Printf("a = %f, b = %f\n", areaA, areaB)
 
 		if areaA < areaB {

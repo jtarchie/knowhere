@@ -24,6 +24,8 @@ func ToIndexedSQL(query string) (string, error) {
 		prefix = prefixes[0] + "_"
 	}
 
+	_, precise := ast.Directives["precise"]
+
 	allowedTags := ast.Tags
 
 	builder.WriteString(fmt.Sprintf(`
@@ -87,6 +89,16 @@ func ToIndexedSQL(query string) (string, error) {
 							strings.Join(asString, " OR "),
 						),
 					)
+
+					if precise {
+						asString = lo.Map(tag.Lookups, func(item string, _ int) string {
+							return fmt.Sprintf("s.tags->>'$.%s' GLOB '%s'", tag.Name, item)
+						})
+						parts = append(parts, fmt.Sprintf(
+							"( %s )",
+							strings.Join(asString, " OR "),
+						))
+					}
 				}
 			}
 		case OpNotEquals:
@@ -123,6 +135,10 @@ func ToIndexedSQL(query string) (string, error) {
 						tag.Name,
 					),
 				)
+
+				if precise {
+					parts = append(parts, fmt.Sprintf("( s.tags->>'$.%s' IS NOT NULL )", tag.Name))
+				}
 			}
 		case OpNotExists:
 			for _, tag := range tags {
@@ -133,6 +149,10 @@ func ToIndexedSQL(query string) (string, error) {
 						tag.Name,
 					),
 				)
+
+				if precise {
+					parts = append(parts, fmt.Sprintf("( s.tags->>'$.%s' IS NULL )", tag.Name))
+				}
 			}
 		case OpGreaterThan, OpGreaterThanEquals, OpLessThan, OpLessThanEquals:
 			for _, tag := range tags {

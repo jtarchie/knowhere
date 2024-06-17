@@ -147,6 +147,9 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`),
 			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`),
 			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`),
+			Entry("with precise exist", "n[name](precise=true)", `( "name" )`, `( s.tags->>'$.name' IS NOT NULL )`),
+			Entry("with precise not exist", "n[amenity=coffee][!name](precise=true)", `NOT ( "name" )`, `( s.tags->>'$.name' IS NULL )`),
+			Entry("with precise value", "n[amenity=coffee](precise=true)", `( "amenity" AND ( "coffee" ) )`, `( s.tags->>'$.amenity' GLOB 'coffee' )`),
 		)
 	})
 })
