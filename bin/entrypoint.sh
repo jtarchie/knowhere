@@ -18,4 +18,4 @@ if [ ! -f /var/osm/entries.db ]; then
 fi
 
 touch /var/osm/entries.db
-/app/knowhere server --port 3000 --db /var/osm/entries.db --cors '*'
+/app/knowhere server --port 3000 --db /var/osm/entries.db --cors '*' --runtime-timeout 10s
