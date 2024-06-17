@@ -1,18 +1,18 @@
 const prefixes = geo.prefixes();
 
-const allColleges = geo.asResults(
+const allUnis = geo.asResults(
   ...prefixes.flatMap((prefix) => {
     return geo.query(
-      `wr[amenity=university,college][name=university,college](prefix=${prefix.name})`,
+      `wr[amenity=university][name](precise=true)(prefix=${prefix.name})`,
     );
   }),
 );
 
 const radius = 500;
-const overlap = 2000;
+const overlap = 3000;
 
-const clustered = allColleges.cluster(radius);
-const grouped = clustered.overlap(clustered, overlap, 4);
+const clustered = allUnis.cluster(radius);
+const grouped = clustered.overlap(clustered, overlap, 3);
 
 const payload = {
   type: "FeatureCollection",

@@ -16,8 +16,6 @@ func (r Results) Cluster(radius float64) Results {
 		areaA := geo.Area(a.Bbox().Bound)
 		areaB := geo.Area(b.Bbox().Bound)
 
-		// fmt.Printf("a = %f, b = %f\n", areaA, areaB)
-
 		if areaA < areaB {
 			return 1
 		}
@@ -55,7 +53,9 @@ func (r Results) Overlap(b Results, radius float64, size uint) []Results {
 
 		extended := result.Bbox().Extend(radius)
 		tree.Search(extended.Min, extended.Max, func(min, max [2]float64, result Result) bool {
-			nearby = append(nearby, result)
+			if _, ok := alreadyUsed[result]; !ok {
+				nearby = append(nearby, result)
+			}
 
 			return int(size) > len(nearby)
 		})
