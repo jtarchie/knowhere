@@ -21,7 +21,7 @@ func (a *Assertion) Stab(msg string) {
 		a.time = time.Now()
 	}
 
-	slog.Info("stab", slog.String("msg", msg), slog.Duration("time", time.Since(a.time)))
+	slog.Info("stab", slog.String("msg", msg), slog.String("time", time.Since(a.time).String()))
 	a.time = time.Now()
 }
 
