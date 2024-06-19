@@ -297,14 +297,6 @@ var _ = Describe("Running the application", Ordered, func() {
 				contents, err := os.ReadFile(match)
 				Expect(err).NotTo(HaveOccurred())
 
-				// result := api.Transform(string(contents), api.TransformOptions{
-				// 	MinifyWhitespace:  true,
-				// 	MinifyIdentifiers: true,
-				// 	MinifySyntax:      true,
-				// 	Sourcemap:         api.SourceMapInline,
-				// })
-				// Expect(result.Errors).To(HaveLen(0))
-
 				client := req.C()
 				response, err := client.R().
 					SetRetryCount(3).
