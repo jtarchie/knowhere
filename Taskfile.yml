@@ -14,7 +14,9 @@ tasks:
     - deno lint examples/
     - golangci-lint run --fix --timeout "10m"
     - shellcheck bin/*.sh
-  test: go test -tags fts5 -race -bench . -benchmem ./...
+  test:
+    cmds:
+    - go test -tags fts5 -race -bench . -benchmem ./...
   ci:
     cmds:
     - task: format

@@ -37,6 +37,7 @@ require (
 
 require (
 	github.com/SaveTheRbtz/fastcdc-go v0.3.0 // indirect
+	github.com/alecthomas/assert/v2 v2.10.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudflare/circl v1.3.9 // indirect
