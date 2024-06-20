@@ -15,7 +15,6 @@ import (
 	"github.com/imroc/req/v3"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
-	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 	"github.com/phayes/freeport"
 )
@@ -42,16 +41,6 @@ var _ = Describe("Running the application", Ordered, func() {
 
 		path, err = gexec.Build("github.com/jtarchie/knowhere", "--tags", "fts5", "-race")
 		Expect(err).NotTo(HaveOccurred())
-	})
-
-	It("can generate a query", func() {
-		session := cli(
-			"query",
-			`n[name="Hatfield Tunnel"](prefix="test")`,
-		)
-
-		Eventually(session, "5s").Should(gexec.Exit(0))
-		Eventually(session.Out).Should(gbytes.Say("SELECT"))
 	})
 
 	It("can build sqlite file from osm pbf", func() {

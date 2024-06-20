@@ -14,6 +14,6 @@ func main() {
 	cli := &commands.CLI{}
 	ctx := kong.Parse(cli)
 	// Call the Run() method of the selected parsed command.
-	err := ctx.Run()
+	err := ctx.Run(os.Stdout)
 	ctx.FatalIfErrorf(err)
 }
