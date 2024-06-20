@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"os"
@@ -22,7 +23,7 @@ type Build struct {
 
 var ErrSourceNotAvailable = errors.New("source unavailable")
 
-func (b *Build) Run() error {
+func (b *Build) Run(stdout io.Writer) error {
 	config, err := os.Open(b.Config)
 	if err != nil {
 		return fmt.Errorf("could not open config file: %w", err)
@@ -99,7 +100,7 @@ func (b *Build) Run() error {
 			AllowedTags: b.AllowedTags,
 		}
 
-		err := command.Run()
+		err := command.Run(stdout)
 		if err != nil {
 			return fmt.Errorf("could not convert %q: %w", filename, err)
 		}

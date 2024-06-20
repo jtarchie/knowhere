@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/jtarchie/knowhere/services"
 )
@@ -13,7 +14,7 @@ type Convert struct {
 	AllowedTags []string `default:"*"                                       help:"a list of allowed tags, all other will be filtered"`
 }
 
-func (b *Convert) Run() error {
+func (b *Convert) Run(_ io.Writer) error {
 	builder := services.NewConverter(b.OSM, b.DB, b.Prefix, b.AllowedTags)
 
 	err := builder.Execute()

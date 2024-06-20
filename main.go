@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log/slog"
 	"os"
 
@@ -12,8 +13,10 @@ func main() {
 	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
 
 	cli := &commands.CLI{}
-	ctx := kong.Parse(cli)
+	var writer io.Writer = os.Stdout
+
+	ctx := kong.Parse(cli, kong.BindTo(writer, (*io.Writer)(nil)))
 	// Call the Run() method of the selected parsed command.
-	err := ctx.Run(os.Stdout)
+	err := ctx.Run()
 	ctx.FatalIfErrorf(err)
 }

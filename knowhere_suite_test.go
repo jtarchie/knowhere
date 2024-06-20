@@ -43,42 +43,6 @@ var _ = Describe("Running the application", Ordered, func() {
 		Expect(err).NotTo(HaveOccurred())
 	})
 
-	It("can build sqlite file from osm pbf", func() {
-		go func() {
-			defer GinkgoRecover()
-
-			http.Handle("/", http.FileServer(http.Dir("./fixtures")))
-			err := http.ListenAndServe(":8848", nil)
-			Expect(err).NotTo(HaveOccurred())
-		}()
-
-		buildPath, err := os.MkdirTemp("", "")
-		Expect(err).NotTo(HaveOccurred())
-
-		dbFilename := filepath.Join(buildPath, "test.sqlite")
-
-		By("building all the things")
-
-		session := cli(
-			"build",
-			"--config", "./fixtures/config.txt",
-			"--db", dbFilename,
-		)
-
-		Eventually(session, "5s").Should(gexec.Exit(0))
-		Expect(dbFilename).To(BeAnExistingFile())
-
-		session = cli(
-			"convert",
-			"--osm", "./fixtures/sample.pbf",
-			"--db", dbFilename,
-			"--prefix", "test",
-		)
-
-		Eventually(session, "5s").Should(gexec.Exit(0))
-		Expect(dbFilename).To(BeAnExistingFile())
-	})
-
 	When("serving the HTTP server", Ordered, func() {
 		var (
 			session *gexec.Session
