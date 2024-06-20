@@ -16,7 +16,10 @@ const entries = allCostcos.filter((costco) => {
   return true;
 });
 
-assert.eq(allCostcos.length > entries.length, "expected fewer entries");
+assert.eq(
+  allCostcos.length > entries.length,
+  `expected ${allCostcos.length} > ${entries.length}`,
+);
 
 const payload = {
   type: "FeatureCollection",

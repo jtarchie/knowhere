@@ -16,7 +16,8 @@ tasks:
     - shellcheck bin/*.sh
   test:
     cmds:
-    - go test -tags fts5 -race -bench . -benchmem ./...
+    - go test -tags fts5 -race ./...
+    - go test -v ./... -bench=. -run="^$" -benchmem
   ci:
     cmds:
     - task: format
