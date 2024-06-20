@@ -38,26 +38,31 @@ func (r Results) Cluster(radius float64) Results {
 	return results
 }
 
-func (r Results) Overlap(b Results, radius float64, size uint) []Results {
+func (r Results) Overlap(b Results, radius float64, size int) []Results {
 	tree := b.AsTree(0)
 
 	results := []Results{}
 	alreadyUsed := map[Result]struct{}{}
+	size++
 
 	for _, result := range r {
-		var nearby Results
+		// initially populate with result that is looking for neighbors
+		nearby := Results{result}
 
 		if _, ok := alreadyUsed[result]; ok {
+			// if there is any crossover with result A and B
+			// don't search for anything already
 			continue
 		}
 
 		extended := result.Bbox().Extend(radius)
 		tree.Search(extended.Min, extended.Max, func(min, max [2]float64, result Result) bool {
 			if _, ok := alreadyUsed[result]; !ok {
+				// only find unique neighbors, don't share
 				nearby = append(nearby, result)
 			}
 
-			return int(size) > len(nearby)
+			return size > len(nearby)
 		})
 
 		if len(nearby) == int(size) {
