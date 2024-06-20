@@ -2,6 +2,7 @@ package commands
 
 import (
 	"fmt"
+	"io"
 	"time"
 
 	"github.com/jtarchie/knowhere/server"
@@ -14,7 +15,7 @@ type Server struct {
 	RuntimeTimeout time.Duration `help:"the timeout for single runtime" default:"2s"`
 }
 
-func (s *Server) Run() error {
+func (s *Server) Run(_ io.Writer) error {
 	server, err := server.New(
 		s.Port,
 		s.DB,
