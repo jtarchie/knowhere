@@ -34,22 +34,24 @@ keywords.sort((a, b) => a.results.length - b.results.length);
 
 assert.stab("query");
 
-const neighbors = keywords[0].results.cluster(500).map((
-  entry,
-) => geo.asResults(entry));
+const neighbors = new Map();
+const cluster = keywords[0].results.cluster(500);
+cluster.forEach((entry) => {
+  neighbors.set(entry.id, new Map());
+});
 
 assert.stab("cluster");
 
+const expectedNeighbors = 2;
+
 keywords.slice(1).forEach((keyword) => {
-  const tree = keyword.results.asTree(keyword.radius);
-
-  neighbors.forEach((entries) => {
-    const extended = entries[0].bbox().extend(keywords[0].radius);
-
-    const nearby = tree.nearby(extended, 1);
-    if (nearby.length === 1) {
-      entries.push(nearby[0]);
-    }
+  const grouped = cluster.overlap(
+    keyword.results,
+    keywords[0].radius,
+    expectedNeighbors - 1,
+  );
+  grouped.forEach((values) => {
+    values.forEach((value) => neighbors.get(values[0].id).set(value.id, value));
   });
 });
 
@@ -57,7 +59,9 @@ assert.stab("nearby");
 
 const payload = {
   type: "FeatureCollection",
-  features: neighbors.flatMap((entries, index) => {
+  features: [...neighbors.values()].flatMap((set, index) => {
+    const entries = [...set.values()];
+
     if (entries.length !== keywords.length) {
       return;
     }

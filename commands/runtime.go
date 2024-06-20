@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"strings"
 	"time"
@@ -43,6 +44,10 @@ func (r *Runtime) Run(stdout io.Writer) error {
 		return fmt.Errorf("could not read file: %w", err)
 	}
 
+	slog.Info("script.start")
+
+	startTime := time.Now()
+
 	value, err := runtime.Execute(string(contents))
 	if err != nil {
 		return fmt.Errorf("could not execute script: %w", err)
@@ -54,6 +59,8 @@ func (r *Runtime) Run(stdout io.Writer) error {
 	}
 
 	fmt.Fprintln(stdout, string(contents))
+
+	slog.Info("script.end", "elapsed", time.Since(startTime).String())
 
 	return nil
 }

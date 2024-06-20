@@ -38,8 +38,8 @@ func (r Results) Cluster(radius float64) Results {
 	return results
 }
 
-func (r Results) Overlap(b Results, radius float64, size int) []Results {
-	tree := b.AsTree(0)
+func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64, size int) []Results {
+	tree := b.AsTree(neighborRadius)
 
 	results := []Results{}
 	alreadyUsed := map[Result]struct{}{}
@@ -55,17 +55,22 @@ func (r Results) Overlap(b Results, radius float64, size int) []Results {
 			continue
 		}
 
-		extended := result.Bbox().Extend(radius)
+		extended := result.Bbox().Extend(originRadius)
 		tree.Search(extended.Min, extended.Max, func(min, max [2]float64, result Result) bool {
 			if _, ok := alreadyUsed[result]; !ok {
 				// only find unique neighbors, don't share
 				nearby = append(nearby, result)
 			}
 
-			return size > len(nearby)
+			return true
 		})
 
-		if len(nearby) == int(size) {
+		slices.SortStableFunc(nearby, func(a Result, b Result) int {
+			return int(geo.Distance(a.Bbox().Center(), result.Bbox().Center()) - geo.Distance(b.Bbox().Center(), result.Bbox().Center()))
+		})
+
+		if len(nearby) >= int(size) {
+			nearby = nearby[:size]
 			results = append(results, nearby)
 
 			for _, used := range nearby {
