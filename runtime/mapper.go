@@ -19,10 +19,9 @@ func (tfm *tagFieldNameMapper) FieldName(t reflect.Type, f reflect.StructField) 
 	}
 
 	field := f.Tag.Get("js")
-	if idx := strings.IndexByte(field, ','); idx != -1 {
-		tag := field[:idx]
-		tfm.cache[name] = tag
-		return tag
+	if field != "" {
+		tfm.cache[name] = field
+		return field
 	}
 
 	fieldName := uncapitalize(f.Name)
