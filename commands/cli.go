@@ -5,5 +5,6 @@ type CLI struct {
 	Convert   Convert   `cmd:""`
 	Integrity Integrity `cmd:""`
 	Query     Generate  `cmd:""`
+	Runtime   Runtime   `cmd:""`
 	Server    Server    `cmd:""`
 }
