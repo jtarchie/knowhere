@@ -39,6 +39,7 @@ const (
 	OpLessThan
 	OpLessThanEquals
 	OpContains
+	OpNotContains
 )
 
 func (o OpType) String() string {

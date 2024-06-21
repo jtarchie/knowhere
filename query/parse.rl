@@ -47,15 +47,16 @@ func Parse(data string) (*AST, error) {
     action create_tag { tag = FilterTag{Lookups: []string{}} }
     action append_tag { tags = append(tags, tag) }
 
-    action tag_eq       { tag.Op = OpEquals }
-    action tag_ne       { tag.Op = OpNotEquals }
-    action tag_exists   { tag.Op = OpExists }
-    action tag_not      { tag.Op = OpNotExists }
-    action tag_gt       { tag.Op = OpGreaterThan }
-    action tag_gte      { tag.Op = OpGreaterThanEquals }
-    action tag_lt       { tag.Op = OpLessThan }
-    action tag_lte      { tag.Op = OpLessThanEquals }
-    action tag_contains { tag.Op = OpContains }
+    action tag_eq           { tag.Op = OpEquals }
+    action tag_ne           { tag.Op = OpNotEquals }
+    action tag_exists       { tag.Op = OpExists }
+    action tag_not          { tag.Op = OpNotExists }
+    action tag_gt           { tag.Op = OpGreaterThan }
+    action tag_gte          { tag.Op = OpGreaterThanEquals }
+    action tag_lt           { tag.Op = OpLessThan }
+    action tag_lte          { tag.Op = OpLessThanEquals }
+    action tag_contains     { tag.Op = OpContains }
+    action tag_not_contains { tag.Op = OpNotContains }
 
     action tag_name  { tag.Name    = data[mark:p] }
     action tag_value { tag.Lookups = append(tag.Lookups, data[mark:p]) }
@@ -84,9 +85,10 @@ func Parse(data string) (*AST, error) {
     tag_lt = (tag_name "<" tag_values) %tag_lt;
     tag_lte = (tag_name "<=" tag_values) %tag_lte;
     tag_contains = (tag_name "=~" tag_values) %tag_contains;
+    tag_not_contains = (tag_name "!~" tag_values) %tag_not_contains;
     tag_exists = (tag_name) %tag_exists;
     tag_not    = ("!" tag_name) %tag_not;
-    tag    = ("[" %inc_bracket) (tag_eq | tag_ne | tag_gt | tag_gte | tag_lt | tag_lte | tag_exists | tag_not | tag_contains) ("]" %dec_bracket);
+    tag    = ("[" %inc_bracket) (tag_eq | tag_ne | tag_gt | tag_gte | tag_lt | tag_lte | tag_exists | tag_not | tag_contains | tag_not_contains) ("]" %dec_bracket);
     tags   = (tag >create_tag %append_tag)*;
 
     directive_value_unquoted = [^,\"\]]+ >mark %directive_value;

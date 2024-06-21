@@ -268,6 +268,25 @@ var _ = Describe("Building a query", func() {
 			},
 			Directives: map[string]query.FilterDirective{},
 		}))
+
+		ast, err = query.Parse(`nw[amenity=pub][name!~"High School"]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+				{
+					Name:    "name",
+					Lookups: []string{"High School"},
+					Op:      query.OpNotContains,
+				},
+			},
+			Directives: map[string]query.FilterDirective{},
+		}))
 	})
 
 	It("supports directives for the query", func() {
