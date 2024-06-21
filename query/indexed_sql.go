@@ -26,13 +26,13 @@ func ToIndexedSQL(query string) (string, error) {
 
 	allowedTags := ast.Tags
 
-	builder.WriteString(fmt.Sprintf(`
+	builder.WriteString(`
 		SELECT
 			rowid AS id, *
 		FROM
-			%ssearch s
+			` + prefix + `search s
 		WHERE
-	`, prefix))
+	`)
 
 	parts := []string{}
 
@@ -43,10 +43,7 @@ func ToIndexedSQL(query string) (string, error) {
 
 		parts = append(
 			parts,
-			fmt.Sprintf(
-				`s.osm_type IN (%s)`,
-				strings.Join(asString, ","),
-			),
+			"s.osm_type IN ("+strings.Join(asString, ",")+")",
 		)
 	}
 
@@ -62,58 +59,43 @@ func ToIndexedSQL(query string) (string, error) {
 		case OpEquals:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return fmt.Sprintf("%q", item)
+					return `"` + item + `"`
 				})
 
 				if tag.Name == "" {
 					equalParts = append(
 						equalParts,
-						fmt.Sprintf(
-							"( %s )",
-							strings.Join(asString, " OR "),
-						),
+						"( "+strings.Join(asString, " OR ")+" )",
 					)
 				} else {
 					equalParts = append(
 						equalParts,
-						fmt.Sprintf(
-							"( %q AND ( %s ) )",
-							tag.Name,
-							strings.Join(asString, " OR "),
-						),
+						`( "`+tag.Name+`" AND ( `+strings.Join(asString, " OR ")+" ) )",
 					)
 
 					asString = lo.Map(tag.Lookups, func(item string, _ int) string {
-						return fmt.Sprintf("s.tags->>'$.%s' = '%s'", tag.Name, item)
+						return "s.tags->>'$." + tag.Name + "' = '" + item + "'"
 					})
-					parts = append(parts, fmt.Sprintf(
-						"( %s )",
-						strings.Join(asString, " OR "),
-					))
+					parts = append(parts,
+						"( "+strings.Join(asString, " OR ")+" )",
+					)
 				}
 			}
 		case OpNotEquals:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return fmt.Sprintf("%q", item)
+					return `"` + item + `"`
 				})
 
 				if tag.Name == "" {
 					notParts = append(
 						notParts,
-						fmt.Sprintf(
-							"( %s )",
-							strings.Join(asString, " OR "),
-						),
+						"( "+strings.Join(asString, " OR ")+" )",
 					)
 				} else {
 					notParts = append(
 						notParts,
-						fmt.Sprintf(
-							"( %q AND ( %s ) )",
-							tag.Name,
-							strings.Join(asString, " OR "),
-						),
+						`( "`+tag.Name+`" AND ( `+strings.Join(asString, " OR ")+" ) )",
 					)
 				}
 			}
@@ -121,95 +103,65 @@ func ToIndexedSQL(query string) (string, error) {
 			for _, tag := range tags {
 				equalParts = append(
 					equalParts,
-					fmt.Sprintf(
-						`( "%s" )`,
-						tag.Name,
-					),
+					`( "`+tag.Name+`" )`,
 				)
 
-				parts = append(parts, fmt.Sprintf("( s.tags->>'$.%s' IS NOT NULL )", tag.Name))
+				parts = append(parts, "( s.tags->>'$."+tag.Name+"' IS NOT NULL )")
 			}
 		case OpNotExists:
 			for _, tag := range tags {
 				notParts = append(
 					notParts,
-					fmt.Sprintf(
-						`( "%s" )`,
-						tag.Name,
-					),
+					`( "`+tag.Name+`" )`,
 				)
 
-				parts = append(parts, fmt.Sprintf("( s.tags->>'$.%s' IS NULL )", tag.Name))
+				parts = append(parts, "( s.tags->>'$."+tag.Name+"' IS NULL )")
 			}
 		case OpGreaterThan, OpGreaterThanEquals, OpLessThan, OpLessThanEquals:
 			for _, tag := range tags {
 				equalParts = append(
 					equalParts,
-					fmt.Sprintf(
-						`( "%s" )`,
-						tag.Name,
-					),
+					`( "`+tag.Name+`" )`,
 				)
 
 				parts = append(
 					parts,
-					fmt.Sprintf(
-						"( s.tags->>'$.%s' %s %s )",
-						tag.Name,
-						operation.String(),
-						tag.Lookups[0],
-					),
+					"( s.tags->>'$."+tag.Name+"' "+operation.String()+" "+tag.Lookups[0]+" )",
 				)
 			}
 		case OpContains:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return fmt.Sprintf("%q", item)
+					return `"` + item + `"`
 				})
 
 				equalParts = append(
 					equalParts,
-					fmt.Sprintf(
-						"( %q AND ( %s ) )",
-						tag.Name,
-						strings.Join(asString, " OR "),
-					),
+					`( "`+tag.Name+`" AND ( `+strings.Join(asString, " OR ")+" ) )",
 				)
 
 				for _, lookup := range tag.Lookups {
 					parts = append(
 						parts,
-						fmt.Sprintf(
-							"( LOWER(s.tags->>'$.%s') GLOB '%s' )",
-							tag.Name,
-							"*"+strings.ToLower(lookup)+"*",
-						),
+						"( LOWER(s.tags->>'$."+tag.Name+"') GLOB '*"+strings.ToLower(lookup)+"*' )",
 					)
 				}
 			}
 		case OpNotContains:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return fmt.Sprintf("%q", item)
+					return `"` + item + `"`
 				})
 
 				notParts = append(
 					notParts,
-					fmt.Sprintf(
-						"( %q AND ( %s ) )",
-						tag.Name,
-						strings.Join(asString, " OR "),
-					),
+					`( "`+tag.Name+`" AND ( `+strings.Join(asString, " OR ")+" ) )",
 				)
 
 				for _, lookup := range tag.Lookups {
 					parts = append(
 						parts,
-						fmt.Sprintf(
-							"( LOWER(s.tags->>'$.%s') NOT GLOB '%s' )",
-							tag.Name,
-							"*"+strings.ToLower(lookup)+"*",
-						),
+						"( LOWER(s.tags->>'$."+tag.Name+"') NOT GLOB '*"+strings.ToLower(lookup)+"*' )",
 					)
 				}
 			}
@@ -223,24 +175,23 @@ func ToIndexedSQL(query string) (string, error) {
 		}
 		parts = append(
 			parts,
-			fmt.Sprintf(
-				"s.tags MATCH '%s'",
-				equals,
-			),
+			"s.tags MATCH '"+equals+"'",
 		)
 	}
 
 	if ids, ok := ast.Directives["id"]; ok {
 		parts = append(
 			parts,
-			fmt.Sprintf(
-				`s.osm_id IN (%s)`,
-				strings.Join(ids, ","),
-			),
+			"s.osm_id IN ("+strings.Join(ids, ",")+")",
 		)
 	}
 
-	builder.WriteString(strings.Join(parts, " AND "))
+	for index, part := range parts {
+		if 0 < index {
+			builder.WriteString(" AND ")
+		}
+		builder.WriteString(part)
+	}
 	builder.WriteString(" ORDER BY rank")
 
 	return builder.String(), nil
