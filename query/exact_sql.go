@@ -126,6 +126,28 @@ func ToExactSQL(query string) (string, error) {
 					),
 				)
 			}
+		case OpContains:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( LOWER(e.tags->>'$.%s') GLOB '%s' )",
+						tag.Name,
+						"*"+strings.ToLower(tag.Lookups[0])+"*",
+					),
+				)
+			}
+		case OpNotContains:
+			for _, tag := range tags {
+				parts = append(
+					parts,
+					fmt.Sprintf(
+						"( LOWER(e.tags->>'$.%s') NOT GLOB '%s' )",
+						tag.Name,
+						"*"+strings.ToLower(tag.Lookups[0])+"*",
+					),
+				)
+			}
 		}
 	}
 

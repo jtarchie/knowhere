@@ -81,6 +81,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("single tag", "n[amenity=restaurant]", `SELECT * FROM entries e WHERE e.osm_type IN (1) AND ( e.tags->>'$.amenity' GLOB 'restaurant' )`),
 			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `( e.tags GLOB '*King*' OR e.tags GLOB '*Queen*' )`),
 			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `( e.tags GLOB 'cafe' )`, `( e.tags NOT GLOB 'Starbucks' )`),
+			Entry("partial match", "nw[name!~Starbucks][name=~coffee]", `( LOWER(e.tags->>'$.name') NOT GLOB '*starbucks*' )`, `( LOWER(e.tags->>'$.name') GLOB '*coffee*' )`),
 			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `( e.tags->>'$.amenity' GLOB 'restaurant' )`, `( e.tags->>'$.cuisine' GLOB 'sushi' )`),
 			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `( e.tags->>'$.amenity' GLOB 'restaurant' OR e.tags->>'$.amenity' GLOB 'pub' OR e.tags->>'$.amenity' GLOB 'cafe' )`),
 			Entry("single tag that exists", "nw[amenity]", `( e.tags->>'$.amenity' IS NOT NULL )`),
