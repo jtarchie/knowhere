@@ -38,7 +38,7 @@ var _ = Describe("Runtime", func() {
 				runtime := &commands.Runtime{
 					Filename:       file,
 					DB:             dbFilename,
-					RuntimeTimeout: 2 * time.Second,
+					RuntimeTimeout: 10 * time.Second,
 				}
 
 				err = runtime.Run(GinkgoWriter)

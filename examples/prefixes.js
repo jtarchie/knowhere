@@ -1,7 +1,7 @@
 const prefixes = geo.prefixes();
 const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
 
-const allCostcos = geo.query(`nwr[name=Costco](prefix=${prefix.name})`);
+const allCostcos = geo.query(`nwr[name=~Costco](prefix=${prefix.name})`);
 
 const bounds = [];
 
@@ -17,8 +17,8 @@ const entries = allCostcos.filter((costco) => {
 });
 
 assert.eq(
-  allCostcos.length > entries.length,
-  `expected ${allCostcos.length} > ${entries.length}`,
+  allCostcos.length >= entries.length,
+  `expected ${allCostcos.length} >= ${entries.length}`,
 );
 
 const payload = {

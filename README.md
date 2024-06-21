@@ -69,4 +69,4 @@ fly deploy
 
 ## TODO
 
-- identify globbing over exact match
+- inquality operator should check for tag exists

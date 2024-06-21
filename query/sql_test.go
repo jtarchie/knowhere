@@ -131,26 +131,24 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			_, err = client.Exec(actualSQL)
 			Expect(err).NotTo(HaveOccurred())
 		},
-			Entry("single tag", "n[amenity=restaurant]", `SELECT rowid AS id, * FROM search s WHERE s.osm_type IN (1) AND s.tags MATCH '( "amenity" AND ( "restaurant" ) )' ORDER BY rank`),
+			Entry("single tag", "n[amenity=restaurant]", `SELECT rowid AS id, * FROM search s WHERE s.osm_type IN (1) AND ( s.tags->>'$.amenity' = 'restaurant' ) AND s.tags MATCH '( "amenity" AND ( "restaurant" ) )' ORDER BY rank`),
 			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `s.osm_type IN (1,2,3)`, `s.tags MATCH '( "*King*" OR "*Queen*" )'`),
 			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `s.tags MATCH '( "cafe" ) NOT ( "Starbucks" )'`),
+			Entry("partial match", "nw[name!~Starbucks][name=~coffee]", `NOT ( "name" AND ( "Starbucks" ) )`, `( "name" AND ( "coffee" ) )`, `( LOWER(s.tags->>'$.name') NOT GLOB '*starbucks*' )`, `( LOWER(s.tags->>'$.name') GLOB '*coffee*' )`),
 			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `( "amenity" AND ( "restaurant" ) )`, `( "cuisine" AND ( "sushi" ) )`),
 			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `( "amenity" AND ( "restaurant" OR "pub" OR "cafe" ) )`),
-			Entry("single tag that exists", "nw[amenity]", `( "amenity" )`),
+			Entry("single tag that exists", "nw[name]", `( "name" )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("multiple tag that exists", "r[route][ref][network]", `( "route" ) AND ( "ref" ) AND ( "network" )`),
 			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `( "amenity" AND ( "restaurant" ) ) AND ( "name" )`),
 			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" AND ( "Starbucks" ) )`),
 			Entry("tag should not exist", "nw[amenity=coffee][!name]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" )`),
-			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`),
-			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`),
+			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
+			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
 			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`),
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`),
 			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`),
 			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`),
-			Entry("with precise exist", "n[name](precise=true)", `( "name" )`, `( s.tags->>'$.name' IS NOT NULL )`),
-			Entry("with precise not exist", "n[amenity=coffee][!name](precise=true)", `NOT ( "name" )`, `( s.tags->>'$.name' IS NULL )`),
-			Entry("with precise value", "n[amenity=coffee](precise=true)", `( "amenity" AND ( "coffee" ) )`, `( s.tags->>'$.amenity' GLOB 'coffee' )`),
 		)
 	})
 })

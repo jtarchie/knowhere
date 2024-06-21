@@ -21,8 +21,8 @@ function zillowURL(bounds) {
 assert.stab("start");
 
 const keywords = [
-  { query: "nwr[name=Costco]", radius: 5000 },
-  { query: "nwr[amenity=cafe][name][name!=Starbucks]", radius: 1000 },
+  { query: "nwr[name=~Costco]", radius: 5000 },
+  { query: "nwr[amenity=cafe][name][name!~Starbucks]", radius: 1000 },
   { query: "nwr[amenity=school][name]", radius: 5000 },
 ];
 

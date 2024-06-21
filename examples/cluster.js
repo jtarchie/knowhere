@@ -20,7 +20,7 @@ const colorPalette = [
 ];
 
 const keywords = [
-  { query: "name=Costco", radius: 5000 },
+  { query: "name=~Costco", radius: 5000 },
   { query: "amenity=cafe", radius: 1000 },
   { query: "amenity=school", radius: 5000 },
 ];
