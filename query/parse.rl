@@ -92,7 +92,7 @@ func Parse(data string) (*AST, error) {
     directive_value = directive_value_quoted | directive_value_unquoted;
     directive_values = directive_value ( "," directive_value )*;
     directive_name = (alnum+ >mark %directive_name) | "*";
-    directive = ("(" %inc_bracket) (directive_name "=" directive_values ) (")" %dec_bracket);
+    directive = ("(" %inc_bracket) (directive_name ("=" directive_values)? ) (")" %dec_bracket);
     directives = (directive >create_directive %append_directive)*;
 
     main := types tags directives;

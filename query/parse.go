@@ -59,12 +59,14 @@ func Parse(data string) (*AST, error) {
 			goto st_case_2
 		case 3:
 			goto st_case_3
+		case 66:
+			goto st_case_66
 		case 4:
 			goto st_case_4
 		case 5:
 			goto st_case_5
-		case 66:
-			goto st_case_66
+		case 67:
+			goto st_case_67
 		case 6:
 			goto st_case_6
 		case 7:
@@ -77,8 +79,6 @@ func Parse(data string) (*AST, error) {
 			goto st_case_10
 		case 11:
 			goto st_case_11
-		case 67:
-			goto st_case_67
 		case 12:
 			goto st_case_12
 		case 13:
@@ -203,7 +203,7 @@ func Parse(data string) (*AST, error) {
 			goto tr4
 		}
 		goto st0
-	tr125:
+	tr127:
 //line parse.rl:44
 
 		return nil, fmt.Errorf("an undefined type was specified %c: %w", data[p], ErrUndefinedFilter)
@@ -226,16 +226,16 @@ func Parse(data string) (*AST, error) {
 //line parse.go:233
 		switch data[p] {
 		case 40:
-			goto tr126
+			goto tr128
 		case 91:
-			goto tr127
+			goto tr129
 		}
-		goto tr125
-	tr126:
+		goto tr127
+	tr128:
 //line parse.rl:65
 		directive = FilterDirective{}
 		goto st2
-	tr129:
+	tr130:
 //line parse.rl:69
 		brackets--
 //line parse.rl:66
@@ -243,7 +243,7 @@ func Parse(data string) (*AST, error) {
 //line parse.rl:65
 		directive = FilterDirective{}
 		goto st2
-	tr130:
+	tr132:
 //line parse.rl:69
 		brackets--
 //line parse.rl:48
@@ -283,15 +283,32 @@ func Parse(data string) (*AST, error) {
 		}
 	st_case_3:
 //line parse.go:292
-		if data[p] == 61 {
+		switch data[p] {
+		case 41:
+			goto st66
+		case 61:
 			goto st4
 		}
 		goto st0
-	tr12:
+	tr24:
+//line parse.rl:62
+		directiveName = data[mark:p]
+		goto st66
+	st66:
+		if p++; p == pe {
+			goto _test_eof66
+		}
+	st_case_66:
+//line parse.go:309
+		if data[p] == 40 {
+			goto tr130
+		}
+		goto st0
+	tr13:
 //line parse.rl:63
 		directive = append(directive, data[mark:p])
 		goto st4
-	tr24:
+	tr26:
 //line parse.rl:62
 		directiveName = data[mark:p]
 		goto st4
@@ -300,7 +317,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof4
 		}
 	st_case_4:
-//line parse.go:310
+//line parse.go:327
 		switch data[p] {
 		case 34:
 			goto st9
@@ -309,8 +326,8 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr8
-	tr8:
+		goto tr9
+	tr9:
 //line parse.rl:38
 		mark = p
 		goto st5
@@ -319,48 +336,54 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof5
 		}
 	st_case_5:
-//line parse.go:329
+//line parse.go:346
 		switch data[p] {
 		case 34:
 			goto st0
 		case 41:
-			goto tr11
-		case 44:
 			goto tr12
+		case 44:
+			goto tr13
 		case 93:
 			goto st0
 		}
 		goto st5
-	tr11:
+	tr12:
 //line parse.rl:63
 		directive = append(directive, data[mark:p])
-		goto st66
-	tr16:
+		goto st67
+	tr17:
 //line parse.rl:38
 		mark = p
 //line parse.rl:63
 		directive = append(directive, data[mark:p])
-		goto st66
-	st66:
+		goto st67
+	tr21:
+//line parse.rl:62
+		directiveName = data[mark:p]
+//line parse.rl:63
+		directive = append(directive, data[mark:p])
+		goto st67
+	st67:
 		if p++; p == pe {
-			goto _test_eof66
+			goto _test_eof67
 		}
-	st_case_66:
-//line parse.go:356
+	st_case_67:
+//line parse.go:379
 		switch data[p] {
 		case 34:
 			goto st0
 		case 40:
-			goto tr128
+			goto tr131
 		case 41:
-			goto tr11
-		case 44:
 			goto tr12
+		case 44:
+			goto tr13
 		case 93:
 			goto st0
 		}
 		goto st5
-	tr128:
+	tr131:
 //line parse.rl:69
 		brackets--
 //line parse.rl:66
@@ -373,33 +396,33 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof6
 		}
 	st_case_6:
-//line parse.go:383
+//line parse.go:406
 		switch data[p] {
 		case 34:
 			goto st0
 		case 41:
-			goto tr11
-		case 42:
-			goto tr13
-		case 44:
 			goto tr12
+		case 42:
+			goto tr14
+		case 44:
+			goto tr13
 		case 93:
 			goto st0
 		}
 		switch {
 		case data[p] < 65:
 			if 48 <= data[p] && data[p] <= 57 {
-				goto tr14
+				goto tr15
 			}
 		case data[p] > 90:
 			if 97 <= data[p] && data[p] <= 122 {
-				goto tr14
+				goto tr15
 			}
 		default:
-			goto tr14
+			goto tr15
 		}
 		goto st5
-	tr13:
+	tr14:
 //line parse.rl:68
 		brackets++
 		goto st7
@@ -408,21 +431,21 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof7
 		}
 	st_case_7:
-//line parse.go:418
+//line parse.go:441
 		switch data[p] {
 		case 34:
 			goto st0
 		case 41:
-			goto tr11
-		case 44:
 			goto tr12
+		case 44:
+			goto tr13
 		case 61:
 			goto st8
 		case 93:
 			goto st0
 		}
 		goto st5
-	tr22:
+	tr23:
 //line parse.rl:62
 		directiveName = data[mark:p]
 		goto st8
@@ -431,18 +454,18 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof8
 		}
 	st_case_8:
-//line parse.go:441
+//line parse.go:464
 		switch data[p] {
 		case 34:
 			goto st9
 		case 41:
-			goto tr16
+			goto tr17
 		case 44:
-			goto tr12
+			goto tr13
 		case 93:
 			goto st0
 		}
-		goto tr8
+		goto tr9
 	st9:
 		if p++; p == pe {
 			goto _test_eof9
@@ -451,8 +474,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr17
-	tr17:
+		goto tr18
+	tr18:
 //line parse.rl:38
 		mark = p
 		goto st10
@@ -461,12 +484,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof10
 		}
 	st_case_10:
-//line parse.go:471
+//line parse.go:494
 		if data[p] == 34 {
-			goto tr19
+			goto tr20
 		}
 		goto st10
-	tr19:
+	tr20:
 //line parse.rl:63
 		directive = append(directive, data[mark:p])
 		goto st11
@@ -475,24 +498,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof11
 		}
 	st_case_11:
-//line parse.go:485
+//line parse.go:508
 		switch data[p] {
 		case 41:
-			goto st67
+			goto st66
 		case 44:
 			goto st4
 		}
 		goto st0
-	st67:
-		if p++; p == pe {
-			goto _test_eof67
-		}
-	st_case_67:
-		if data[p] == 40 {
-			goto tr129
-		}
-		goto st0
-	tr14:
+	tr15:
 //line parse.rl:68
 		brackets++
 //line parse.rl:38
@@ -503,16 +517,16 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof12
 		}
 	st_case_12:
-//line parse.go:513
+//line parse.go:527
 		switch data[p] {
 		case 34:
 			goto st0
 		case 41:
-			goto tr11
+			goto tr21
 		case 44:
-			goto tr12
+			goto tr13
 		case 61:
-			goto tr22
+			goto tr23
 		case 93:
 			goto st0
 		}
@@ -540,9 +554,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof13
 		}
 	st_case_13:
-//line parse.go:550
-		if data[p] == 61 {
+//line parse.go:564
+		switch data[p] {
+		case 41:
 			goto tr24
+		case 61:
+			goto tr26
 		}
 		switch {
 		case data[p] < 65:
@@ -557,11 +574,11 @@ func Parse(data string) (*AST, error) {
 			goto st13
 		}
 		goto st0
-	tr127:
+	tr129:
 //line parse.rl:47
 		tag = FilterTag{Lookups: []string{}}
 		goto st14
-	tr131:
+	tr133:
 //line parse.rl:69
 		brackets--
 //line parse.rl:48
@@ -574,38 +591,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof14
 		}
 	st_case_14:
-//line parse.go:584
+//line parse.go:601
 		switch data[p] {
 		case 33:
-			goto tr25
-		case 42:
-			goto tr26
-		}
-		switch {
-		case data[p] < 65:
-			if 48 <= data[p] && data[p] <= 57 {
-				goto tr27
-			}
-		case data[p] > 90:
-			if 97 <= data[p] && data[p] <= 122 {
-				goto tr27
-			}
-		default:
 			goto tr27
-		}
-		goto st0
-	tr25:
-//line parse.rl:68
-		brackets++
-		goto st15
-	st15:
-		if p++; p == pe {
-			goto _test_eof15
-		}
-	st_case_15:
-//line parse.go:613
-		if data[p] == 42 {
-			goto st16
+		case 42:
+			goto tr28
 		}
 		switch {
 		case data[p] < 65:
@@ -620,50 +611,76 @@ func Parse(data string) (*AST, error) {
 			goto tr29
 		}
 		goto st0
+	tr27:
+//line parse.rl:68
+		brackets++
+		goto st15
+	st15:
+		if p++; p == pe {
+			goto _test_eof15
+		}
+	st_case_15:
+//line parse.go:630
+		if data[p] == 42 {
+			goto st16
+		}
+		switch {
+		case data[p] < 65:
+			if 48 <= data[p] && data[p] <= 57 {
+				goto tr31
+			}
+		case data[p] > 90:
+			if 97 <= data[p] && data[p] <= 122 {
+				goto tr31
+			}
+		default:
+			goto tr31
+		}
+		goto st0
 	st16:
 		if p++; p == pe {
 			goto _test_eof16
 		}
 	st_case_16:
 		if data[p] == 93 {
-			goto tr30
+			goto tr32
 		}
 		goto st0
-	tr30:
+	tr32:
 //line parse.rl:53
 		tag.Op = OpNotExists
 		goto st68
-	tr32:
+	tr34:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 //line parse.rl:53
 		tag.Op = OpNotExists
 		goto st68
-	tr37:
+	tr39:
 //line parse.rl:52
 		tag.Op = OpExists
 		goto st68
-	tr43:
+	tr45:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:51
 		tag.Op = OpNotEquals
 		goto st68
-	tr47:
+	tr49:
 //line parse.rl:51
 		tag.Op = OpNotEquals
 		goto st68
-	tr53:
+	tr55:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:56
 		tag.Op = OpLessThan
 		goto st68
-	tr58:
+	tr60:
 //line parse.rl:56
 		tag.Op = OpLessThan
 		goto st68
-	tr63:
+	tr65:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:56
@@ -671,43 +688,43 @@ func Parse(data string) (*AST, error) {
 //line parse.rl:57
 		tag.Op = OpLessThanEquals
 		goto st68
-	tr69:
+	tr71:
 //line parse.rl:56
 		tag.Op = OpLessThan
 //line parse.rl:57
 		tag.Op = OpLessThanEquals
 		goto st68
-	tr74:
+	tr76:
 //line parse.rl:57
 		tag.Op = OpLessThanEquals
 		goto st68
-	tr78:
+	tr80:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:57
 		tag.Op = OpLessThanEquals
 		goto st68
-	tr83:
+	tr85:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:50
 		tag.Op = OpEquals
 		goto st68
-	tr87:
+	tr89:
 //line parse.rl:50
 		tag.Op = OpEquals
 		goto st68
-	tr93:
+	tr95:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:54
 		tag.Op = OpGreaterThan
 		goto st68
-	tr98:
+	tr100:
 //line parse.rl:54
 		tag.Op = OpGreaterThan
 		goto st68
-	tr103:
+	tr105:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:54
@@ -715,23 +732,23 @@ func Parse(data string) (*AST, error) {
 //line parse.rl:55
 		tag.Op = OpGreaterThanEquals
 		goto st68
-	tr109:
+	tr111:
 //line parse.rl:54
 		tag.Op = OpGreaterThan
 //line parse.rl:55
 		tag.Op = OpGreaterThanEquals
 		goto st68
-	tr114:
+	tr116:
 //line parse.rl:55
 		tag.Op = OpGreaterThanEquals
 		goto st68
-	tr118:
+	tr120:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 //line parse.rl:55
 		tag.Op = OpGreaterThanEquals
 		goto st68
-	tr124:
+	tr126:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 //line parse.rl:52
@@ -742,15 +759,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof68
 		}
 	st_case_68:
-//line parse.go:752
+//line parse.go:769
 		switch data[p] {
 		case 40:
-			goto tr130
+			goto tr132
 		case 91:
-			goto tr131
+			goto tr133
 		}
 		goto st0
-	tr29:
+	tr31:
 //line parse.rl:38
 		mark = p
 		goto st17
@@ -759,9 +776,9 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof17
 		}
 	st_case_17:
-//line parse.go:769
+//line parse.go:786
 		if data[p] == 93 {
-			goto tr32
+			goto tr34
 		}
 		switch {
 		case data[p] < 65:
@@ -776,7 +793,7 @@ func Parse(data string) (*AST, error) {
 			goto st17
 		}
 		goto st0
-	tr26:
+	tr28:
 //line parse.rl:68
 		brackets++
 		goto st18
@@ -785,7 +802,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof18
 		}
 	st_case_18:
-//line parse.go:795
+//line parse.go:812
 		switch data[p] {
 		case 33:
 			goto st19
@@ -796,10 +813,10 @@ func Parse(data string) (*AST, error) {
 		case 62:
 			goto st47
 		case 93:
-			goto tr37
+			goto tr39
 		}
 		goto st0
-	tr119:
+	tr121:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 		goto st19
@@ -808,12 +825,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof19
 		}
 	st_case_19:
-//line parse.go:818
+//line parse.go:835
 		if data[p] == 61 {
 			goto st20
 		}
 		goto st0
-	tr42:
+	tr44:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st20
@@ -822,7 +839,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof20
 		}
 	st_case_20:
-//line parse.go:832
+//line parse.go:849
 		switch data[p] {
 		case 34:
 			goto st22
@@ -831,8 +848,8 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr39
-	tr39:
+		goto tr41
+	tr41:
 //line parse.rl:38
 		mark = p
 		goto st21
@@ -841,14 +858,14 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof21
 		}
 	st_case_21:
-//line parse.go:851
+//line parse.go:868
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr42
+			goto tr44
 		case 93:
-			goto tr43
+			goto tr45
 		}
 		goto st21
 	st22:
@@ -859,8 +876,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr44
-	tr44:
+		goto tr46
+	tr46:
 //line parse.rl:38
 		mark = p
 		goto st23
@@ -869,12 +886,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof23
 		}
 	st_case_23:
-//line parse.go:879
+//line parse.go:896
 		if data[p] == 34 {
-			goto tr46
+			goto tr48
 		}
 		goto st23
-	tr46:
+	tr48:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st24
@@ -883,15 +900,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof24
 		}
 	st_case_24:
-//line parse.go:893
+//line parse.go:910
 		switch data[p] {
 		case 44:
 			goto st20
 		case 93:
-			goto tr47
+			goto tr49
 		}
 		goto st0
-	tr121:
+	tr123:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 		goto st25
@@ -900,19 +917,19 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof25
 		}
 	st_case_25:
-//line parse.go:910
+//line parse.go:927
 		switch data[p] {
 		case 34:
 			goto st28
 		case 44:
 			goto st0
 		case 61:
-			goto tr50
+			goto tr52
 		case 93:
 			goto st0
 		}
-		goto tr48
-	tr48:
+		goto tr50
+	tr50:
 //line parse.rl:38
 		mark = p
 		goto st26
@@ -921,17 +938,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof26
 		}
 	st_case_26:
-//line parse.go:931
+//line parse.go:948
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr52
+			goto tr54
 		case 93:
-			goto tr53
+			goto tr55
 		}
 		goto st26
-	tr52:
+	tr54:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st27
@@ -940,7 +957,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof27
 		}
 	st_case_27:
-//line parse.go:950
+//line parse.go:967
 		switch data[p] {
 		case 34:
 			goto st28
@@ -949,7 +966,7 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr48
+		goto tr50
 	st28:
 		if p++; p == pe {
 			goto _test_eof28
@@ -958,8 +975,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr54
-	tr54:
+		goto tr56
+	tr56:
 //line parse.rl:38
 		mark = p
 		goto st29
@@ -968,12 +985,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof29
 		}
 	st_case_29:
-//line parse.go:978
+//line parse.go:995
 		if data[p] == 34 {
-			goto tr56
+			goto tr58
 		}
 		goto st29
-	tr56:
+	tr58:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st30
@@ -982,15 +999,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof30
 		}
 	st_case_30:
-//line parse.go:992
+//line parse.go:1009
 		switch data[p] {
 		case 44:
 			goto st27
 		case 93:
-			goto tr58
+			goto tr60
 		}
 		goto st0
-	tr50:
+	tr52:
 //line parse.rl:38
 		mark = p
 		goto st31
@@ -999,17 +1016,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof31
 		}
 	st_case_31:
-//line parse.go:1009
+//line parse.go:1026
 		switch data[p] {
 		case 34:
 			goto st37
 		case 44:
-			goto tr52
+			goto tr54
 		case 93:
-			goto tr53
+			goto tr55
 		}
-		goto tr59
-	tr59:
+		goto tr61
+	tr61:
 //line parse.rl:38
 		mark = p
 		goto st32
@@ -1018,17 +1035,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof32
 		}
 	st_case_32:
-//line parse.go:1028
+//line parse.go:1045
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr62
+			goto tr64
 		case 93:
-			goto tr63
+			goto tr65
 		}
 		goto st32
-	tr62:
+	tr64:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st33
@@ -1037,7 +1054,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof33
 		}
 	st_case_33:
-//line parse.go:1047
+//line parse.go:1064
 		switch data[p] {
 		case 34:
 			goto st34
@@ -1046,7 +1063,7 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr59
+		goto tr61
 	st34:
 		if p++; p == pe {
 			goto _test_eof34
@@ -1055,8 +1072,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr65
-	tr65:
+		goto tr67
+	tr67:
 //line parse.rl:38
 		mark = p
 		goto st35
@@ -1065,12 +1082,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof35
 		}
 	st_case_35:
-//line parse.go:1075
+//line parse.go:1092
 		if data[p] == 34 {
-			goto tr67
+			goto tr69
 		}
 		goto st35
-	tr67:
+	tr69:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st36
@@ -1079,12 +1096,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof36
 		}
 	st_case_36:
-//line parse.go:1089
+//line parse.go:1106
 		switch data[p] {
 		case 44:
 			goto st33
 		case 93:
-			goto tr69
+			goto tr71
 		}
 		goto st0
 	st37:
@@ -1095,8 +1112,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr70
-	tr70:
+		goto tr72
+	tr72:
 //line parse.rl:38
 		mark = p
 		goto st38
@@ -1105,12 +1122,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof38
 		}
 	st_case_38:
-//line parse.go:1115
+//line parse.go:1132
 		if data[p] == 34 {
-			goto tr72
+			goto tr74
 		}
 		goto st38
-	tr72:
+	tr74:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st39
@@ -1119,15 +1136,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof39
 		}
 	st_case_39:
-//line parse.go:1129
+//line parse.go:1146
 		switch data[p] {
 		case 44:
 			goto st40
 		case 93:
-			goto tr74
+			goto tr76
 		}
 		goto st0
-	tr77:
+	tr79:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st40
@@ -1136,7 +1153,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof40
 		}
 	st_case_40:
-//line parse.go:1146
+//line parse.go:1163
 		switch data[p] {
 		case 34:
 			goto st37
@@ -1145,8 +1162,8 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr75
-	tr75:
+		goto tr77
+	tr77:
 //line parse.rl:38
 		mark = p
 		goto st41
@@ -1155,21 +1172,21 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof41
 		}
 	st_case_41:
-//line parse.go:1165
+//line parse.go:1182
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr77
+			goto tr79
 		case 93:
-			goto tr78
+			goto tr80
 		}
 		goto st41
-	tr82:
+	tr84:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st42
-	tr122:
+	tr124:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 		goto st42
@@ -1178,7 +1195,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof42
 		}
 	st_case_42:
-//line parse.go:1188
+//line parse.go:1205
 		switch data[p] {
 		case 34:
 			goto st44
@@ -1187,8 +1204,8 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr79
-	tr79:
+		goto tr81
+	tr81:
 //line parse.rl:38
 		mark = p
 		goto st43
@@ -1197,14 +1214,14 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof43
 		}
 	st_case_43:
-//line parse.go:1207
+//line parse.go:1224
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr82
+			goto tr84
 		case 93:
-			goto tr83
+			goto tr85
 		}
 		goto st43
 	st44:
@@ -1215,8 +1232,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr84
-	tr84:
+		goto tr86
+	tr86:
 //line parse.rl:38
 		mark = p
 		goto st45
@@ -1225,12 +1242,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof45
 		}
 	st_case_45:
-//line parse.go:1235
+//line parse.go:1252
 		if data[p] == 34 {
-			goto tr86
+			goto tr88
 		}
 		goto st45
-	tr86:
+	tr88:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st46
@@ -1239,15 +1256,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof46
 		}
 	st_case_46:
-//line parse.go:1249
+//line parse.go:1266
 		switch data[p] {
 		case 44:
 			goto st42
 		case 93:
-			goto tr87
+			goto tr89
 		}
 		goto st0
-	tr123:
+	tr125:
 //line parse.rl:59
 		tag.Name = data[mark:p]
 		goto st47
@@ -1256,19 +1273,19 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof47
 		}
 	st_case_47:
-//line parse.go:1266
+//line parse.go:1283
 		switch data[p] {
 		case 34:
 			goto st50
 		case 44:
 			goto st0
 		case 61:
-			goto tr90
+			goto tr92
 		case 93:
 			goto st0
 		}
-		goto tr88
-	tr88:
+		goto tr90
+	tr90:
 //line parse.rl:38
 		mark = p
 		goto st48
@@ -1277,17 +1294,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof48
 		}
 	st_case_48:
-//line parse.go:1287
+//line parse.go:1304
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr92
+			goto tr94
 		case 93:
-			goto tr93
+			goto tr95
 		}
 		goto st48
-	tr92:
+	tr94:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st49
@@ -1296,7 +1313,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof49
 		}
 	st_case_49:
-//line parse.go:1306
+//line parse.go:1323
 		switch data[p] {
 		case 34:
 			goto st50
@@ -1305,7 +1322,7 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr88
+		goto tr90
 	st50:
 		if p++; p == pe {
 			goto _test_eof50
@@ -1314,8 +1331,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr94
-	tr94:
+		goto tr96
+	tr96:
 //line parse.rl:38
 		mark = p
 		goto st51
@@ -1324,12 +1341,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof51
 		}
 	st_case_51:
-//line parse.go:1334
+//line parse.go:1351
 		if data[p] == 34 {
-			goto tr96
+			goto tr98
 		}
 		goto st51
-	tr96:
+	tr98:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st52
@@ -1338,15 +1355,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof52
 		}
 	st_case_52:
-//line parse.go:1348
+//line parse.go:1365
 		switch data[p] {
 		case 44:
 			goto st49
 		case 93:
-			goto tr98
+			goto tr100
 		}
 		goto st0
-	tr90:
+	tr92:
 //line parse.rl:38
 		mark = p
 		goto st53
@@ -1355,17 +1372,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof53
 		}
 	st_case_53:
-//line parse.go:1365
+//line parse.go:1382
 		switch data[p] {
 		case 34:
 			goto st59
 		case 44:
-			goto tr92
+			goto tr94
 		case 93:
-			goto tr93
+			goto tr95
 		}
-		goto tr99
-	tr99:
+		goto tr101
+	tr101:
 //line parse.rl:38
 		mark = p
 		goto st54
@@ -1374,17 +1391,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof54
 		}
 	st_case_54:
-//line parse.go:1384
+//line parse.go:1401
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr102
+			goto tr104
 		case 93:
-			goto tr103
+			goto tr105
 		}
 		goto st54
-	tr102:
+	tr104:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st55
@@ -1393,7 +1410,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof55
 		}
 	st_case_55:
-//line parse.go:1403
+//line parse.go:1420
 		switch data[p] {
 		case 34:
 			goto st56
@@ -1402,7 +1419,7 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr99
+		goto tr101
 	st56:
 		if p++; p == pe {
 			goto _test_eof56
@@ -1411,8 +1428,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr105
-	tr105:
+		goto tr107
+	tr107:
 //line parse.rl:38
 		mark = p
 		goto st57
@@ -1421,12 +1438,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof57
 		}
 	st_case_57:
-//line parse.go:1431
+//line parse.go:1448
 		if data[p] == 34 {
-			goto tr107
+			goto tr109
 		}
 		goto st57
-	tr107:
+	tr109:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st58
@@ -1435,12 +1452,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof58
 		}
 	st_case_58:
-//line parse.go:1445
+//line parse.go:1462
 		switch data[p] {
 		case 44:
 			goto st55
 		case 93:
-			goto tr109
+			goto tr111
 		}
 		goto st0
 	st59:
@@ -1451,8 +1468,8 @@ func Parse(data string) (*AST, error) {
 		if data[p] == 34 {
 			goto st0
 		}
-		goto tr110
-	tr110:
+		goto tr112
+	tr112:
 //line parse.rl:38
 		mark = p
 		goto st60
@@ -1461,12 +1478,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof60
 		}
 	st_case_60:
-//line parse.go:1471
+//line parse.go:1488
 		if data[p] == 34 {
-			goto tr112
+			goto tr114
 		}
 		goto st60
-	tr112:
+	tr114:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st61
@@ -1475,15 +1492,15 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof61
 		}
 	st_case_61:
-//line parse.go:1485
+//line parse.go:1502
 		switch data[p] {
 		case 44:
 			goto st62
 		case 93:
-			goto tr114
+			goto tr116
 		}
 		goto st0
-	tr117:
+	tr119:
 //line parse.rl:60
 		tag.Lookups = append(tag.Lookups, data[mark:p])
 		goto st62
@@ -1492,7 +1509,7 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof62
 		}
 	st_case_62:
-//line parse.go:1502
+//line parse.go:1519
 		switch data[p] {
 		case 34:
 			goto st59
@@ -1501,8 +1518,8 @@ func Parse(data string) (*AST, error) {
 		case 93:
 			goto st0
 		}
-		goto tr115
-	tr115:
+		goto tr117
+	tr117:
 //line parse.rl:38
 		mark = p
 		goto st63
@@ -1511,17 +1528,17 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof63
 		}
 	st_case_63:
-//line parse.go:1521
+//line parse.go:1538
 		switch data[p] {
 		case 34:
 			goto st0
 		case 44:
-			goto tr117
+			goto tr119
 		case 93:
-			goto tr118
+			goto tr120
 		}
 		goto st63
-	tr27:
+	tr29:
 //line parse.rl:68
 		brackets++
 //line parse.rl:38
@@ -1532,18 +1549,18 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof64
 		}
 	st_case_64:
-//line parse.go:1542
+//line parse.go:1559
 		switch data[p] {
 		case 33:
-			goto tr119
-		case 60:
 			goto tr121
-		case 61:
-			goto tr122
-		case 62:
+		case 60:
 			goto tr123
-		case 93:
+		case 61:
 			goto tr124
+		case 62:
+			goto tr125
+		case 93:
+			goto tr126
 		}
 		switch {
 		case data[p] < 65:
@@ -1575,12 +1592,12 @@ func Parse(data string) (*AST, error) {
 			goto _test_eof69
 		}
 	st_case_69:
-//line parse.go:1585
+//line parse.go:1602
 		switch data[p] {
 		case 40:
-			goto tr126
+			goto tr128
 		case 91:
-			goto tr127
+			goto tr129
 		case 110:
 			goto tr2
 		case 114:
@@ -1588,7 +1605,7 @@ func Parse(data string) (*AST, error) {
 		case 119:
 			goto tr4
 		}
-		goto tr125
+		goto tr127
 	st_out:
 	_test_eof65:
 		cs = 65
@@ -1599,14 +1616,17 @@ func Parse(data string) (*AST, error) {
 	_test_eof3:
 		cs = 3
 		goto _test_eof
+	_test_eof66:
+		cs = 66
+		goto _test_eof
 	_test_eof4:
 		cs = 4
 		goto _test_eof
 	_test_eof5:
 		cs = 5
 		goto _test_eof
-	_test_eof66:
-		cs = 66
+	_test_eof67:
+		cs = 67
 		goto _test_eof
 	_test_eof6:
 		cs = 6
@@ -1625,9 +1645,6 @@ func Parse(data string) (*AST, error) {
 		goto _test_eof
 	_test_eof11:
 		cs = 11
-		goto _test_eof
-	_test_eof67:
-		cs = 67
 		goto _test_eof
 	_test_eof12:
 		cs = 12
@@ -1810,7 +1827,7 @@ func Parse(data string) (*AST, error) {
 				brackets--
 //line parse.rl:66
 				directives[directiveName] = directive
-//line parse.go:1682
+//line parse.go:1699
 			}
 		}
 

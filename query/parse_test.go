@@ -265,6 +265,21 @@ var _ = Describe("Building a query", func() {
 				"area": []string{"colorado"},
 			},
 		}))
+		ast, err = query.Parse(`nw[amenity=pub](precise)`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+			},
+			Directives: map[string]query.FilterDirective{
+				"precise": []string{},
+			},
+		}))
 	})
 
 	It("supports inequalities", func() {
