@@ -249,6 +249,27 @@ var _ = Describe("Building a query", func() {
 		}))
 	})
 
+	It("supports contains substring", func() {
+		ast, err := query.Parse(`nw[amenity=pub][name=~"High School"]`)
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Types: []query.FilterType{query.NodeFilter, query.WayFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "amenity",
+					Lookups: []string{"pub"},
+					Op:      query.OpEquals,
+				},
+				{
+					Name:    "name",
+					Lookups: []string{"High School"},
+					Op:      query.OpContains,
+				},
+			},
+			Directives: map[string]query.FilterDirective{},
+		}))
+	})
+
 	It("supports directives for the query", func() {
 		ast, err := query.Parse(`nw[amenity=pub](area=colorado)`)
 		Expect(err).NotTo(HaveOccurred())
