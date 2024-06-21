@@ -145,10 +145,10 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
-			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`),
-			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`),
-			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`),
-			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`),
+			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`, `( "pop" )`),
+			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`, `( "pop" )`),
+			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`, `( "pop" )`),
+			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`, `( "pop" )`),
 		)
 	})
 })

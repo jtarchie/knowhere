@@ -143,6 +143,14 @@ func ToIndexedSQL(query string) (string, error) {
 			}
 		case OpGreaterThan, OpGreaterThanEquals, OpLessThan, OpLessThanEquals:
 			for _, tag := range tags {
+				equalParts = append(
+					equalParts,
+					fmt.Sprintf(
+						`( "%s" )`,
+						tag.Name,
+					),
+				)
+
 				parts = append(
 					parts,
 					fmt.Sprintf(
