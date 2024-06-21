@@ -12,7 +12,7 @@ const radius = 500;
 const overlap = 3000;
 
 const clustered = allUnis.cluster(radius);
-const grouped = clustered.overlap(clustered, overlap, 3);
+const grouped = clustered.overlap(clustered, overlap, 0, 3);
 
 const payload = {
   type: "FeatureCollection",

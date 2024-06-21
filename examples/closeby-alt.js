@@ -48,6 +48,7 @@ keywords.slice(1).forEach((keyword) => {
   const grouped = cluster.overlap(
     keyword.results,
     keywords[0].radius,
+    keyword.radius,
     expectedNeighbors - 1,
   );
   grouped.forEach((values) => {
