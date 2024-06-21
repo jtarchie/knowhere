@@ -139,7 +139,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `( "amenity" AND ( "restaurant" OR "pub" OR "cafe" ) )`),
 			Entry("single tag that exists", "nw[name]", `( "name" )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("multiple tag that exists", "r[route][ref][network]", `( "route" ) AND ( "ref" ) AND ( "network" )`),
-			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `( "amenity" AND ( "restaurant" ) ) AND ( "name" )`),
+			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `( "amenity" AND ( "restaurant" ) )`, `( "name" )`),
 			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" AND ( "Starbucks" ) )`),
 			Entry("tag should not exist", "nw[amenity=coffee][!name]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" )`),
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
