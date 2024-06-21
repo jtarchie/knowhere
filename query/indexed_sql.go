@@ -59,12 +59,7 @@ func ToIndexedSQL(query string) (string, error) {
 	equalParts := []string{}
 	notParts := []string{}
 
-	for operation := range OpLessThanEquals + 1 {
-		tags, ok := groupedTags[operation]
-		if !ok {
-			continue
-		}
-
+	for operation, tags := range groupedTags {
 		switch operation {
 		case OpEquals:
 			for _, tag := range tags {
