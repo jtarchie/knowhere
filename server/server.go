@@ -70,6 +70,8 @@ func New(
 }
 
 func (s *Server) Start() error {
+	defer s.client.Close()
+
 	bind := fmt.Sprintf("0.0.0.0:%d", s.port)
 
 	slog.Info("server.started", slog.String("bind", "http://"+bind))
