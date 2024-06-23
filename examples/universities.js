@@ -3,7 +3,7 @@ const prefixes = geo.prefixes();
 const allUnis = geo.asResults(
   ...prefixes.flatMap((prefix) => {
     return geo.query(
-      `wr[amenity=university][name](precise=true)(prefix=${prefix.name})`,
+      `wr[amenity=university][name](prefix=${prefix.name})`,
     );
   }),
 );
