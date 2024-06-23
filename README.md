@@ -66,7 +66,3 @@ to the container.
 ```bash
 fly deploy
 ```
-
-## TODO
-
-- inquality operator should check for tag exists
