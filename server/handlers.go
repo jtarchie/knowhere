@@ -31,7 +31,7 @@ func setupRoutes(
 ) {
 	handler.GET("/api/search", locationSearch(client))
 	handler.GET("/api/prefixes", prefixes(client))
-	handler.GET("/api/runtime", runtime(client, timeout))
+	handler.Any("/api/runtime", runtime(client, timeout))
 
 	assetHandler := assetHandler()
 	handler.GET("/", echo.WrapHandler(assetHandler))
