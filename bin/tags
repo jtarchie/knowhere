@@ -1,0 +1,23 @@
+# boundaries of political areas
+admin_level
+border_type
+boundary
+# points of interest
+amenity
+building
+fast_food
+fuel
+landuse
+leisure
+natural
+route
+shop
+tourism
+waterway
+# for vehicles
+area:highway
+highway
+cycleway
+# other
+name
+website

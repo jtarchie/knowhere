@@ -37,7 +37,7 @@ done
 go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$config_path" \
 	--db "$db_path" \
-	--allowed-tags "name,amenity,shop,leisure,tourism,boundary,admin_level,waterway,border_type"
+	--allowed-tags "$(grep -v '^#' bin/tags | tr '\n' ',')"
 
 # Compressing the database
 go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
