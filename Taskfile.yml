@@ -8,7 +8,6 @@ tasks:
     - deno fmt README.md docs/ examples/ server/assets/*.ts commands/runtime
     - gofmt -w .
     - shfmt -w bin/*.sh
-    - tidy -w 0 -i -m server/assets/index.html
   lint:
     cmds:
     - deno lint examples/
