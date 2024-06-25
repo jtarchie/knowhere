@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/imroc/req/v3"
 	"github.com/schollz/progressbar/v3"
@@ -48,7 +49,7 @@ func (b *Build) Run(stdout io.Writer) error {
 		}
 	}
 
-	client := req.C().SetOutputDirectory(buildPath)
+	client := req.C().SetOutputDirectory(buildPath).SetTimeout(time.Hour)
 	scanner := bufio.NewScanner(config)
 
 	for scanner.Scan() {
