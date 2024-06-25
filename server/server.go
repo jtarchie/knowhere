@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	runtimeNative "runtime"
 	"strings"
 	"time"
 
@@ -23,7 +24,7 @@ func New(
 	cors []string,
 	timeout time.Duration,
 ) (*Server, error) {
-	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", dbFilename)
+	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&cache_size=2000&_busy_timeout=5000", dbFilename)
 
 	if strings.Contains(dbFilename, ".zst") {
 		err := sqlitezstd.Init()
@@ -39,15 +40,8 @@ func New(
 		return nil, fmt.Errorf("could not open database file: %w", err)
 	}
 
-	_, err = client.Exec(`
-		pragma temp_store = memory;
-		pragma mmap_size = 268435456; -- 256 MB
-		PRAGMA cache_size = 2000;
-		PRAGMA busy_timeout = 5000;
-	`)
-	if err != nil {
-		return nil, fmt.Errorf("could not setup pragmas: %w", err)
-	}
+	client.SetMaxOpenConns(runtimeNative.NumCPU())
+	client.SetMaxIdleConns(runtimeNative.NumCPU())
 
 	slog.Info(
 		"server.config",
