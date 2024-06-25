@@ -23,5 +23,5 @@ primary_region = 'sjc'
 [mounts]
   source = "sqlite"
   destination = "/var/osm/"
-  initial_size = "15gb"
+  initial_size = "50gb"
 
