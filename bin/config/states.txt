@@ -48,3 +48,16 @@ https://download.geofabrik.de/north-america/us/washington-latest.osm.pbf
 https://download.geofabrik.de/north-america/us/west-virginia-latest.osm.pbf
 https://download.geofabrik.de/north-america/us/wisconsin-latest.osm.pbf
 https://download.geofabrik.de/north-america/us/wyoming-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/alberta-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/british-columbia-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/manitoba-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/new-brunswick-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/newfoundland-and-labrador-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/northwest-territories-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/nova-scotia-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/nunavut-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/ontario-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/prince-edward-island-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/quebec-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/saskatchewan-latest.osm.pbf
+https://download.geofabrik.de/north-america/canada/yukon-latest.osm.pbf
