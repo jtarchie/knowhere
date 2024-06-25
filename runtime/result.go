@@ -24,7 +24,7 @@ func (wr Result) AsFeature(properties map[string]interface{}) *geojson.Feature {
 
 	feature.Properties["title"] = wr.Name
 	feature.Properties["id"] = wr.ID
-	feature.Properties["type"] = wr.OsmType.String()
+	feature.Properties["type"] = wr.OsmType
 
 	for name, value := range properties {
 		feature.Properties[name] = value
