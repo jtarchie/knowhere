@@ -4,7 +4,7 @@ set -eux
 
 # Function to download database and restart server
 download_and_restart() {
-	if curl -s -q -o /var/osm/entries.db https://sqlite.knowhere.live/entries.db; then
+	if curl -s -q -o /var/osm/entries.db https://sqlite.knowhere.live/entries.db.zst; then
 		echo "Download complete. Restarting knowhere server..."
 		# Find the process ID of knowhere server and send SIGKILL
 		pkill -f "knowhere"
@@ -18,4 +18,4 @@ if [ ! -f /var/osm/entries.db ]; then
 fi
 
 touch /var/osm/entries.db
-/app/knowhere server --port 3000 --db /var/osm/entries.db --cors '*' --runtime-timeout 10s
+/app/knowhere server --port 3000 --db /var/osm/entries.db.zst --cors '*' --runtime-timeout 10s
