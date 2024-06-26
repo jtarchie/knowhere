@@ -49,6 +49,34 @@ var _ = Describe("Building a query", func() {
 				},
 			},
 		}))
+
+		ast, err = query.Parse("n[fuel:diesel=yes]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "fuel:diesel",
+					Lookups: []string{"yes"},
+					Op:      query.OpEquals,
+				},
+			},
+		}))
+
+		ast, err = query.Parse("n[admin_level=4]")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(ast).To(Equal(&query.AST{
+			Directives: map[string]query.FilterDirective{},
+			Types:      []query.FilterType{query.NodeFilter},
+			Tags: []query.FilterTag{
+				{
+					Name:    "admin_level",
+					Lookups: []string{"4"},
+					Op:      query.OpEquals,
+				},
+			},
+		}))
 	})
 
 	It("can parse multiple tags", func() {
