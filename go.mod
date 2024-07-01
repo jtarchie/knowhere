@@ -24,7 +24,7 @@ require (
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
-	github.com/samber/lo v1.39.0
+	github.com/samber/lo v1.44.0
 	github.com/samber/slog-echo v1.14.2
 	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
