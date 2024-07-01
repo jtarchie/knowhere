@@ -9,7 +9,7 @@ require (
 	github.com/dop251/goja v0.0.0-20240610225006-393f6d42497b
 	github.com/dop251/goja_nodejs v0.0.0-20240418154818-2aae10d4cbcf
 	github.com/engelsjk/polygol v0.0.3
-	github.com/evanw/esbuild v0.21.5
+	github.com/evanw/esbuild v0.22.0
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
