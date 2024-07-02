@@ -6,10 +6,9 @@ require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/dop251/goja v0.0.0-20240610225006-393f6d42497b
+	github.com/dop251/goja v0.0.0-20240627195025-eb1f15ee67d2
 	github.com/dop251/goja_nodejs v0.0.0-20240418154818-2aae10d4cbcf
 	github.com/engelsjk/polygol v0.0.3
-	github.com/evanw/esbuild v0.21.5
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
@@ -24,7 +23,7 @@ require (
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
-	github.com/samber/lo v1.39.0
+	github.com/samber/lo v1.44.0
 	github.com/samber/slog-echo v1.14.2
 	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
@@ -49,7 +48,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240622144329-c177fd99eaa9 // indirect
+	github.com/google/pprof v0.0.0-20240625030939-27f56978b8b0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/klauspost/compress v1.17.9 // indirect
@@ -61,7 +60,7 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/quic-go v0.45.0 // indirect
+	github.com/quic-go/quic-go v0.45.1 // indirect
 	github.com/refraction-networking/utls v1.6.6 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/tidwall/geoindex v1.7.0 // indirect
@@ -70,7 +69,7 @@ require (
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
-	go.mongodb.org/mongo-driver v1.15.1 // indirect
+	go.mongodb.org/mongo-driver v1.16.0 // indirect
 	go.opentelemetry.io/otel v1.27.0 // indirect
 	go.opentelemetry.io/otel/trace v1.27.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
