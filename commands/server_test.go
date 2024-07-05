@@ -43,7 +43,7 @@ var _ = Describe("Server", func() {
 		server := &commands.Server{
 			Port:           port,
 			DB:             dbFilename,
-			RuntimeTimeout: 2 * time.Second,
+			RuntimeTimeout: time.Second,
 		}
 		go func() {
 			defer GinkgoRecover()
@@ -153,6 +153,7 @@ var _ = Describe("Server", func() {
 
 			Expect(payload.String()).To(MatchJSON(fmt.Sprintf(`{"error":%q}`, errMsg)))
 		},
+			Entry("timeouts on infinite loop", "for(;;) {}", `evaluation error: vm timed out at main.js:1:3(1)`),
 			Entry("no source provided", ``, `source not provided in request body`),
 			Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at main.js:1:15(1)"),
 			Entry("assertion fail", `assert.eq(false, "this did not work")`, "evaluation error: assertion failed: this did not work at main.js:1:24(6)"),
