@@ -34,7 +34,7 @@ func runtime(
 			if err != nil {
 				slog.Error("runtime.error", slog.String("error", err.Error()))
 
-				return ctx.JSON(http.StatusBadRequest, map[string]string{
+				return response(ctx, http.StatusBadRequest, map[string]string{
 					"error": "Could not read request body",
 				})
 			}
@@ -46,7 +46,7 @@ func runtime(
 		if source == "" {
 			slog.Error("runtime.error", slog.String("error", "source was empty"))
 
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
+			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": "source not provided in request body",
 			})
 		}
@@ -71,11 +71,11 @@ func runtime(
 				msg += ": " + interrupted.Error()
 			}
 
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
+			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": msg,
 			})
 		}
 
-		return ctx.JSON(http.StatusOK, value.Export())
+		return response(ctx, http.StatusOK, value.Export())
 	}
 }

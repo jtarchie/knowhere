@@ -57,12 +57,12 @@ func prefixes(client *sql.DB) func(echo.Context) error {
 		if err != nil {
 			slog.Error("prefixes.error", slog.String("error", err.Error()))
 
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
+			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": "Results could not be processed",
 			})
 		}
 
-		return ctx.JSON(http.StatusOK, map[string]interface{}{
+		return response(ctx, http.StatusOK, map[string]interface{}{
 			"prefixes": prefixes,
 		})
 	}

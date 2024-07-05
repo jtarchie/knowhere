@@ -15,7 +15,7 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 	return func(ctx echo.Context) error {
 		search := ctx.FormValue("search")
 		if search == "" {
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
+			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": "Required to have a `search` for the query",
 			})
 		}
@@ -24,7 +24,7 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 		if err != nil {
 			slog.Error("search.error", slog.String("error", err.Error()))
 
-			return ctx.JSON(http.StatusBadRequest, map[string]string{
+			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": "Results could not be processed",
 			})
 		}
@@ -45,7 +45,7 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			features = append(features, &feature)
 		}
 
-		return ctx.JSON(http.StatusOK, geojson.FeatureCollection{
+		return response(ctx, http.StatusOK, geojson.FeatureCollection{
 			Features: features,
 		})
 	}
