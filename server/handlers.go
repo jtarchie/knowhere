@@ -17,9 +17,9 @@ func setupMiddleware(handler *echo.Echo, cors []string) {
 	handler.Use(middleware.Gzip())
 
 	if 0 < len(cors) {
+		slog.Info("cors.setup", "cors", cors)
 		handler.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: cors,
-			AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 		}))
 	}
 }

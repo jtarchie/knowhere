@@ -6,6 +6,9 @@
 app = 'knowhere'
 primary_region = 'sjc'
 
+[env]
+CORS_DOMAIN = "https://knowhere.live"
+
 [build]
   dockerfile = "Dockerfile"
 

@@ -20,4 +20,4 @@ if [ ! -f /var/osm/$filename ]; then
 fi
 
 touch /var/osm/$filename
-/app/knowhere server --port 3000 --db /var/osm/$filename --cors '*' --runtime-timeout 10s
+/app/knowhere server --port 3000 --db /var/osm/$filename --cors "$CORS_DOMAIN" --runtime-timeout 10s
