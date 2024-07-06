@@ -32,9 +32,3 @@ func BenchmarkToIndexedSQL(b *testing.B) {
 		_, _ = query.ToIndexedSQL(search)
 	}
 }
-
-func BenchmarkToExactSQL(b *testing.B) {
-	for n := 0; n < b.N; n++ {
-		_, _ = query.ToExactSQL(search)
-	}
-}
