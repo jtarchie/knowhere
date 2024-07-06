@@ -10,6 +10,7 @@ import (
 
 type Server struct {
 	Cors           []string      `help:"list of URLs to allow CORs"`
+	AllowCIDR      []string      `help:"list of CIDRs to allow through to server" default:"0.0.0.0/0"`
 	DB             string        `help:"sqlite file to server"      required:""`
 	Port           int           `default:"8080"                    help:"port for the http server" required:""`
 	RuntimeTimeout time.Duration `help:"the timeout for single runtime" default:"2s"`
@@ -20,6 +21,7 @@ func (s *Server) Run(_ io.Writer) error {
 		s.Port,
 		s.DB,
 		s.Cors,
+		s.AllowCIDR,
 		s.RuntimeTimeout,
 	)
 	if err != nil {

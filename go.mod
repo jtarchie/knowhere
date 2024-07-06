@@ -16,6 +16,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/jtarchie/sqlitezstd v0.0.0-20240618161552-cf04934c83a1
 	github.com/labstack/echo/v4 v4.12.0
+	github.com/libp2p/go-cidranger v1.1.0
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/onsi/ginkgo/v2 v2.19.0

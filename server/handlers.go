@@ -11,16 +11,21 @@ import (
 	slogecho "github.com/samber/slog-echo"
 )
 
-func setupMiddleware(handler *echo.Echo, cors []string) {
+func setupMiddleware(handler *echo.Echo, cors []string, allowedCIDRs []string) {
 	handler.Use(slogecho.New(slog.Default()))
 	handler.Use(middleware.Recover())
 	handler.Use(middleware.Gzip())
 
-	if 0 < len(cors) {
+	if 0 < len(cors) && cors[0] != "*" {
 		slog.Info("cors.setup", "cors", cors)
 		handler.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 			AllowOrigins: cors,
 		}))
+	}
+
+	if 0 < len(allowedCIDRs) && allowedCIDRs[0] != "0.0.0.0/0" {
+		slog.Info("cidrs.setup", "allows", allowedCIDRs)
+		handler.Use(CIDRAllow(allowedCIDRs...))
 	}
 }
 

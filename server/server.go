@@ -22,6 +22,7 @@ func New(
 	port int,
 	dbFilename string,
 	cors []string,
+	allowCIDRs []string,
 	timeout time.Duration,
 ) (*Server, error) {
 	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&cache_size=2000&_busy_timeout=5000", dbFilename)
@@ -53,7 +54,7 @@ func New(
 	handler.HideBanner = true
 	handler.JSONSerializer = &DefaultJSONSerializer{}
 
-	setupMiddleware(handler, cors)
+	setupMiddleware(handler, cors, allowCIDRs)
 	setupRoutes(handler, client, timeout)
 
 	return &Server{
