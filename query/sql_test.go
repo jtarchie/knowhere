@@ -23,19 +23,19 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 
 		_, err = client.Exec(`
 			CREATE TABLE entries (
-				id, osm_type, osm_id, tags
+				id, osm_type, osm_id, tags, minLat, maxLat, minLon, maxLon
 			);
 			CREATE VIRTUAL TABLE
 				search
 			USING
-				fts5(tags, osm_type, osm_id, content = 'entries', tokenize="porter", content_rowid='id');
+				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'entries', tokenize="porter", content_rowid='id');
 			CREATE TABLE test_entries (
-				id, osm_type, osm_id, tags
+				id, osm_type, osm_id, tags, minLat, maxLat, minLon, maxLon
 			);
 			CREATE VIRTUAL TABLE
 				test_search
 			USING
-				fts5(tags, osm_type, osm_id, content = 'test_entries', tokenize="porter", content_rowid='id');
+				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'test_entries', tokenize="porter", content_rowid='id');
 		`)
 		Expect(err).NotTo(HaveOccurred())
 	})
@@ -92,6 +92,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
+			Entry("with bounding box (bb=minLon,minLat,maxLon,maxLat)", "n(bb=1.10,2.20,11.11,99.99)", `1.10 <= s.minLon`, `2.20 <= s.minLat`, `s.maxLon <= 11.11`, `s.maxLat <= 99.99`),
 			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`, `( "pop" )`),
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`, `( "pop" )`),
 			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`, `( "pop" )`),

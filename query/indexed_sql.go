@@ -186,6 +186,18 @@ func ToIndexedSQL(query string) (string, error) {
 		)
 	}
 
+	if bbs, ok := ast.Directives["bb"]; ok {
+		if 4 == len(bbs) {
+			parts = append(
+				parts,
+				bbs[0]+" <= s.minLon",
+				bbs[1]+" <= s.minLat",
+				"s.maxLon <= "+bbs[2],
+				"s.maxLat <= "+bbs[3],
+			)
+		}
+	}
+
 	for index, part := range parts {
 		if 0 < index {
 			builder.WriteString(" AND ")
