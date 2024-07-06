@@ -6,9 +6,10 @@ import (
 	"net/http"
 
 	"github.com/jtarchie/knowhere/query"
+	r "github.com/jtarchie/knowhere/runtime"
 	"github.com/labstack/echo/v4"
-	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geojson"
+	"github.com/samber/lo"
 )
 
 func locationSearch(client *sql.DB) func(echo.Context) error {
@@ -29,21 +30,10 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			})
 		}
 
-		features := []*geojson.Feature{}
-
-		for _, result := range results {
-			var feature geojson.Feature
-
-			feature.ID = result.ID
-			feature.Geometry = orb.Point{result.MinLon, result.MinLat}
-			feature.Type = "Feature"
-
-			feature.Properties = map[string]interface{}{
-				"title": result.Name,
-			}
-
-			features = append(features, &feature)
-		}
+		features := lo.Map(results, func(result query.Result, _ int) *geojson.Feature {
+			wrapper := r.Result{Result: result}
+			return wrapper.AsFeature(nil)
+		})
 
 		return response(ctx, http.StatusOK, geojson.FeatureCollection{
 			Features: features,

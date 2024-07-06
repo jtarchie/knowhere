@@ -80,24 +80,25 @@ var _ = Describe("Server", func() {
 
 		Expect(payload.String()).To(MatchJSON(`
 		{
-			"features": [
-				{
-					"id": 294,
-					"type": "Feature",
-					"geometry": {
-						"type": "Point",
-						"coordinates": [
-							-0.24156,
-							51.76005
-						]
-					},
-					"properties": {
-						"title": "Hatfield Tunnel"
-					}
-				}
-			],
-			"type": "FeatureCollection"
-		}
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [
+                -0.23752,
+                51.76459
+              ]
+            },
+            "properties": {
+              "id": 294,
+              "title": "Hatfield Tunnel",
+              "type": 2
+            }
+          }
+        ],
+        "type": "FeatureCollection"
+      }
 	`))
 	})
 
