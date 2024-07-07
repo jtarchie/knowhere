@@ -15,9 +15,13 @@ shop
 tourism
 waterway
 # for vehicles
-area:highway
 highway
 cycleway
+# school
+school
+# public transit
+public_transport
+railway
 # other
 name
 website
