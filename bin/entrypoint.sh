@@ -16,6 +16,7 @@ download_and_restart() {
 }
 
 if [ ! -f /var/osm/$filename ]; then
+	echo "Downloading the database"
 	download_and_restart &
 fi
 
