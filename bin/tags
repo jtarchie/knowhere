@@ -25,3 +25,7 @@ railway
 # other
 name
 website
+# address
+addr:housenumber
+addr:street
+addr:city
