@@ -10,6 +10,7 @@ import (
 	"github.com/dop251/goja"
 	"github.com/georgysavva/scany/v2/sqlscan"
 	"github.com/jtarchie/knowhere/query"
+	"github.com/paulmach/orb"
 	"github.com/samber/lo"
 )
 
@@ -78,6 +79,10 @@ func (g *Geo) AsResults(results ...Result) Results {
 
 func (g *Geo) AsBounds(bounds ...Bound) Bounds {
 	return Bounds(bounds)
+}
+
+func (g *Geo) AsPoint(lat, lng float64) Point {
+	return Point{lng, lat}
 }
 
 func (g *Geo) Color(index int) string {
