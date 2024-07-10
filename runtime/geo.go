@@ -10,7 +10,6 @@ import (
 	"github.com/dop251/goja"
 	"github.com/georgysavva/scany/v2/sqlscan"
 	"github.com/jtarchie/knowhere/query"
-	"github.com/paulmach/orb"
 	"github.com/samber/lo"
 )
 
