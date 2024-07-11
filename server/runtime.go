@@ -71,6 +71,11 @@ func runtime(
 				msg += ": " + interrupted.Error()
 			}
 
+			var syntax *goja.CompilerSyntaxError
+			if errors.As(err, &syntax) {
+				msg += ": " + syntax.Error()
+			}
+
 			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": msg,
 			})
