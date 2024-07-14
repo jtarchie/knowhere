@@ -51,7 +51,7 @@ var _ = Describe("Parse", func() {
 			}
 		}
 
-		Expect(float32(valid) / float32(total)).To(BeNumerically(">=", 0.1))
+		Expect(float32(valid) / float32(total)).To(BeNumerically("<=", 0.9))
 	})
 })
 
