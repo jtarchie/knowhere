@@ -1,6 +1,6 @@
 assert.stab("start");
 
-const allCostcos = geo.query(`nwr[name=~Costco](prefix=colorado)`);
+const allCostcos = query.execute(`nwr[name=~Costco](prefix=colorado)`);
 
 assert.stab("query");
 
@@ -14,7 +14,7 @@ const payload = {
   type: "FeatureCollection",
   features: entries.map((entry, index) => {
     return entry.asFeature({
-      "marker-color": geo.color(index),
+      "marker-color": colors.pick(index),
     });
   }),
 };

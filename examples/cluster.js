@@ -1,7 +1,7 @@
-function cluster(query, radius) {
+function cluster(search, radius) {
   const tree = geo.rtree();
 
-  return geo.query(`nwr[${query}](prefix=colorado)`).filter((entry) => {
+  return query.execute(`nwr[${search}](prefix=colorado)`).filter((entry) => {
     const extended = entry.bbox().extend(radius);
 
     if (tree.within(extended)) {

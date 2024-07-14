@@ -9,10 +9,10 @@ import (
 
 var _ = Describe("Geo", func() {
 	It("returns a color", func() {
-		geo := runtime.Geo{}
+		color := runtime.Colors{}
 
 		for i := 0; i < 100; i++ {
-			color := geo.Color(i)
+			color := color.Pick(i)
 			Expect(color).NotTo(Equal(""))
 		}
 	})

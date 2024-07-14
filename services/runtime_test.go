@@ -47,7 +47,7 @@ var _ = Describe("When using the runtime", func() {
 		It("returns the original", func() {
 			runtime := services.NewRuntime(client, time.Second)
 			value, err := runtime.Execute(`
-				const results = geo.query('nw[name="Hatfield Tunnel"](prefix=test)');
+				const results = query.execute('nw[name="Hatfield Tunnel"](prefix=test)');
 				assert.eq(results.length == 1);
 				
 				return results[0].bbox()

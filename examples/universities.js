@@ -1,8 +1,8 @@
-const prefixes = geo.prefixes();
+const prefixes = query.prefixes();
 
 const allUnis = geo.asResults(
   ...prefixes.flatMap((prefix) => {
-    return geo.query(
+    return query.execute(
       `wr[amenity=university][name](prefix=${prefix.name})`,
     );
   }),
@@ -19,7 +19,7 @@ const payload = {
   features: grouped.flatMap((entries, index) => {
     const features = entries.flatMap((entry) => {
       const feature = entry.asFeature({
-        "marker-color": geo.color(index),
+        "marker-color": colors.pick(index),
         index: index,
       });
 
@@ -33,7 +33,7 @@ const payload = {
     return features.concat(
       [
         bounds.asFeature({
-          "fill": geo.color(index),
+          "fill": colors.pick(index),
           "fill-opacity": 0.2,
         }),
       ],

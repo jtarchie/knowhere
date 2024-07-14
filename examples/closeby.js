@@ -27,7 +27,7 @@ const keywords = [
 ];
 
 keywords.forEach((keyword) => {
-  keyword.results = geo.query(`${keyword.query}(prefix=colorado)`);
+  keyword.results = query.execute(`${keyword.query}(prefix=colorado)`);
 });
 
 keywords.sort((a, b) => a.results.length - b.results.length);
@@ -63,7 +63,7 @@ const payload = {
     }
 
     const features = entries.flatMap((entry, index) => {
-      const color = geo.color(index);
+      const color = colors.pick(index);
 
       const feature = entry.asFeature({
         "marker-color": color,
@@ -82,7 +82,7 @@ const payload = {
     return features.concat(
       [
         bounds.asFeature({
-          "fill": geo.color(index),
+          "fill": colors.pick(index),
           "fill-opacity": 0.5,
           "url": zillowURL(bounds.asBound()),
         }),

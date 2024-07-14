@@ -105,7 +105,7 @@ var _ = Describe("Server", func() {
 	When("hitting the runtime endpoint", func() {
 		It("returns the result in JSON", func() {
 			source := `
-			const results = geo.query('nw[name="Hatfield Tunnel"](prefix="test")') ;
+			const results = query.execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
 			return results.map((result) => result.name)
 			`
 			client := req.C()

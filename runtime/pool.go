@@ -35,7 +35,7 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 				new(require.Registry).Enable(vm)
 				url.Enable(vm)
 
-				err := vm.Set("geo", &Geo{
+				err := vm.Set("query", &Query{
 					vm:      vm,
 					timeout: timeout,
 					client:  client,
@@ -48,6 +48,9 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 				if err != nil {
 					return fmt.Errorf("could not setup `assert` VM: %w", err)
 				}
+
+				_ = vm.Set("colors", &Colors{})
+				_ = vm.Set("geo", &Geo{})
 
 				return vm
 			},
