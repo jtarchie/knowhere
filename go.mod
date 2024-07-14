@@ -63,6 +63,7 @@ require (
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.45.1 // indirect
+	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/tidwall/geoindex v1.7.0 // indirect
