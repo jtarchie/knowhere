@@ -3,6 +3,7 @@ package commands
 import (
 	"fmt"
 	"io"
+	"log/slog"
 
 	"github.com/jtarchie/knowhere/query"
 )
@@ -17,6 +18,7 @@ func (q *Generate) Run(stdout io.Writer) error {
 		return fmt.Errorf("could not parse query: %w", err)
 	}
 
+	slog.Debug("generate.query", "query", q.Value, "sql", sqlQuery)
 	fmt.Fprintln(stdout, sqlQuery) //nolint
 
 	return nil

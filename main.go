@@ -10,12 +10,13 @@ import (
 )
 
 func main() {
-	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, nil)))
-
 	cli := &commands.CLI{}
 	var writer io.Writer = os.Stdout
 
 	ctx := kong.Parse(cli, kong.BindTo(writer, (*io.Writer)(nil)))
+	slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
+		Level: cli.LogLevel,
+	})))
 	// Call the Run() method of the selected parsed command.
 	err := ctx.Run()
 	ctx.FatalIfErrorf(err)
