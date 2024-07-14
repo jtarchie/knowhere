@@ -63,6 +63,7 @@ def find_regexes(rows, threshold = 0.1)
   end.compact.sort_by(&:length).reverse
 end
 
+puts '// nolint'
 puts 'package address'
 puts 'import "regexp"'
 puts "// source: https://github.com/Senzing/libpostal-data/blob/main/files/tests/v1.1.0/test_data.csv"

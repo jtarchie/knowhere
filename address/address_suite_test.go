@@ -56,7 +56,7 @@ var _ = Describe("Parse", func() {
 })
 
 func BenchmarkParse(b *testing.B) {
-    for i := 0; i < b.N; i++ {
-        _, _ = address.Parse("331 Heather Hill Dr, Gibsonia, PA 15044")
-    }
+	for i := 0; i < b.N; i++ {
+		_, _ = address.Parse("331 Heather Hill Dr, Gibsonia, PA 15044")
+	}
 }
