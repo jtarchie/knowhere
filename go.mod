@@ -18,13 +18,13 @@ require (
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/olekukonko/tablewriter v0.0.5
 	github.com/onsi/ginkgo/v2 v2.19.0
 	github.com/onsi/gomega v1.33.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
-	github.com/samber/lo v1.44.0
+	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
+	github.com/samber/lo v1.45.0
 	github.com/samber/slog-echo v1.14.2
 	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
@@ -57,15 +57,14 @@ require (
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
 	github.com/quic-go/quic-go v0.45.1 // indirect
-	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/tidwall/geoindex v1.7.0 // indirect
 	github.com/tidwall/gjson v1.17.1 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
