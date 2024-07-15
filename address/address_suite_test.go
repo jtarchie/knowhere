@@ -1,10 +1,12 @@
 package address_test
 
 import (
+	"log/slog"
 	"os"
 	"strings"
 	"testing"
 
+	"github.com/alecthomas/assert/v2"
 	"github.com/jtarchie/knowhere/address"
 	"github.com/recursionpharma/go-csv-map"
 
@@ -35,28 +37,41 @@ var _ = Describe("Parse", func() {
 			if record["country_code"] == "us" {
 				total++
 				fullAddress := record["full_address"]
-				parsedAddress, ok := address.Parse(fullAddress)
-				if ok {
-					parseValid := true
+				parsedAddress, ableToParse := address.Parse(fullAddress)
+
+				if ableToParse {
+					parseMatches := true
+
 					for key, value := range parsedAddress {
 						if strings.ToLower(value) != record[key] {
-							parseValid = false
+							slog.Debug("matches", "full", fullAddress, "key", key, "parsed", strings.ToLower(value), "record", record[key])
+							parseMatches = false
 							break
 						}
 					}
-					if parseValid {
+
+					if parseMatches {
 						valid++
 					}
 				}
 			}
 		}
 
-		Expect(float32(valid) / float32(total)).To(BeNumerically("<=", 0.9))
+		Expect(float32(valid) / float32(total)).To(BeNumerically(">=", 0.75))
 	})
 })
 
 func BenchmarkParse(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = address.Parse("331 Heather Hill Dr, Gibsonia, PA 15044")
+		parts, ok := address.Parse("331 Heather Hill Dr, Gibsonia, PA 15044")
+		if !ok {
+			b.Fatalf("could not because %#v", parts)
+		}
+
+		assert.Equal(b, parts["house_number"], "331")
+		assert.Equal(b, parts["road"], "Heather Hill Dr")
+		assert.Equal(b, parts["city"], "Gibsonia")
+		assert.Equal(b, parts["state"], "PA")
+		assert.Equal(b, parts["postcode"], "15044")
 	}
 }
