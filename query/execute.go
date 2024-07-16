@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log/slog"
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 )
@@ -24,6 +25,8 @@ func Execute(ctx context.Context, client *sql.DB, search string, fun func(string
 	if err != nil {
 		return nil, fmt.Errorf("could not parse the query: %w", err)
 	}
+
+	slog.Debug("query.execute", "sql", sqlQuery)
 
 	var results []Result
 
