@@ -16,7 +16,6 @@ var states = lo.GroupBy(lo.FlatMap(lo.ToPairs(countries.Get("US").Subdivisions),
 })
 
 func Parse(fullAddress string) (map[string]string, bool) {
-
 	for _, parser := range addressParsers {
 		match := parser.FindStringSubmatch(fullAddress)
 		if len(match) == 0 {

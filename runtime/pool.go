@@ -43,6 +43,7 @@ func NewPool(client *sql.DB, timeout time.Duration) *Pool {
 				_ = vm.Set("assert", &Assertion{vm: vm})
 				_ = vm.Set("colors", &Colors{})
 				_ = vm.Set("geo", &Geo{})
+				_ = vm.Set("address", &Address{})
 
 				return vm
 			},
