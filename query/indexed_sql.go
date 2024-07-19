@@ -132,6 +132,10 @@ func ToIndexedSQL(query string) (string, error) {
 		case OpContains:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
+					if item[len(item)-1] == '*' {
+						return `"` + item[0:len(item)-1] + `"*`
+					}
+
 					return `"` + item + `"`
 				})
 
