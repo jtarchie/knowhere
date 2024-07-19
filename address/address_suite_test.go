@@ -69,7 +69,7 @@ func BenchmarkParse(b *testing.B) {
 		}
 
 		assert.Equal(b, parts["house_number"], "331")
-		assert.Equal(b, parts["road"], "Heather Hill Dr")
+		assert.Equal(b, parts["road"], "Heather Hill Drive")
 		assert.Equal(b, parts["city"], "Gibsonia")
 		assert.Equal(b, parts["state"], "PA")
 		assert.Equal(b, parts["postcode"], "15044")

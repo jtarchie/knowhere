@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"strings"
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 )
@@ -38,6 +39,36 @@ func Execute(ctx context.Context, client *sql.DB, search string, fun func(string
 	)
 	if err != nil {
 		return nil, fmt.Errorf("could not execute query: %w", err)
+	}
+
+	return results, nil
+}
+
+func Union(ctx context.Context, client *sql.DB, queries ...string) ([]Result, error) {
+	sqlQueries := make([]string, 0, len(queries))
+
+	for _, query := range queries {
+		sqlQuery, err := ToIndexedSQL(query)
+		if err != nil {
+			return nil, fmt.Errorf("could not parse the query: %w", err)
+		}
+
+		sqlQueries = append(sqlQueries, fmt.Sprintf("SELECT id, osm_id, osm_type, minLon, minLat, maxLon, maxLat, IFNULL(tags->>'$.name', 'Unknown') as name FROM (%s)", sqlQuery))
+	}
+
+	unionSQL := strings.Join(sqlQueries, "\n UNION ALL \n")
+	slog.Debug("query.union", "sql", unionSQL)
+
+	var results []Result
+
+	err := sqlscan.Select(
+		ctx,
+		client,
+		&results,
+		unionSQL,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("could not union query: %w", err)
 	}
 
 	return results, nil

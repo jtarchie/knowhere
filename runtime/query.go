@@ -5,11 +5,15 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
+	"strings"
 	"time"
 
 	"github.com/dop251/goja"
 	"github.com/georgysavva/scany/v2/sqlscan"
+	"github.com/iancoleman/strcase"
+	"github.com/jtarchie/knowhere/address"
 	"github.com/jtarchie/knowhere/query"
+	"github.com/pioz/countries"
 	"github.com/samber/lo"
 )
 
@@ -20,6 +24,8 @@ type Query struct {
 }
 
 func (g *Query) Execute(qs string) Results {
+	slog.Debug("query.execute", "query", qs)
+
 	ctx, cancel := context.WithTimeout(context.TODO(), g.timeout)
 	defer cancel()
 
@@ -34,6 +40,43 @@ func (g *Query) Execute(qs string) Results {
 	return lo.Map(results, func(result query.Result, _ int) Result {
 		return Result{result}
 	})
+}
+
+func (q *Query) Union(queries ...string) Results {
+	slog.Debug("query.execute", "query", queries)
+
+	ctx, cancel := context.WithTimeout(context.TODO(), q.timeout)
+	defer cancel()
+
+	results, err := query.Union(ctx, q.client, queries...)
+	if err != nil {
+		slog.Error("query.union", "query", queries, "err", err.Error())
+		q.vm.Interrupt("could not union queries")
+
+		return nil
+	}
+
+	return lo.Map(results, func(result query.Result, _ int) Result {
+		return Result{result}
+	})
+}
+
+func (g *Query) FromAddress(fullAddress string, prefix string) Results {
+	parts, ok := address.Parse(fullAddress)
+	if !ok {
+		return Results{}
+	}
+
+	if prefix == "" {
+		prefix = strcase.ToSnake(stateProvinceMap[strings.ToUpper(parts["state"])].Name)
+	}
+
+	return g.Union(
+		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](prefix="`+prefix+`")`,
+		`nwr[addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](prefix="`+prefix+`")`,
+		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"](prefix="`+prefix+`")`,
+		`nwr[name=~"`+parts["road"]+`*"][highway=residential](prefix="`+prefix+`")`,
+	)
 }
 
 type Prefix struct {
@@ -67,3 +110,8 @@ func (g *Query) Prefixes() []Prefix {
 
 	return results
 }
+
+var stateProvinceMap = lo.Assign(
+	countries.Get("US").Subdivisions,
+	countries.Get("CA").Subdivisions,
+)

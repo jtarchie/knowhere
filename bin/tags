@@ -29,3 +29,5 @@ website
 addr:housenumber
 addr:street
 addr:city
+addr:postcode
+postal_code
