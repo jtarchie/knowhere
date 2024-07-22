@@ -173,8 +173,8 @@ github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZV
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/samber/lo v1.46.0 h1:w8G+oaCPgz1PoCJztqymCFaKwXt+5cCXn51uPxExFfQ=
 github.com/samber/lo v1.46.0/go.mod h1:RmDH9Ct32Qy3gduHQuKJ3gW1fMHAnE/fAzQuf6He5cU=
-github.com/samber/slog-echo v1.14.3 h1:kEWKtBkwWg1A1wd/7pzxwVF5hp/JvO4bR4ReZWs7HtI=
-github.com/samber/slog-echo v1.14.3/go.mod h1:i8QlNMhE0rVr+Mjj5ZIm6DMuTQ87euvAL2jRAd5HNVY=
+github.com/samber/slog-echo v1.14.4 h1:ZIGH03wfnYGAp8rwurWR9zGXB0q1pZhpxoZFfsFlm7I=
+github.com/samber/slog-echo v1.14.4/go.mod h1:i8QlNMhE0rVr+Mjj5ZIm6DMuTQ87euvAL2jRAd5HNVY=
 github.com/schollz/progressbar/v3 v3.14.4 h1:W9ZrDSJk7eqmQhd3uxFNNcTr0QL+xuGNI9dEMrw0r74=
 github.com/schollz/progressbar/v3 v3.14.4/go.mod h1:aT3UQ7yGm+2ZjeXPqsjTenwL3ddUiuZ0kfQ/2tHlyNI=
 github.com/smarty/assertions v1.15.0 h1:cR//PqUBUiQRakZWqBiFFQ9wb8emQGDb0HeGdqGByCY=

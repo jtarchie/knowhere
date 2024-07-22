@@ -28,7 +28,7 @@ require (
 	github.com/pioz/countries v0.2.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/samber/lo v1.46.0
-	github.com/samber/slog-echo v1.14.3
+	github.com/samber/slog-echo v1.14.4
 	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
