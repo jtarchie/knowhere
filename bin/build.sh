@@ -44,6 +44,7 @@ go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 	-f "$db_path" \
 	-o "$db_path".zst \
 	-q 7 \
+	-v \
 	-c 16:32:64
 
 # Rclone copy (if enabled)
