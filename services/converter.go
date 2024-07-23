@@ -25,6 +25,7 @@ type Converter struct {
 	name        string
 	osmPath     string
 	prefix      string
+	rtree       bool
 }
 
 var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
@@ -34,6 +35,7 @@ func NewConverter(
 	dbPath string,
 	prefix string,
 	tags []string,
+	rtree bool,
 ) *Converter {
 	var allowedTags []string
 
@@ -47,9 +49,10 @@ func NewConverter(
 	return &Converter{
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
+		name:        name,
 		osmPath:     osmPath,
 		prefix:      strcase.ToSnake(strings.ToLower(prefix)),
-		name:        name,
+		rtree:       rtree,
 	}
 }
 
@@ -409,9 +412,10 @@ func (b *Converter) Execute() error {
 
 	slog.Info("db.fts.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	if b.rtree {
+		slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
-	err = b.clientExecute(client, `
+		err = b.clientExecute(client, `
 		INSERT INTO
 			{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
 		SELECT
@@ -421,11 +425,12 @@ func (b *Converter) Execute() error {
 		FROM
 		{{prefix}}_entries;
 	`)
-	if err != nil {
-		return fmt.Errorf("could build full text: %w", err)
-	}
+		if err != nil {
+			return fmt.Errorf("could build full text: %w", err)
+		}
 
-	slog.Info("db.rtree.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+		slog.Info("db.rtree.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	}
 
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 

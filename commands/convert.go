@@ -8,14 +8,15 @@ import (
 )
 
 type Convert struct {
-	OSM         string   `help:"osm pbf file to build the sqlite file from" required:""                                               type:"existingfile"`
-	DB          string   `help:"db filename to import data to"              required:""`
-	Prefix      string   `help:"will add this prefix to all table names"    required:""`
 	AllowedTags []string `default:"*"                                       help:"a list of allowed tags, all other will be filtered"`
+	DB          string   `help:"db filename to import data to"              required:""`
+	OSM         string   `help:"osm pbf file to build the sqlite file from" required:""                                               type:"existingfile"`
+	Prefix      string   `help:"will add this prefix to all table names"    required:""`
+	Rtree       bool     `help:"enable rtree index"`
 }
 
 func (b *Convert) Run(_ io.Writer) error {
-	builder := services.NewConverter(b.OSM, b.DB, b.Prefix, b.AllowedTags)
+	builder := services.NewConverter(b.OSM, b.DB, b.Prefix, b.AllowedTags, b.Rtree)
 
 	err := builder.Execute()
 	if err != nil {

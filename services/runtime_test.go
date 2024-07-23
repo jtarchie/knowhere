@@ -26,6 +26,7 @@ var _ = Describe("When using the runtime", func() {
 			dbPath,
 			"test",
 			[]string{"*"},
+			false,
 		)
 		err = converter.Execute()
 		Expect(err).NotTo(HaveOccurred())
