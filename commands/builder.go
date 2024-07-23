@@ -25,6 +25,13 @@ type Build struct {
 var ErrSourceNotAvailable = errors.New("source unavailable")
 
 func (b *Build) Run(stdout io.Writer) error {
+	startTime := time.Now()
+	slog.Info("start")
+	defer func() {
+		endTime := time.Now()
+		slog.Info("end", "duration", endTime.Sub(startTime))
+	}()
+
 	config, err := os.Open(b.Config)
 	if err != nil {
 		return fmt.Errorf("could not open config file: %w", err)
