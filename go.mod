@@ -28,7 +28,7 @@ require (
 	github.com/pioz/countries v0.2.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/samber/lo v1.46.0
-	github.com/samber/slog-echo v1.14.3
+	github.com/samber/slog-echo v1.14.4
 	github.com/schollz/progressbar/v3 v3.14.4
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
@@ -53,7 +53,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240711041743-f6c9dda6c6da // indirect
+	github.com/google/pprof v0.0.0-20240722153945-304e4f0156b8 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
@@ -84,7 +84,7 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/crypto v0.25.0 // indirect
-	golang.org/x/exp v0.0.0-20240716175740-e3f259677ff7 // indirect
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
