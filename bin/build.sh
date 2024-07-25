@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail # Improved error handling
+set -euxo pipefail # Improved error handling
 
 # Default values
 db_path=".build/entries.db"
@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-# Building the SQLite database
+Building the SQLite database
 go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$config_path" \
 	--db "$db_path" \
@@ -43,8 +43,7 @@ go run -tags fts5 github.com/jtarchie/knowhere build \
 go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 	-f "$db_path" \
 	-o "$db_path".zst \
-	-q 7 \
-	-v \
+	-q 20 \
 	-c 16:32:64
 
 # Rclone copy (if enabled)
