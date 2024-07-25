@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-Building the SQLite database
+# Building the SQLite database
 go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$config_path" \
 	--db "$db_path" \
