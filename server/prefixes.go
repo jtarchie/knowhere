@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/georgysavva/scany/v2/sqlscan"
 	"github.com/labstack/echo/v4"
@@ -61,6 +62,9 @@ func prefixes(client *sql.DB) func(echo.Context) error {
 				"error": "Results could not be processed",
 			})
 		}
+
+		ctx.Response().Header().Set("Cache-Control", "public, max-age=1800")
+		ctx.Response().Header().Set("Expires", time.Now().Add(30*time.Minute).Format(http.TimeFormat))
 
 		return response(ctx, http.StatusOK, map[string]interface{}{
 			"prefixes": prefixes,

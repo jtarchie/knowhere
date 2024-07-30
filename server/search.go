@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/jtarchie/knowhere/query"
 	r "github.com/jtarchie/knowhere/runtime"
@@ -34,6 +35,9 @@ func locationSearch(client *sql.DB) func(echo.Context) error {
 			wrapper := r.Result{Result: result}
 			return wrapper.AsFeature(nil)
 		})
+
+		ctx.Response().Header().Set("Cache-Control", "public, max-age=1800")
+		ctx.Response().Header().Set("Expires", time.Now().Add(30*time.Minute).Format(http.TimeFormat))
 
 		return response(ctx, http.StatusOK, geojson.FeatureCollection{
 			Features: features,
