@@ -111,6 +111,22 @@ func (g *Query) Prefixes() []Prefix {
 	return results
 }
 
+func (g *Query) PrefixByPoint(point Point) Prefix {
+	prefixes := g.Prefixes()
+	for _, prefix := range prefixes {
+		if prefix.MinLon <= point[0] && point[0] <= prefix.MaxLon &&
+			prefix.MinLat <= point[1] && point[1] <= prefix.MaxLat {
+			return prefix
+		}
+
+	}
+
+	slog.Error("query.prefixes", "err", "could not prefix for point", "point", point)
+	g.vm.Interrupt("could not read prefixes")
+
+	return Prefix{}
+}
+
 var stateProvinceMap = lo.Assign(
 	countries.Get("US").Subdivisions,
 	countries.Get("CA").Subdivisions,

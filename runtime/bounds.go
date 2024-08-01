@@ -20,6 +20,16 @@ func (wb Bound) Extend(radius float64) Bound {
 	return Bound{geo.BoundPad(wb.Bound, radius)}
 }
 
+func (wb Bound) AsFeature(properties map[string]interface{}) *geojson.Feature {
+	feature := geojson.NewFeature(wb.Bound)
+
+	for name, value := range properties {
+		feature.Properties[name] = value
+	}
+
+	return feature
+}
+
 type Bounds []Bound
 
 func (r Bounds) AsBound() Bound {

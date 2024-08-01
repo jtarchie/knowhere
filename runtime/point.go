@@ -7,6 +7,10 @@ import (
 
 type Point orb.Point
 
+func (r Point) AsBound() Bound {
+	return Bound{orb.Point(r).Bound()}
+}
+
 func (r Point) AsFeature(properties map[string]interface{}) *geojson.Feature {
 	feature := geojson.NewFeature(orb.Point(r))
 

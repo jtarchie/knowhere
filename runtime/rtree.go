@@ -48,6 +48,22 @@ func (r *RTree) Nearby(bound Bound, count uint) Results {
 	return results
 }
 
+func (r *RTree) Search(bound Bound, count uint) Results {
+	results := make([]Result, 0, count)
+
+	r.RTreeG.Search(bound.Min, bound.Max,
+		func(min, max [2]float64, result Result) bool {
+			results = append(results, result)
+
+			count--
+
+			return 0 < count
+		},
+	)
+
+	return results
+}
+
 func fromWrappedDistOverlap(target Bound) func(min, max [2]float64, data Result, item bool) float64 {
 	callback := rtree.BoxDist[float64, Result](target.Min, target.Max, nil)
 
