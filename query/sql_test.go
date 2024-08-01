@@ -78,7 +78,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			_, err = client.Exec(actualSQL)
 			Expect(err).NotTo(HaveOccurred())
 		},
-			Entry("single tag", "n[amenity=restaurant]", `SELECT rowid AS id, * FROM search s WHERE s.osm_type IN (1) AND ( s.tags->>'$.amenity' = 'restaurant' ) AND s.tags MATCH '( "amenity" AND ( "restaurant" ) )' ORDER BY rank`),
+			Entry("single tag", "n[amenity=restaurant]", `SELECT rowid AS id, * FROM search s WHERE s.osm_type IN (1) AND ( s.tags->>'$.amenity' = 'restaurant' ) AND s.tags MATCH '( "amenity" AND ( "restaurant" ) )'`),
 			Entry("all tags", `nrw[*="*King*","*Queen*"]`, `s.osm_type IN (1,2,3)`, `s.tags MATCH '( "*King*" OR "*Queen*" )'`),
 			Entry("all tags with negative", `n[*="cafe"][*!="Starbucks"]`, `s.tags MATCH '( "cafe" ) NOT ( "Starbucks" )'`),
 			Entry("partial match", "nw[name!~Starbucks][name=~coffee]", `NOT ( "name" AND ( "Starbucks" ) )`, `( "name" AND ( "coffee" ) )`, `( LOWER(s.tags->>'$.name') NOT GLOB '*starbucks*' )`, `( LOWER(s.tags->>'$.name') GLOB '*coffee*' )`),

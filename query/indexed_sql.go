@@ -208,7 +208,5 @@ func ToIndexedSQL(query string) (string, error) {
 		}
 		builder.WriteString(part)
 	}
-	builder.WriteString(" ORDER BY rank")
-
 	return builder.String(), nil
 }
