@@ -25,7 +25,7 @@ func New(
 	allowCIDRs []string,
 	timeout time.Duration,
 ) (*Server, error) {
-	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&_cache_size=20000&_busy_timeout=5000", dbFilename)
+	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&_cache_size=2000&_busy_timeout=5000", dbFilename)
 
 	if strings.Contains(dbFilename, ".zst") {
 		err := sqlitezstd.Init()
