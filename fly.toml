@@ -18,11 +18,12 @@ ALLOW_CIDR = "2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
   processes = ['app']
 
 [[vm]]
-  size = "shared-cpu-2x"
+  size = "shared-cpu-4x"
+   memory = "4gb"
 
 [mounts]
   source = "sqlite"
