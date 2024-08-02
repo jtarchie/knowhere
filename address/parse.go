@@ -43,13 +43,13 @@ func Parse(fullAddress string) (map[string]string, bool) {
 		results := map[string]string{}
 		subnames := parser.SubexpNames()
 		for i, name := range match[1:] {
-			if name[len(name)-1] == ',' {
+			if len(name) > 0 && name[len(name)-1] == ',' {
 				name = name[0 : len(name)-1]
 			}
 			results[subnames[i+1]] = name
 		}
 
-		if state, ok := results["state"]; ok {
+		if state, ok := results["state"]; ok && state != "" {
 			matches := fuzzy.RankFindNormalizedFold(state, states[strings.ToLower(state[0:1])])
 			if len(matches) == 0 {
 				continue

@@ -26,6 +26,8 @@ def find_regexes(rows)
 
       pattern = if value =~ /^\d+$/
                   '\d+'
+      elsif value =~ /^[\d-]+$/
+                  '[\d-]+'
                 elsif address =~ /#{value},/
                   '[^,]+'
                 else
@@ -72,7 +74,7 @@ puts 'import "regexp"'
 puts '// source: https://github.com/Senzing/libpostal-data/blob/main/files/tests/v1.1.0/test_data.csv'
 puts 'var addressParsers = []*regexp.Regexp{'
 
-find_regexes(rows.select { |r| %w[us].include?(r[:country_code]) }).take(25).sort_by(&:length).reverse.each do |regex|
+find_regexes(rows.select { |r| %w[us].include?(r[:country_code]) }).take(25).each do |regex|
   puts "regexp.MustCompile(`#{regex}`),"
 end
 
