@@ -8,6 +8,12 @@ github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d
 github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511/go.mod h1:/c6B1uw8h2AxDjxpuIzuH6ja+imc24EYlmE1kRqghjY=
 github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1 h1:26fXh2eGDAFd3RL+RngsyKw6BPwrdULYJQI46Azcidw=
 github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1/go.mod h1:cvUQDGY8Zt1hfS8ygvqcDYkOyJeM/cw/orgNlvMv/KQ=
+github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240802150924-9279d401eb88 h1:93qG1j+N+do/T0cyb6rHKpuLA83IquBTTOxR2zlTRX8=
+github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240802150924-9279d401eb88/go.mod h1:aHm1gKUNVAYibORxwe3wH090Bo6p9ZYkk9Ye9wwA+eA=
+github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.0 h1:xrJ8H90dBw8Y3Iir32xLAfJdMba9vOeVv7lcRTBSyRo=
+github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.0/go.mod h1:JitQWJ8JuV4Y87l8VsHiiwhb3cgdyn68mX40s7NT6PA=
+github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.1-0.20240802145525-42610f01425d h1:n18I8uvA8O0eraJ4+Mj0btS2Iinj+HhR49p4qaGVjq0=
+github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.1-0.20240802145525-42610f01425d/go.mod h1:JitQWJ8JuV4Y87l8VsHiiwhb3cgdyn68mX40s7NT6PA=
 github.com/alecthomas/assert/v2 v2.10.0 h1:jjRCHsj6hBJhkmhznrCzoNpbA3zqy0fYiUcYZP/GkPY=
 github.com/alecthomas/assert/v2 v2.10.0/go.mod h1:Bze95FyfUr7x34QZrjL+XP+0qgp/zg8yS+TtBj1WA3k=
 github.com/alecthomas/kong v0.9.0 h1:G5diXxc85KvoV2f0ZRVuMsi45IrBgx9zDNGNj165aPA=
@@ -179,6 +185,8 @@ github.com/samber/slog-echo v1.14.4 h1:ZIGH03wfnYGAp8rwurWR9zGXB0q1pZhpxoZFfsFlm
 github.com/samber/slog-echo v1.14.4/go.mod h1:i8QlNMhE0rVr+Mjj5ZIm6DMuTQ87euvAL2jRAd5HNVY=
 github.com/schollz/progressbar/v3 v3.14.4 h1:W9ZrDSJk7eqmQhd3uxFNNcTr0QL+xuGNI9dEMrw0r74=
 github.com/schollz/progressbar/v3 v3.14.4/go.mod h1:aT3UQ7yGm+2ZjeXPqsjTenwL3ddUiuZ0kfQ/2tHlyNI=
+github.com/schollz/progressbar/v3 v3.14.5 h1:97RrSxbBASxQuZN9yemnyGrFZ/swnG6IrEe2R0BseX8=
+github.com/schollz/progressbar/v3 v3.14.5/go.mod h1:Nrzpuw3Nl0srLY0VlTvC4V6RL50pcEymjy6qyJAaLa0=
 github.com/smarty/assertions v1.15.0 h1:cR//PqUBUiQRakZWqBiFFQ9wb8emQGDb0HeGdqGByCY=
 github.com/smarty/assertions v1.15.0/go.mod h1:yABtdzeQs6l1brC900WlRNwj6ZR55d7B+E8C6HtKdec=
 github.com/smartystreets/goconvey v1.8.1 h1:qGjIddxOk4grTu9JPOU31tVfq3cNdBlNa5sSznIX1xY=

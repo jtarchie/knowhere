@@ -29,7 +29,7 @@ require (
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/samber/lo v1.46.0
 	github.com/samber/slog-echo v1.14.4
-	github.com/schollz/progressbar/v3 v3.14.4
+	github.com/schollz/progressbar/v3 v3.14.5
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
 	github.com/valyala/fasttemplate v1.2.2
@@ -39,6 +39,8 @@ require (
 
 require (
 	github.com/SaveTheRbtz/fastcdc-go v0.3.0 // indirect
+	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240802150924-9279d401eb88 // indirect
+	github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.1-0.20240802145525-42610f01425d // indirect
 	github.com/alecthomas/repr v0.4.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
