@@ -6,6 +6,8 @@ github.com/SaveTheRbtz/fastcdc-go v0.3.0 h1:JdHvLlnijDuisYIwpRDcHZEjbxvCqtEmJ3gf
 github.com/SaveTheRbtz/fastcdc-go v0.3.0/go.mod h1:2kMKqvBv1h9wCaUfETqsVkSESsCiFhp4YyEHyz7/SfE=
 github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511 h1:6zgbk+bj0JJLtDlrQpaEPSvWmNeRZMZpogpt2KqX2yE=
 github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511/go.mod h1:/c6B1uw8h2AxDjxpuIzuH6ja+imc24EYlmE1kRqghjY=
+github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1 h1:26fXh2eGDAFd3RL+RngsyKw6BPwrdULYJQI46Azcidw=
+github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1/go.mod h1:cvUQDGY8Zt1hfS8ygvqcDYkOyJeM/cw/orgNlvMv/KQ=
 github.com/alecthomas/assert/v2 v2.10.0 h1:jjRCHsj6hBJhkmhznrCzoNpbA3zqy0fYiUcYZP/GkPY=
 github.com/alecthomas/assert/v2 v2.10.0/go.mod h1:Bze95FyfUr7x34QZrjL+XP+0qgp/zg8yS+TtBj1WA3k=
 github.com/alecthomas/kong v0.9.0 h1:G5diXxc85KvoV2f0ZRVuMsi45IrBgx9zDNGNj165aPA=

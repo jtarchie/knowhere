@@ -3,7 +3,7 @@ module github.com/jtarchie/knowhere
 go 1.22.4
 
 require (
-	github.com/SaveTheRbtz/zstd-seekable-format-go v0.6.2-0.20231018052958-4410daa6d511
+	github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1
 	github.com/alecthomas/assert/v2 v2.10.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
