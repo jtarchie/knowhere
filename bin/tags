@@ -19,6 +19,7 @@ highway
 cycleway
 # school
 school
+isced:level
 # public transit
 public_transport
 railway
