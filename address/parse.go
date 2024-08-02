@@ -34,6 +34,8 @@ var streets = map[string]string{
 var streetsMatcher = regexp.MustCompile(`\b(` + strings.Join(lo.Keys(streets), "|") + `)\b`)
 
 func Parse(fullAddress string) (map[string]string, bool) {
+	fullAddress = strings.TrimSpace(fullAddress)
+
 	for _, parser := range addressParsers {
 		match := parser.FindStringSubmatch(fullAddress)
 		if len(match) == 0 {
