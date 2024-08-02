@@ -1,27 +1,27 @@
 module github.com/jtarchie/knowhere
 
-go 1.22.4
+go 1.22.5
 
 require (
-	github.com/SaveTheRbtz/zstd-seekable-format-go v0.7.1
+	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240802150924-9279d401eb88
 	github.com/alecthomas/assert/v2 v2.10.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/dop251/goja v0.0.0-20240707163329-b1681fb2a2f5
-	github.com/dop251/goja_nodejs v0.0.0-20240418154818-2aae10d4cbcf
+	github.com/dop251/goja v0.0.0-20240731150404-c665f0b58f6e
+	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
 	github.com/engelsjk/polygol v0.0.3
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.43.7
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20240618161552-cf04934c83a1
+	github.com/jtarchie/sqlitezstd v0.0.0-20240726191313-287b3163085b
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/mattn/go-sqlite3 v1.14.22
-	github.com/onsi/ginkgo/v2 v2.19.0
-	github.com/onsi/gomega v1.33.1
+	github.com/onsi/ginkgo/v2 v2.19.1
+	github.com/onsi/gomega v1.34.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
@@ -29,7 +29,7 @@ require (
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/samber/lo v1.46.0
 	github.com/samber/slog-echo v1.14.4
-	github.com/schollz/progressbar/v3 v3.14.5
+	github.com/schollz/progressbar/v3 v3.14.6
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
 	github.com/valyala/fasttemplate v1.2.2
@@ -39,7 +39,6 @@ require (
 
 require (
 	github.com/SaveTheRbtz/fastcdc-go v0.3.0 // indirect
-	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240802150924-9279d401eb88 // indirect
 	github.com/SaveTheRbtz/zstd-seekable-format-go/pkg v0.7.1-0.20240802145525-42610f01425d // indirect
 	github.com/alecthomas/repr v0.4.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
@@ -55,7 +54,7 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/btree v1.1.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20240722153945-304e4f0156b8 // indirect
+	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
@@ -67,12 +66,12 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.4.0 // indirect
-	github.com/quic-go/quic-go v0.45.1 // indirect
+	github.com/quic-go/quic-go v0.45.2 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
 	github.com/tidwall/geoindex v1.7.0 // indirect
-	github.com/tidwall/gjson v1.17.1 // indirect
+	github.com/tidwall/gjson v1.17.3 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/tidwall/sjson v1.2.5 // indirect
@@ -95,7 +94,6 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.23.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/ranger v0.0.0-20171016084633-e2e137620847 // indirect
 )
