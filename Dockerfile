@@ -8,7 +8,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN --mount=type=cache,target="/root/.cache/go-build" CGO_ENABLED=1 go build -tags "fts5" -o knowhere
+RUN --mount=type=cache,target="/root/.cache/go-build" CGO_CFLAGS="-O3" CGO_ENABLED=1 go build -ldflags="-w -s" -tags "fts5" -o knowhere
 
 FROM alpine:latest
 
