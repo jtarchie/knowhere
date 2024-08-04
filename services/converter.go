@@ -11,7 +11,9 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/jtarchie/knowhere/marshal"
 	"github.com/jtarchie/knowhere/query"
+	"github.com/mattn/go-sqlite3"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/mmcloughlin/geohash"
 	"github.com/paulmach/osm"
 	"github.com/samber/lo"
 	"github.com/valyala/fasttemplate"
@@ -91,7 +93,7 @@ func (b *Converter) Execute() error {
 	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	// open the sql database
-	client, err := sql.Open("sqlite3", b.dbPath)
+	client, err := sql.Open("sqlite3_geohash", b.dbPath)
 	if err != nil {
 		return fmt.Errorf("could not open database file: %w", err)
 	}
@@ -373,6 +375,9 @@ func (b *Converter) Execute() error {
 			tags = jsonb('{}');
 		DROP INDEX {{prefix}}_ref_ids;
 		DROP TABLE {{prefix}}_refs;
+
+		-- calculate geohash and add to tags
+		UPDATE {{prefix}}_entries SET tags = jsonb_set(tags, '$.geohash', geohash(minLat, maxLat, minLon, maxLon));
 	`)
 	if err != nil {
 		return fmt.Errorf("could not add bounding boxes: %w", err)
@@ -463,4 +468,23 @@ func (b *Converter) Execute() error {
 	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 	return nil
+}
+
+func geohashFunc(minLat, maxLat, minLon, maxLon float64) string {
+	return geohash.Encode(
+		(minLat+maxLat)/2.0,
+		(minLon+maxLon)/2.0,
+	)
+}
+
+func init() {
+	sql.Register("sqlite3_geohash", &sqlite3.SQLiteDriver{
+		Extensions: []string{},
+		ConnectHook: func(conn *sqlite3.SQLiteConn) error {
+			if err := conn.RegisterFunc("geohash", geohashFunc, true); err != nil {
+				return err
+			}
+			return nil
+		},
+	})
 }

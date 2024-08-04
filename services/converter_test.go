@@ -33,7 +33,7 @@ var _ = Describe("Converter", func() {
 
 		var tagCount int64
 		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM united_states_entries, json_each(united_states_entries.tags);", &tagCount)
-		Expect(tagCount).To(BeEquivalentTo(1))
+		Expect(tagCount).To(BeEquivalentTo(2)) // added geohash
 	})
 
 	It("puts nodes, ways, and relations into the entries", func() {
@@ -80,7 +80,7 @@ var _ = Describe("Converter", func() {
 
 		var tagCount int64
 		value(dbPath, "SELECT COUNT(DISTINCT json_each.key) FROM united_states_entries, json_each(united_states_entries.tags);", &tagCount)
-		Expect(tagCount).To(BeEquivalentTo(46))
+		Expect(tagCount).To(BeEquivalentTo(47)) // HINT: geohash was added
 
 		/*
 			Napkin math for bounding box
