@@ -22,7 +22,7 @@ ALLOW_CIDR = "2400:cb00::/32,2606:4700::/32,2803:f800::/32,2405:b500::/32,2405:8
   processes = ['app']
 
 [[vm]]
-  size = "shared-cpu-4x"
+  size = "performance-2x"
    memory = "4gb"
 
 [mounts]
