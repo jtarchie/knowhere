@@ -131,14 +131,6 @@ func (b *Converter) Execute() error {
 			minLon    REAL,
 			maxLon    REAL
 		) STRICT;
-
-		CREATE VIRTUAL TABLE IF NOT EXISTS {{prefix}}_rtree USING rtree(
-			id INTEGER PRIMARY KEY,
-			minLon REAL,
-			maxLon REAL,
-			minLat REAL,
-			maxLat REAL
-		);
 	`)
 	if err != nil {
 		return fmt.Errorf("could not execute schema: %w", err)
@@ -421,15 +413,23 @@ func (b *Converter) Execute() error {
 		slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
 
 		err = b.clientExecute(client, `
-		INSERT INTO
-			{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
-		SELECT
-			id,
-			minLon, maxLon,
-			minLat, maxLat
-		FROM
-		{{prefix}}_entries;
-	`)
+			CREATE VIRTUAL TABLE IF NOT EXISTS {{prefix}}_rtree USING rtree(
+				id INTEGER PRIMARY KEY,
+				minLon REAL,
+				maxLon REAL,
+				minLat REAL,
+				maxLat REAL
+			);
+
+			INSERT INTO
+				{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
+			SELECT
+				id,
+				minLon, maxLon,
+				minLat, maxLat
+			FROM
+			{{prefix}}_entries;
+		`)
 		if err != nil {
 			return fmt.Errorf("could build full text: %w", err)
 		}
