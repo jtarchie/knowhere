@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log/slog"
-	"strings"
 	"time"
 
 	"github.com/dop251/goja"
@@ -13,7 +12,6 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/jtarchie/knowhere/address"
 	"github.com/jtarchie/knowhere/query"
-	"github.com/pioz/countries"
 	"github.com/samber/lo"
 )
 
@@ -62,13 +60,13 @@ func (q *Query) Union(queries ...string) Results {
 }
 
 func (g *Query) FromAddress(fullAddress string, prefix string) Results {
-	parts, ok := address.Parse(fullAddress)
+	parts, ok := address.Parse(fullAddress, true)
 	if !ok {
 		return Results{}
 	}
 
 	if prefix == "" {
-		prefix = strcase.ToSnake(stateProvinceMap[strings.ToUpper(parts["state"])].Name)
+		prefix = strcase.ToSnake(parts["state"])
 	}
 
 	return g.Union(
@@ -110,8 +108,3 @@ func (g *Query) Prefixes() []Prefix {
 
 	return results
 }
-
-var stateProvinceMap = lo.Assign(
-	countries.Get("US").Subdivisions,
-	countries.Get("CA").Subdivisions,
-)

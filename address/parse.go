@@ -11,7 +11,7 @@ import (
 )
 
 var states = lo.GroupBy(lo.FlatMap(lo.ToPairs(countries.Get("US").Subdivisions), func(entry lo.Entry[string, countries.Subdivision], _ int) []string {
-	return []string{entry.Key, entry.Value.Name}
+	return []string{entry.Value.Name}
 }), func(value string) string {
 	return strings.ToLower(value[0:1])
 })
@@ -33,7 +33,7 @@ var streets = map[string]string{
 }
 var streetsMatcher = regexp.MustCompile(`\b(` + strings.Join(lo.Keys(streets), "|") + `)\b`)
 
-func Parse(fullAddress string) (map[string]string, bool) {
+func Parse(fullAddress string, cleanup bool) (map[string]string, bool) {
 	fullAddress = strings.TrimSpace(fullAddress)
 
 	for _, parser := range addressParsers {
@@ -51,20 +51,20 @@ func Parse(fullAddress string) (map[string]string, bool) {
 			results[subnames[i+1]] = name
 		}
 
-		if state, ok := results["state"]; ok && state != "" {
-			matches := fuzzy.RankFindNormalizedFold(state, states[strings.ToLower(state[0:1])])
-			if len(matches) == 0 {
-				continue
+		if cleanup {
+			if state, ok := results["state"]; ok && state != "" {
+				matches := fuzzy.RankFindNormalizedFold(state, states[strings.ToLower(state[0:1])])
+				if len(matches) > 0 {
+					sort.Sort(matches)
+					results["state"] = matches[0].Target
+				}
 			}
 
-			sort.Sort(matches)
-			results["state"] = matches[0].Target
-		}
-
-		if road, ok := results["road"]; ok {
-			results["road"] = streetsMatcher.ReplaceAllStringFunc(road, func(abbr string) string {
-				return streets[abbr]
-			})
+			if road, ok := results["road"]; ok && road != "" {
+				results["road"] = streetsMatcher.ReplaceAllStringFunc(road, func(abbr string) string {
+					return streets[abbr]
+				})
+			}
 		}
 
 		return results, true
