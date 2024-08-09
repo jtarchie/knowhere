@@ -27,7 +27,7 @@ const payload = {
     });
 
     const bounds = geo.asBounds(
-      ...entries.map((entry) => entry.bbox().extend(overlap)),
+      ...entries.map((entry) => entry.bound().extend(overlap)),
     );
 
     return features.concat(

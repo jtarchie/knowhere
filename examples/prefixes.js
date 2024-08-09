@@ -6,7 +6,7 @@ const allCostcos = query.execute(`nwr[name=~Costco](prefix=${prefix.name})`);
 const bounds = [];
 
 const entries = allCostcos.filter((costco) => {
-  const extended = costco.bbox().extend(2000);
+  const extended = costco.bound().extend(2000);
 
   if (bounds.some((bbox) => bbox.intersects(extended))) {
     return false;

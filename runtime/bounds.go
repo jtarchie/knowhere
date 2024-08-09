@@ -9,19 +9,51 @@ import (
 )
 
 type Bound struct {
-	orb.Bound
+	bound orb.Bound
+}
+
+func NewBound(bound orb.Bound) Bound {
+	return Bound{bound: bound}
+}
+
+func (wb Bound) Min() [2]float64 {
+	return wb.bound.Min
+}
+
+func (wb Bound) Max() [2]float64 {
+	return wb.bound.Max
+}
+
+func (wb Bound) Center() Point {
+	return Point(wb.bound.Center())
+}
+
+func (wb Bound) Left() float64 {
+	return wb.bound.Left()
+}
+
+func (wb Bound) Right() float64 {
+	return wb.bound.Right()
+}
+
+func (wb Bound) Top() float64 {
+	return wb.bound.Top()
+}
+
+func (wb Bound) Bottom() float64 {
+	return wb.bound.Bottom()
 }
 
 func (wb Bound) Intersects(bounds Bound) bool {
-	return wb.Bound.Intersects(bounds.Bound)
+	return wb.bound.Intersects(bounds.bound)
 }
 
 func (wb Bound) Extend(radius float64) Bound {
-	return Bound{geo.BoundPad(wb.Bound, radius)}
+	return Bound{geo.BoundPad(wb.bound, radius)}
 }
 
 func (wb Bound) AsFeature(properties map[string]interface{}) *geojson.Feature {
-	feature := geojson.NewFeature(wb.Bound)
+	feature := geojson.NewFeature(wb.bound)
 
 	for name, value := range properties {
 		feature.Properties[name] = value
@@ -33,9 +65,9 @@ func (wb Bound) AsFeature(properties map[string]interface{}) *geojson.Feature {
 type Bounds []Bound
 
 func (r Bounds) AsBound() Bound {
-	union := r[0].Bound
+	union := r[0].bound
 	for _, bound := range r {
-		union = union.Union(bound.Bound)
+		union = union.Union(bound.bound)
 	}
 
 	return Bound{union}
@@ -43,7 +75,7 @@ func (r Bounds) AsBound() Bound {
 
 func (r Bounds) Union() orb.Geometry {
 	polygons := lo.Map(r, func(result Bound, _ int) orb.Polygon {
-		return result.ToPolygon()
+		return result.bound.ToPolygon()
 	})
 	points := lo.Map(polygons, func(polygon orb.Polygon, _ int) polygol.Geom {
 		return g2p(polygon)

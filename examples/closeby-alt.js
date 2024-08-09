@@ -80,7 +80,7 @@ const payload = {
 
     const bounds = geo.asBounds(
       ...entries.map((entry, index) =>
-        entry.bbox().extend(keywords[index].radius)
+        entry.bound().extend(keywords[index].radius)
       ),
     );
 

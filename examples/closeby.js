@@ -44,7 +44,7 @@ keywords.slice(1).forEach((keyword) => {
   const tree = keyword.results.asTree(keyword.radius);
 
   neighbors.forEach((entries) => {
-    const extended = entries[0].bbox().extend(keywords[0].radius);
+    const extended = entries[0].bound().extend(keywords[0].radius);
 
     const nearby = tree.nearby(extended, 1);
     if (nearby.length === 1) {
@@ -75,7 +75,7 @@ const payload = {
 
     const bounds = geo.asBounds(
       ...entries.map((entry, index) =>
-        entry.bbox().extend(keywords[index].radius)
+        entry.bound().extend(keywords[index].radius)
       ),
     );
 

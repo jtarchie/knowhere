@@ -51,7 +51,12 @@ var _ = Describe("When using the runtime", func() {
 				const results = query.execute('nw[name="Hatfield Tunnel"](prefix=test)');
 				assert.eq(results.length == 1);
 				
-				return results[0].bbox()
+				const bound = results[0].bound();
+
+				return {
+					Min: [bound.min()[0], bound.min()[1]],
+					Max: [bound.max()[0], bound.max()[1]],
+				}
 			`)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(toJSON(value.Export())).To(MatchJSON(`{

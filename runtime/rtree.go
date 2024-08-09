@@ -11,13 +11,13 @@ type RTree struct {
 }
 
 func (r *RTree) Insert(bound Bound, element Result) {
-	r.RTreeG.Insert(bound.Min, bound.Max, element)
+	r.RTreeG.Insert(bound.bound.Min, bound.bound.Max, element)
 }
 
 func (r *RTree) Within(bound Bound) bool {
 	contains := false
 
-	r.RTreeG.Search(bound.Min, bound.Max, func(min, max [2]float64, _ Result) bool {
+	r.RTreeG.Search(bound.bound.Min, bound.bound.Max, func(min, max [2]float64, _ Result) bool {
 		contains = true
 
 		// as long as one thing exists
@@ -28,7 +28,7 @@ func (r *RTree) Within(bound Bound) bool {
 }
 
 func (r *RTree) Delete(bound Bound, element Result) {
-	r.RTreeG.Delete(bound.Min, bound.Max, element)
+	r.RTreeG.Delete(bound.bound.Min, bound.bound.Max, element)
 }
 
 func (r *RTree) Nearby(bound Bound, count uint) Results {
@@ -51,7 +51,7 @@ func (r *RTree) Nearby(bound Bound, count uint) Results {
 func (r *RTree) Search(bound Bound, count uint) Results {
 	results := make([]Result, 0, count)
 
-	r.RTreeG.Search(bound.Min, bound.Max,
+	r.RTreeG.Search(bound.bound.Min, bound.bound.Max,
 		func(min, max [2]float64, result Result) bool {
 			results = append(results, result)
 
@@ -65,7 +65,7 @@ func (r *RTree) Search(bound Bound, count uint) Results {
 }
 
 func fromWrappedDistOverlap(target Bound) func(min, max [2]float64, data Result, item bool) float64 {
-	callback := rtree.BoxDist[float64, Result](target.Min, target.Max, nil)
+	callback := rtree.BoxDist[float64, Result](target.bound.Min, target.bound.Max, nil)
 
 	return func(bMin, bMax [2]float64, item Result, hasItem bool) float64 {
 		if !hasItem {
@@ -77,6 +77,6 @@ func fromWrappedDistOverlap(target Bound) func(min, max [2]float64, data Result,
 			Max: bMax,
 		}
 
-		return geo.Distance(target.Center(), current.Center())
+		return geo.Distance(target.bound.Center(), current.Center())
 	}
 }

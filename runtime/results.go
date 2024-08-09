@@ -14,8 +14,8 @@ func (r Results) Cluster(radius float64) Results {
 
 	// sort by biggest surface area first
 	slices.SortStableFunc(r, func(a Result, b Result) int {
-		areaA := geo.Area(a.Bbox().Bound)
-		areaB := geo.Area(b.Bbox().Bound)
+		areaA := geo.Area(a.Bound().bound)
+		areaB := geo.Area(b.Bound().bound)
 
 		if areaA < areaB {
 			return 1
@@ -28,7 +28,7 @@ func (r Results) Cluster(radius float64) Results {
 	})
 
 	for _, entry := range r {
-		extended := entry.Bbox().Extend(radius)
+		extended := entry.Bound().Extend(radius)
 
 		if !tree.Within(extended) {
 			results = append(results, entry)
@@ -56,8 +56,8 @@ func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64
 			continue
 		}
 
-		extended := result.Bbox().Extend(originRadius)
-		tree.RTreeG.Search(extended.Min, extended.Max, func(min, max [2]float64, result Result) bool {
+		extended := result.Bound().Extend(originRadius)
+		tree.RTreeG.Search(extended.bound.Min, extended.bound.Max, func(min, max [2]float64, result Result) bool {
 			if _, ok := alreadyUsed[result.ID]; !ok {
 				// only find unique neighbors, don't share
 				nearby = append(nearby, result)
@@ -67,7 +67,7 @@ func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64
 		})
 
 		slices.SortStableFunc(nearby, func(a Result, b Result) int {
-			return int(geo.Distance(a.Bbox().Center(), result.Bbox().Center()) - geo.Distance(b.Bbox().Center(), result.Bbox().Center()))
+			return int(geo.Distance(a.Bound().bound.Center(), result.Bound().bound.Center()) - geo.Distance(b.Bound().bound.Center(), result.Bound().bound.Center()))
 		})
 
 		if len(nearby) >= int(size) {
@@ -87,7 +87,7 @@ func (r Results) AsTree(radius float64) *RTree {
 	tree := &RTree{}
 
 	for _, entry := range r {
-		bbox := entry.Bbox()
+		bbox := entry.Bound()
 		if 0 < radius {
 			bbox = bbox.Extend(radius)
 		}
