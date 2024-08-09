@@ -262,7 +262,7 @@ func boundsToGeohashPrecision(bounds orb.Bound) uint {
 
 	for index, precision := range geohashPrecisions {
 		if height <= precision[0] && width <= precision[1] {
-			return uint(len(geohashPrecisions) - index + 1)
+			return uint(len(geohashPrecisions) - index)
 		}
 	}
 
