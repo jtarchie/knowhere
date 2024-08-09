@@ -24,8 +24,9 @@ func New(
 	cors []string,
 	allowCIDRs []string,
 	timeout time.Duration,
+	cacheSize int,
 ) (*Server, error) {
-	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&_cache_size=2000&_busy_timeout=5000", dbFilename)
+	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&_cache_size=%d&_busy_timeout=5000", dbFilename, cacheSize)
 
 	if strings.Contains(dbFilename, ".zst") {
 		err := sqlitezstd.Init()
