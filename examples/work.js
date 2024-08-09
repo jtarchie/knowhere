@@ -11,13 +11,15 @@ const homes = [
     entries.length >= 1,
     `expected one address match ${entries.length}`,
   );
-  return entries.map((entry) => [entry.min_lat, entry.min_lon, entry.name]);
+  return entries.map((
+    entry,
+  ) => [entry.min_lat, entry.min_lon, entry.tags.name]);
 });
 
 const impacts = query.execute(
   `nwr[name=~"Western Psychiatric"](prefix=pennsylvania)`,
 ).map((entry) => {
-  return [entry.min_lat, entry.min_lon, entry.name];
+  return [entry.min_lat, entry.min_lon, entry.tags.name];
 });
 
 let features = homes.map((coords, index) => {

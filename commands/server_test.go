@@ -106,7 +106,8 @@ var _ = Describe("Server", func() {
 		It("returns the result in JSON", func() {
 			source := `
 			const results = query.execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
-			return results.map((result) => result.name)
+			assert.stab(JSON.stringify(results))
+			return results.map((result) => result.tags['name'])
 			`
 			client := req.C()
 			response, err := client.R().

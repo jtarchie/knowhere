@@ -39,8 +39,8 @@ var _ = Describe("RTree", func() {
 		tree := &runtime.RTree{}
 
 		actual := []runtime.Result{
-			runtime.Result{query.Result{Name: "1"}},
-			runtime.Result{query.Result{Name: "2"}},
+			runtime.Result{query.Result{ID: 1}},
+			runtime.Result{query.Result{ID: 2}},
 		}
 
 		tree.Insert(

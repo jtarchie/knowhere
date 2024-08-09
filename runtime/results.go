@@ -43,14 +43,14 @@ func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64
 	tree := b.AsTree(neighborRadius)
 
 	results := []Results{}
-	alreadyUsed := map[Result]struct{}{}
+	alreadyUsed := map[int64]struct{}{}
 	size++
 
 	for _, result := range r {
 		// initially populate with result that is looking for neighbors
 		nearby := Results{result}
 
-		if _, ok := alreadyUsed[result]; ok {
+		if _, ok := alreadyUsed[result.ID]; ok {
 			// if there is any crossover with result A and B
 			// don't search for anything already
 			continue
@@ -58,7 +58,7 @@ func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64
 
 		extended := result.Bbox().Extend(originRadius)
 		tree.RTreeG.Search(extended.Min, extended.Max, func(min, max [2]float64, result Result) bool {
-			if _, ok := alreadyUsed[result]; !ok {
+			if _, ok := alreadyUsed[result.ID]; !ok {
 				// only find unique neighbors, don't share
 				nearby = append(nearby, result)
 			}
@@ -75,7 +75,7 @@ func (r Results) Overlap(b Results, originRadius float64, neighborRadius float64
 			results = append(results, nearby)
 
 			for _, used := range nearby {
-				alreadyUsed[used] = struct{}{}
+				alreadyUsed[used.ID] = struct{}{}
 			}
 		}
 	}
