@@ -1,0 +1,11 @@
+site_name: Knowhere Documentation
+site_url: https://knowhere.live/docs
+theme:
+  name: material
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.snippets
+
+site_dir: dist/docs
