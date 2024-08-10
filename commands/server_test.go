@@ -1,6 +1,7 @@
 package commands_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -154,14 +155,17 @@ var _ = Describe("Server", func() {
 			_, err = io.Copy(payload, response.Body)
 			Expect(err).NotTo(HaveOccurred())
 
-			Expect(payload.String()).To(MatchJSON(fmt.Sprintf(`{"error":%q}`, errMsg)))
+			var payloadMap map[string]string
+			err = json.Unmarshal([]byte(payload.String()), &payloadMap)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(payloadMap["error"]).To(ContainSubstring(errMsg))
 		},
-			Entry("timeouts on infinite loop", "for(;;) {}", `evaluation error: vm timed out at main.js:1:3(1)`),
+			Entry("timeouts on infinite loop", "for(;;) {}", `evaluation error: vm timed out at main.js`),
 			Entry("no source provided", ``, `source not provided in request body`),
-			Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at main.js:1:15(1)"),
-			Entry("syntax error", `const a = a, b => {}`, "evaluation error: SyntaxError: main.js: Line 1:30 Unexpected token =\u003e"),
-			Entry("assertion fail", `assert.eq(false, "this did not work")`, "evaluation error: assertion failed: this did not work at main.js:1:24(6)"),
-			Entry("assertion geojson", `assert.geoJSON({})`, "evaluation error: assert of geojson failed: missing type at main.js:1:29(5)"),
+			Entry("invalid javascript", `asdf;`, "evaluation error: ReferenceError: asdf is not defined at main.js"),
+			Entry("syntax error", `const a = a, b => {}`, "evaluation error: SyntaxError:"),
+			Entry("assertion fail", `assert.eq(false, "this did not work")`, "evaluation error: assertion failed: this did not work at main.js"),
+			Entry("assertion geojson", `assert.geoJSON({})`, "evaluation error: assert of geojson failed: missing type at main.js"),
 		)
 	})
 

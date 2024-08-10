@@ -48,6 +48,7 @@ require (
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/dlclark/regexp2 v1.11.2 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
+	github.com/evanw/esbuild v0.23.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect

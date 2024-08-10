@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/dop251/goja"
+	"github.com/evanw/esbuild/pkg/api"
 	"github.com/jtarchie/knowhere/runtime"
 )
 
@@ -45,9 +46,25 @@ func (r *Runtime) Execute(
 	})
 	defer timer.Stop()
 
+	result := api.Transform(source, api.TransformOptions{
+		Loader:    api.LoaderTS,
+		Format:    api.FormatCommonJS,
+		Target:    api.ES2015,
+		Sourcemap: api.SourceMapNone,
+		Platform:  api.PlatformNeutral,
+	})
+
+	if len(result.Errors) > 0 {
+		return nil, &goja.CompilerSyntaxError{
+			CompilerError: goja.CompilerError{
+				Message: result.Errors[0].Text,
+			},
+		}
+	}
+
 	program, err := goja.Compile(
 		"main.js",
-		fmt.Sprintf(`{(function() {%s}).apply(undefined)}`, source),
+		"{(function() { const module = {}; "+string(result.Code)+"; return module.exports.payload;}).apply(undefined)}",
 		true,
 	)
 	if err != nil {

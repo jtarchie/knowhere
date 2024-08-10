@@ -1,3 +1,5 @@
+/// <reference path="../docs/examples/global.d.ts" />
+
 const prefixes = query.prefixes();
 
 const allUnis = geo.asResults(
@@ -41,4 +43,4 @@ const payload = {
   }),
 };
 
-return payload;
+export { payload };

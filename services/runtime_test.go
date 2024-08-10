@@ -38,7 +38,8 @@ var _ = Describe("When using the runtime", func() {
 	It("can run hello world", func() {
 		runtime := services.NewRuntime(client, time.Second)
 		value, err := runtime.Execute(`
-			return "Hello, World"
+			const payload = "Hello, World";
+			export { payload };
 		`)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(value.Export()).To(BeEquivalentTo("Hello, World"))
@@ -52,11 +53,12 @@ var _ = Describe("When using the runtime", func() {
 				assert.eq(results.length == 1);
 				
 				const bound = results[0].bound();
-
-				return {
+				const payload = {
 					Min: [bound.min()[0], bound.min()[1]],
 					Max: [bound.max()[0], bound.max()[1]],
 				}
+
+				export { payload };
 			`)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(toJSON(value.Export())).To(MatchJSON(`{
@@ -77,7 +79,7 @@ var _ = Describe("When using the runtime", func() {
 		_, err := runtime.Execute(`
 			const payload = {};
 			assert.geoJSON(payload);
-			return payload;
+			export { payload };
 		`)
 		Expect(err).To(HaveOccurred())
 
@@ -93,7 +95,7 @@ var _ = Describe("When using the runtime", func() {
 				}
 			};
 			assert.geoJSON(payload);
-			return payload;
+			export { payload };
 		`)
 		Expect(err).NotTo(HaveOccurred())
 

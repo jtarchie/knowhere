@@ -1,6 +1,8 @@
 package commands_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
@@ -24,12 +26,12 @@ var _ = Describe("Runtime", func() {
 		})
 
 		It("should have some examples", func() {
-			matches, err := filepath.Glob("../examples/*.js")
+			matches, err := filepath.Glob("../examples/*.ts")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(len(matches)).NotTo(Equal(0))
 		})
 
-		matches, _ := filepath.Glob("../examples/*.js")
+		matches, _ := filepath.Glob("../examples/*.ts")
 		for _, match := range matches {
 			It(fmt.Sprintf("ensures that %q passes", match), func() {
 				file, err := os.Open(match)
@@ -41,7 +43,13 @@ var _ = Describe("Runtime", func() {
 					RuntimeTimeout: 10 * time.Second,
 				}
 
-				err = runtime.Run(GinkgoWriter)
+				buffer := &bytes.Buffer{}
+				err = runtime.Run(buffer)
+				Expect(err).NotTo(HaveOccurred())
+
+				var payload interface{}
+				err = json.Unmarshal(buffer.Bytes(), &payload)
+				Expect(payload).NotTo(BeNil())
 				Expect(err).NotTo(HaveOccurred())
 			})
 		}

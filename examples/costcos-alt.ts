@@ -1,12 +1,8 @@
-assert.stab("start");
+/// <reference path="../docs/examples/global.d.ts" />
 
 const allCostcos = query.execute(`nwr[name=~Costco](prefix=colorado)`);
 
-assert.stab("query");
-
 const entries = allCostcos.cluster(2000);
-
-assert.stab("cluster");
 
 assert.eq(allCostcos.length > entries.length, "expected fewer entries");
 
@@ -19,9 +15,6 @@ const payload = {
   }),
 };
 
-assert.stab("payload");
-
 assert.geoJSON(payload);
 
-assert.stab("assert");
-return payload;
+export { payload };

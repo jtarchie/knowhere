@@ -1,6 +1,8 @@
+/// <reference path="../docs/examples/global.d.ts" />
+
 const allCostcos = query.execute(`nwr[name=~Costco](prefix=colorado)`);
 
-const bounds = [];
+const bounds: Bound[] = [];
 
 const entries = allCostcos.filter((costco) => {
   const extended = costco.bound().extend(2000);
@@ -26,4 +28,4 @@ const payload = {
 
 assert.geoJSON(payload);
 
-return payload;
+export { payload };

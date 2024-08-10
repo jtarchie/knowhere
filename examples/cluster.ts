@@ -1,3 +1,5 @@
+/// <reference path="../docs/examples/global.d.ts" />
+
 function cluster(search, radius) {
   const tree = geo.rtree();
 
@@ -25,9 +27,10 @@ const keywords = [
   { query: "amenity=school", radius: 5000 },
 ];
 
-const clusters = keywords.map((keyword) => {
-  return [keyword, cluster(keyword.query, keyword.radius)];
-});
+const clusters: Array<[typeof keywords[0], ReturnType<typeof cluster>]> =
+  keywords.map((keyword) => {
+    return [keyword, cluster(keyword.query, keyword.radius)];
+  });
 
 assert.eq(
   clusters.length === keywords.length,
@@ -52,4 +55,4 @@ const payload = {
 
 assert.geoJSON(payload);
 
-return payload;
+export { payload };

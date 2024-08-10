@@ -1,4 +1,4 @@
-assert.stab("start");
+/// <reference path="../docs/examples/global.d.ts" />
 
 const homes = [
   // lat, lng, address
@@ -6,20 +6,19 @@ const homes = [
   "200 Pine Mountain Ln, McCandless, PA 15090",
 ].flatMap((address) => {
   const entries = query.fromAddress(address);
-  assert.stab(`found entries: ${address}`);
   assert.eq(
     entries.length >= 1,
     `expected one address match ${entries.length}`,
   );
   return entries.map((
     entry,
-  ) => [entry.min_lat, entry.min_lon, entry.tags.name]);
+  ): [number, number, string] => [entry.minLat, entry.minLon, entry.tags.name]);
 });
 
 const impacts = query.execute(
   `nwr[name=~"Western Psychiatric"](prefix=pennsylvania)`,
-).map((entry) => {
-  return [entry.min_lat, entry.min_lon, entry.tags.name];
+).map((entry): [number, number, string] => {
+  return [entry.minLat, entry.minLon, entry.tags.name];
 });
 
 let features = homes.map((coords, index) => {
@@ -35,7 +34,7 @@ features = features.concat(impacts.map((coords, index) => {
   const point = geo.asPoint(coords[0], coords[1]);
 
   return point.asFeature({
-    "marker-color": colors.pick(index + homes.size + 1),
+    "marker-color": colors.pick(index + homes.length + 1),
     "title": coords[2],
     "isochrone": true,
   });
@@ -46,9 +45,6 @@ const payload = {
   features: features,
 };
 
-assert.stab("payload");
-
 assert.geoJSON(payload);
 
-assert.stab("assert");
-return payload;
+export { payload };

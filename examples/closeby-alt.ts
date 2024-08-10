@@ -1,3 +1,5 @@
+/// <reference path="../docs/examples/global.d.ts" />
+
 function zillowURL(bounds) {
   // https://www.zillow.com/homes/for_sale/?searchQueryState={%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A{%22west%22%3A-105.91190088989258%2C%22east%22%3A-105.64513911010742%2C%22south%22%3A39.88949772255962%2C%22north%22%3A39.967295787905705}%2C%22filterState%22%3A{%22sort%22%3A{%22value%22%3A%22globalrelevanceex%22}}}
 
@@ -18,29 +20,30 @@ function zillowURL(bounds) {
   return url.toString();
 }
 
-assert.stab("start");
-
 const keywords = [
-  { query: "nwr[name=~Costco]", radius: 5000 },
-  { query: "nwr[amenity=cafe][name][name!~Starbucks]", radius: 1000 },
-  { query: "nwr[amenity=school][name]", radius: 5000 },
+  {
+    radius: 5000,
+    results: query.execute(`nwr[name=~Costco](prefix=colorado)`),
+  },
+  {
+    radius: 1000,
+    results: query.execute(
+      `nwr[amenity=cafe][name][name!~Starbucks](prefix=colorado)`,
+    ),
+  },
+  {
+    radius: 5000,
+    results: query.execute(`nwr[amenity=school][name](prefix=colorado)`),
+  },
 ];
 
-keywords.forEach((keyword) => {
-  keyword.results = query.execute(`${keyword.query}(prefix=colorado)`);
-});
-
 keywords.sort((a, b) => a.results.length - b.results.length);
-
-assert.stab("query");
 
 const neighbors = new Map();
 const cluster = keywords[0].results.cluster(500);
 cluster.forEach((entry) => {
   neighbors.set(entry.id, new Map());
 });
-
-assert.stab("cluster");
 
 const expectedNeighbors = 2;
 
@@ -55,8 +58,6 @@ keywords.slice(1).forEach((keyword) => {
     values.forEach((value) => neighbors.get(values[0].id).set(value.id, value));
   });
 });
-
-assert.stab("nearby");
 
 const payload = {
   type: "FeatureCollection",
@@ -96,10 +97,6 @@ const payload = {
   }).filter(Boolean),
 };
 
-assert.stab("payload");
-
 assert.geoJSON(payload);
 
-assert.stab("assert GeoJSON");
-
-return payload;
+export { payload };
