@@ -10,7 +10,7 @@ tasks:
   format:
     cmds:
     - deno fmt README.md docs/ examples/ server/assets/*.ts commands/runtime
-    - deno lint examples/
+    - deno lint examples/ docs/examples/
     - gofmt -w .
     - shfmt -w bin/*.sh
   lint:

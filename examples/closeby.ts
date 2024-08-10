@@ -1,4 +1,4 @@
-/// <reference path="../docs/examples/global.d.ts" />
+/// <reference path="../docs/global.d.ts" />
 
 function zillowURL(bounds) {
   // https://www.zillow.com/homes/for_sale/?searchQueryState={%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A{%22west%22%3A-105.91190088989258%2C%22east%22%3A-105.64513911010742%2C%22south%22%3A39.88949772255962%2C%22north%22%3A39.967295787905705}%2C%22filterState%22%3A{%22sort%22%3A{%22value%22%3A%22globalrelevanceex%22}}}

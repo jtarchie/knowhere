@@ -31,8 +31,10 @@ var _ = Describe("Runtime", func() {
 			Expect(len(matches)).NotTo(Equal(0))
 		})
 
-		matches, _ := filepath.Glob("../examples/*.ts")
-		for _, match := range matches {
+		examples, _ := filepath.Glob("../examples/*.ts")
+		docs, _ := filepath.Glob("../docs/examples/*.ts")
+
+		for _, match := range append(examples, docs...) {
 			It(fmt.Sprintf("ensures that %q passes", match), func() {
 				file, err := os.Open(match)
 				Expect(err).NotTo(HaveOccurred())
