@@ -10,6 +10,7 @@ require (
 	github.com/dop251/goja v0.0.0-20240731150404-c665f0b58f6e
 	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
 	github.com/engelsjk/polygol v0.0.3
+	github.com/evanw/esbuild v0.23.0
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
@@ -35,7 +36,7 @@ require (
 	github.com/tidwall/rtree v1.10.0
 	github.com/valyala/fasttemplate v1.2.2
 	github.com/vmihailenco/msgpack/v5 v5.4.1
-	golang.org/x/text v0.16.0
+	golang.org/x/text v0.17.0
 )
 
 require (
@@ -48,7 +49,6 @@ require (
 	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
 	github.com/dlclark/regexp2 v1.11.2 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
-	github.com/evanw/esbuild v0.23.0 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
@@ -90,7 +90,7 @@ require (
 	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56 // indirect
 	golang.org/x/mod v0.19.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/term v0.22.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
