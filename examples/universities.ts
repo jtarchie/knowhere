@@ -1,4 +1,4 @@
-/// <reference path="../docs/global.d.ts" />
+/// <reference path="../docs/src/global.d.ts" />
 
 const prefixes = query.prefixes();
 

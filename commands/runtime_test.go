@@ -32,7 +32,7 @@ var _ = Describe("Runtime", func() {
 		})
 
 		examples, _ := filepath.Glob("../examples/*.ts")
-		docs, _ := filepath.Glob("../docs/examples/*.ts")
+		docs, _ := filepath.Glob("../docs/src/examples/*.ts")
 
 		for _, match := range append(examples, docs...) {
 			It(fmt.Sprintf("ensures that %q passes", match), func() {

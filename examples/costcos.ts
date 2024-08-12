@@ -1,4 +1,4 @@
-/// <reference path="../docs/global.d.ts" />
+/// <reference path="../docs/src/global.d.ts" />
 
 const allCostcos = query.execute(`nwr[name=~Costco](prefix=colorado)`);
 
