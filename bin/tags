@@ -6,14 +6,33 @@ boundary
 amenity
 building
 fast_food
-fuel
 landuse
 leisure
+man_made
 natural
 route
 shop
 tourism
 waterway
+# fuel types -- https://wiki.openstreetmap.org/wiki/Key:fuel
+fuel
+fuel:diesel
+fuel:octane_100
+fuel:octane_80
+fuel:octane_85
+fuel:octane_86
+fuel:octane_88
+fuel:octane_89
+fuel:octane_90
+fuel:octane_91
+fuel:octane_92
+fuel:octane_93
+fuel:octane_94
+fuel:octane_95
+fuel:octane_97
+fuel:octane_98
+# attributes of shop
+internet_access
 # for vehicles
 highway
 cycleway
