@@ -55,9 +55,7 @@ func Execute(ctx context.Context, client *sql.DB, search string, fun func(string
 				minLat,
 				maxLon,
 				maxLat,
-				json_object(
-					'name', tags->>'$.name'
-				) as tags
+				json(tags) as tags
 			FROM (%s)`, sqlQuery),
 	)
 	if err != nil {
