@@ -33,7 +33,7 @@ volume_id = nil
 
 begin
   volume_id = json(task(%(fly volumes create "#{volume_name}" --size 25 --region #{region} --yes --no-encryption --json))).fetch('id')
-  task(%(fly machine run . --name "#{machine_name}" --volume "#{volume_id}:/var/osm" --region #{region} --rm))
+  task(%(fly machine run . --name "#{machine_name}" --volume "#{volume_id}:/var/osm/" --region #{region} --rm))
   machine_id = json(task(%(fly machine ls --json))).find { |machine| machine['name'] == machine_name }.fetch('id')
   task(%(fly ssh console --machine "#{machine_id}" --command "curl -q --progress-bar -o /var/osm/entries.db.zst https://sqlite.knowhere.live/entries.db.zst"))
   task(%(fly machine destroy "#{machine_id}" --force))
@@ -46,7 +46,7 @@ begin
     old_machine_id = machine.fetch('id')
     puts "recreating #{old_machine_id}"
     new_volume_id = json(task(%(fly volumes fork #{volume_id} --name #{volume_name} --json))).fetch('id')
-    task(%(fly machines clone #{old_machine_id} --attach-volume "#{new_volume_id}:/var/osm" --region #{region}))
+    task(%(fly machines clone #{old_machine_id} --attach-volume "#{new_volume_id}:/var/osm/" --region #{region}))
     task(%(fly machines destroy #{old_machine_id} --force))
     machine.dig('config', 'mounts').each do |mount|
       task(%(fly volumes destroy #{mount.fetch('volume')} --yes))
