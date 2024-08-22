@@ -49,7 +49,7 @@ var _ = Describe("When using the runtime", func() {
 		It("returns the original", func() {
 			runtime := services.NewRuntime(client, time.Second)
 			value, err := runtime.Execute(`
-				const results = query.execute('nw[name="Hatfield Tunnel"](prefix=test)');
+				const results = query.execute('nw[name="Hatfield Tunnel"](area=test)');
 				assert.eq(results.length == 1);
 				
 				const bound = results[0].bound();

@@ -91,7 +91,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("tag with not matcher", "nw[amenity=coffee][name!=Starbucks]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" AND ( "Starbucks" ) )`),
 			Entry("tag should not exist", "nw[amenity=coffee][!name]", `( "amenity" AND ( "coffee" ) ) NOT ( "name" )`),
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
-			Entry("with table prefix", "n[amenity=restaurant](prefix=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
+			Entry("with table area", "n[amenity=restaurant](area=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
 			Entry("with bounding box (bb=minLon,minLat,maxLon,maxLat)", "n(bb=1.10,2.20,11.11,99.99)", `1.10 <= s.minLon`, `2.20 <= s.minLat`, `s.maxLon <= 11.11`, `s.maxLat <= 99.99`),
 			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`, `( "pop" )`),

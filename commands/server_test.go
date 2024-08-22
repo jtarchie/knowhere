@@ -70,7 +70,7 @@ var _ = Describe("Server", func() {
 		client := req.C()
 		response, err := client.R().
 			SetRetryCount(3).
-			AddQueryParam("search", `nw[name="Hatfield Tunnel"](prefix="test")`).
+			AddQueryParam("search", `nw[name="Hatfield Tunnel"](area="test")`).
 			Get(fmt.Sprintf("http://localhost:%d/api/search", port))
 
 		Expect(err).NotTo(HaveOccurred())
@@ -107,7 +107,7 @@ var _ = Describe("Server", func() {
 	When("hitting the runtime endpoint", func() {
 		It("returns the result in JSON", func() {
 			source := `
-			const results = query.execute('nw[name="Hatfield Tunnel"](prefix="test")') ;
+			const results = query.execute('nw[name="Hatfield Tunnel"](area="test")') ;
 			assert.stab(JSON.stringify(results))
 			return results.map((result) => result.tags['name'])
 			`
@@ -169,11 +169,11 @@ var _ = Describe("Server", func() {
 		)
 	})
 
-	It("hitting prefixes API endpoint", func() {
+	It("hitting areas API endpoint", func() {
 		client := req.C()
 		response, err := client.R().
 			SetRetryCount(3).
-			Get(fmt.Sprintf("http://localhost:%d/api/prefixes", port))
+			Get(fmt.Sprintf("http://localhost:%d/api/areas", port))
 
 		Expect(err).NotTo(HaveOccurred())
 
@@ -184,7 +184,7 @@ var _ = Describe("Server", func() {
 
 		Expect(payload.String()).To(MatchJSON(`
 		{
-			"prefixes": [
+			"areas": [
 				{
 					"name": "Test",
 					"slug": "test",

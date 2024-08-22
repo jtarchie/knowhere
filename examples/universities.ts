@@ -1,11 +1,11 @@
 /// <reference path="../docs/src/global.d.ts" />
 
-const prefixes = query.prefixes();
+const areas = query.areas();
 
 const allUnis = geo.asResults(
-  ...prefixes.flatMap((prefix) => {
+  ...areas.flatMap((area) => {
     return query.execute(
-      `wr[amenity=university][name](prefix=${prefix.name})`,
+      `wr[amenity=university][name](area=${area.name})`,
     );
   }),
 );

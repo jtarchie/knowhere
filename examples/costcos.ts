@@ -1,6 +1,6 @@
 /// <reference path="../docs/src/global.d.ts" />
 
-const allCostcos = query.execute(`nwr[name=~Costco](prefix=colorado)`);
+const allCostcos = query.execute(`nwr[name=~Costco](area=colorado)`);
 
 const bounds: Bound[] = [];
 

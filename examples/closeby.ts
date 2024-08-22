@@ -23,17 +23,17 @@ function zillowURL(bounds) {
 const keywords = [
   {
     radius: 5000,
-    results: query.execute(`nwr[name=~Costco](prefix=colorado)`),
+    results: query.execute(`nwr[name=~Costco](area=colorado)`),
   },
   {
     radius: 1000,
     results: query.execute(
-      `nwr[amenity=cafe][name][name!~Starbucks](prefix=colorado)`,
+      `nwr[amenity=cafe][name][name!~Starbucks](area=colorado)`,
     ),
   },
   {
     radius: 5000,
-    results: query.execute(`nwr[amenity=school][name](prefix=colorado)`),
+    results: query.execute(`nwr[amenity=school][name](area=colorado)`),
   },
 ];
 

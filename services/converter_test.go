@@ -106,12 +106,12 @@ var _ = Describe("Converter", func() {
 		Expect(points.MinLon.Float64).To(BeNumerically("~", -0.2327))
 		Expect(points.MaxLon.Float64).To(BeNumerically("~", -0.23268))
 
-		var prefix string
-		value(dbPath, "SELECT name FROM prefixes", &prefix)
-		Expect(prefix).To(Equal("united_states"))
+		var area string
+		value(dbPath, "SELECT name FROM areas", &area)
+		Expect(area).To(Equal("united_states"))
 
-		value(dbPath, "SELECT full_name FROM prefixes", &prefix)
-		Expect(prefix).To(Equal("United States"))
+		value(dbPath, "SELECT full_name FROM areas", &area)
+		Expect(area).To(Equal("United States"))
 
 		var fullCount int64
 		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE minLat IS NULL", &fullCount)

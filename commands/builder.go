@@ -95,16 +95,16 @@ func (b *Build) Run(stdout io.Writer) error {
 			_ = bar.Finish()
 		}
 
-		// prefix remove the `latest` and extension
-		prefix := strings.ReplaceAll(filename, ".osm.pbf", "")
-		prefix = strings.ReplaceAll(prefix, ".pbf", "")
-		prefix = strings.ReplaceAll(prefix, "-latest", "")
+		// area remove the `latest` and extension
+		area := strings.ReplaceAll(filename, ".osm.pbf", "")
+		area = strings.ReplaceAll(area, ".pbf", "")
+		area = strings.ReplaceAll(area, "-latest", "")
 
 		slog.Info("converting", "downloadFilename", downloadFilename)
 		command := &Convert{
 			OSM:         downloadFilename,
 			DB:          b.DB,
-			Prefix:      prefix,
+			Prefix:      area,
 			AllowedTags: b.AllowedTags,
 		}
 

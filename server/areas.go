@@ -13,7 +13,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Prefix struct {
+type Area struct {
 	Name     string  `db:"name"`
 	FullName string  `db:"full_name"`
 	MinLat   float64 `db:"minLat"`
@@ -22,7 +22,7 @@ type Prefix struct {
 	MaxLon   float64 `db:"maxLon"`
 }
 
-func (p *Prefix) MarshalJSON() ([]byte, error) {
+func (p *Area) MarshalJSON() ([]byte, error) {
 	buffer := &bytes.Buffer{}
 
 	buffer.WriteString(`{"name":`)
@@ -42,21 +42,21 @@ func (p *Prefix) MarshalJSON() ([]byte, error) {
 	return buffer.Bytes(), nil
 }
 
-func prefixes(client *sql.DB) func(echo.Context) error {
+func areas(client *sql.DB) func(echo.Context) error {
 	return func(ctx echo.Context) error {
-		var prefixes []Prefix
+		var areas []Area
 
 		err := sqlscan.Select(
 			ctx.Request().Context(),
 			client,
-			&prefixes, `
+			&areas, `
 			SELECT
 				name, full_name, minLat, maxLat, minLon, maxLon
 			FROM
-				prefixes
+				areas
 		`)
 		if err != nil {
-			slog.Error("prefixes.error", slog.String("error", err.Error()))
+			slog.Error("areas.error", slog.String("error", err.Error()))
 
 			return response(ctx, http.StatusBadRequest, map[string]string{
 				"error": "Results could not be processed",
@@ -67,7 +67,7 @@ func prefixes(client *sql.DB) func(echo.Context) error {
 		ctx.Response().Header().Set("Expires", time.Now().Add(30*time.Minute).Format(http.TimeFormat))
 
 		return response(ctx, http.StatusOK, map[string]interface{}{
-			"prefixes": prefixes,
+			"areas": areas,
 		})
 	}
 }

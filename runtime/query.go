@@ -59,21 +59,21 @@ func (q *Query) Union(queries ...string) Results {
 	})
 }
 
-func (g *Query) FromAddress(fullAddress string, prefix string) Results {
+func (g *Query) FromAddress(fullAddress string, area string) Results {
 	parts, ok := address.Parse(fullAddress, true)
 	if !ok {
 		return Results{}
 	}
 
-	if prefix == "" {
-		prefix = strcase.ToSnake(parts["state"])
+	if area == "" {
+		area = strcase.ToSnake(parts["state"])
 	}
 
 	return g.Union(
-		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](prefix="`+prefix+`")`,
-		`nwr[addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](prefix="`+prefix+`")`,
-		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"](prefix="`+prefix+`")`,
-		`nwr[name=~"`+parts["road"]+`*"][highway=residential](prefix="`+prefix+`")`,
+		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](area="`+area+`")`,
+		`nwr[addr:street=~"`+parts["road"]+`*"][addr:city=~"`+parts["city"]+`"](area="`+area+`")`,
+		`nwr[addr:housenumber=~"`+parts["house_number"]+`"][addr:street=~"`+parts["road"]+`*"](area="`+area+`")`,
+		`nwr[name=~"`+parts["road"]+`*"][highway=residential](area="`+area+`")`,
 	)
 }
 
@@ -86,7 +86,7 @@ type Prefix struct {
 	MaxLon   float64 `db:"maxLon"`
 }
 
-func (g *Query) Prefixes() []Prefix {
+func (g *Query) Areas() []Prefix {
 	ctx, cancel := context.WithTimeout(context.TODO(), g.timeout)
 	defer cancel()
 
@@ -99,11 +99,11 @@ func (g *Query) Prefixes() []Prefix {
 		`SELECT
 				name, full_name, minLat, maxLat, minLon, maxLon
 			FROM
-				prefixes`,
+				areas`,
 	)
 	if err != nil {
-		slog.Error("query.prefixes", "err", err.Error())
-		g.vm.Interrupt("could not read prefixes")
+		slog.Error("query.areas", "err", err.Error())
+		g.vm.Interrupt("could not read areas")
 	}
 
 	return results

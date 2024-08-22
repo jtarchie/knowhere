@@ -1,9 +1,9 @@
 /// <reference path="../docs/src/global.d.ts" />
 
-const prefixes = query.prefixes();
-const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+const areas = query.areas();
+const area = areas[Math.floor(Math.random() * areas.length)];
 
-const allCostcos = query.execute(`nwr[name=~Costco](prefix=${prefix.name})`);
+const allCostcos = query.execute(`nwr[name=~Costco](area=${area.name})`);
 
 const bounds: Bound[] = [];
 

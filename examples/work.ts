@@ -16,7 +16,7 @@ const homes = [
 });
 
 const impacts = query.execute(
-  `nwr[name=~"Western Psychiatric"](prefix=pennsylvania)`,
+  `nwr[name=~"Western Psychiatric"](area=pennsylvania)`,
 ).map((entry): [number, number, string] => {
   return [entry.minLat, entry.minLon, entry.tags.name];
 });

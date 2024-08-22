@@ -35,7 +35,7 @@ func setupRoutes(
 	timeout time.Duration,
 ) {
 	handler.GET("/api/search", locationSearch(client))
-	handler.GET("/api/prefixes", prefixes(client))
+	handler.GET("/api/areas", areas(client))
 	handler.Any("/api/runtime", runtime(client, timeout))
 
 	assetHandler := assetHandler()

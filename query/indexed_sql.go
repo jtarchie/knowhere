@@ -19,12 +19,12 @@ func ToIndexedSQL(query string) (string, error) {
 
 	var (
 		builder strings.Builder
-		prefix  string
+		area    string
 	)
 
-	prefixes, ok := ast.Directives["prefix"]
-	if ok && len(prefixes) == 1 {
-		prefix = prefixes[0] + "_"
+	areas, ok := ast.Directives["area"]
+	if ok && len(areas) == 1 {
+		area = areas[0] + "_"
 	}
 
 	allowedTags := ast.Tags
@@ -33,7 +33,7 @@ func ToIndexedSQL(query string) (string, error) {
 		SELECT
 			rowid AS id, *
 		FROM
-			` + prefix + `search s
+			` + area + `search s
 		WHERE
 	`)
 

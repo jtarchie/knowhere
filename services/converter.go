@@ -26,7 +26,7 @@ type Converter struct {
 	dbPath      string
 	name        string
 	osmPath     string
-	prefix      string
+	area        string
 	rtree       bool
 }
 
@@ -35,7 +35,7 @@ var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
 func NewConverter(
 	osmPath string,
 	dbPath string,
-	prefix string,
+	area string,
 	tags []string,
 	rtree bool,
 ) *Converter {
@@ -46,14 +46,14 @@ func NewConverter(
 	}
 
 	caser := cases.Title(language.English, cases.NoLower)
-	name := caser.String(nonAlphanumericRegex.ReplaceAllString(prefix, " "))
+	name := caser.String(nonAlphanumericRegex.ReplaceAllString(area, " "))
 
 	return &Converter{
 		allowedTags: allowedTags,
 		dbPath:      dbPath,
 		name:        name,
 		osmPath:     osmPath,
-		prefix:      strcase.ToSnake(strings.ToLower(prefix)),
+		area:        strcase.ToSnake(strings.ToLower(area)),
 		rtree:       rtree,
 	}
 }
@@ -64,8 +64,8 @@ func (b *Converter) Sprintf(template string) string {
 	t := fasttemplate.New(template, "{{", "}}")
 
 	return t.ExecuteString(map[string]interface{}{
-		"name":   b.name,
-		"prefix": b.prefix,
+		"name": b.name,
+		"area": b.area,
 	})
 }
 
@@ -90,7 +90,7 @@ func (b *Converter) clientExecute(client *sql.DB, statement string) error {
 }
 
 func (b *Converter) Execute() error {
-	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.open", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	// open the sql database
 	client, err := sql.Open("sqlite3_geohash", b.dbPath)
@@ -101,10 +101,10 @@ func (b *Converter) Execute() error {
 
 	client.SetMaxOpenConns(1)
 
-	slog.Info("db.schema.create", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.schema.create", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
-		CREATE TABLE {{prefix}}_entries (
+		CREATE TABLE {{area}}_entries (
 			id       INTEGER PRIMARY KEY AUTOINCREMENT,
 			osm_id   INTEGER NOT NULL,
 			osm_type INTEGER NOT NULL,
@@ -116,13 +116,13 @@ func (b *Converter) Execute() error {
 			refs     BLOB
 		) STRICT;
 
-		CREATE TABLE {{prefix}}_refs (
+		CREATE TABLE {{area}}_refs (
 			parent_id    INTEGER NOT NULL,
 			osm_id 	     INTEGER NOT NULL,
 			osm_type     INTEGER NOT NULL
 		) STRICT;
 
-		CREATE TABLE IF NOT EXISTS prefixes (
+		CREATE TABLE IF NOT EXISTS areas (
 			id        INTEGER PRIMARY KEY AUTOINCREMENT,
 			name      TEXT NOT NULL,
 			full_name TEXT NOT NULL,
@@ -138,7 +138,7 @@ func (b *Converter) Execute() error {
 
 	importer := NewImporter(b.osmPath)
 
-	slog.Info("db.import.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.import.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	transaction, err := client.Begin()
 	if err != nil {
@@ -150,7 +150,7 @@ func (b *Converter) Execute() error {
 	}()
 
 	insert, err := transaction.Prepare(b.Sprintf(`
-	INSERT INTO {{prefix}}_entries
+	INSERT INTO {{area}}_entries
 		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags, refs)
 			VALUES
 		(?, ?, ?, ?, ?, ?, jsonb(?), jsonb(?));
@@ -160,7 +160,7 @@ func (b *Converter) Execute() error {
 	}
 
 	refInsert, err := transaction.Prepare(b.Sprintf(`
-		INSERT INTO {{prefix}}_refs (parent_id, osm_id, osm_type) VALUES (?, ?, ?);
+		INSERT INTO {{area}}_refs (parent_id, osm_id, osm_type) VALUES (?, ?, ?);
 	`))
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for ref insert: %w", err)
@@ -269,19 +269,19 @@ func (b *Converter) Execute() error {
 		return fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	slog.Info("db.import.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.import.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
-	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.bounding_boxes.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
-		CREATE INDEX {{prefix}}_ref_ids ON {{prefix}}_refs(parent_id);
-		CREATE UNIQUE INDEX {{prefix}}_osm_types ON {{prefix}}_entries(osm_type, osm_id);
+		CREATE INDEX {{area}}_ref_ids ON {{area}}_refs(parent_id);
+		CREATE UNIQUE INDEX {{area}}_osm_types ON {{area}}_entries(osm_type, osm_id);
 
 		WITH ways AS (
 			SELECT
 					e.id
 			FROM
-					{{prefix}}_entries e
+					{{area}}_entries e
 			WHERE
 					e.osm_type = 2 -- way
 		), bb AS (
@@ -294,18 +294,18 @@ func (b *Converter) Execute() error {
 			FROM
 					ways w
 			JOIN
-					{{prefix}}_refs r
+					{{area}}_refs r
 			ON
 					r.parent_id = w.id
 			JOIN
-					{{prefix}}_entries n
+					{{area}}_entries n
 			ON
 					n.osm_type = 1 AND n.osm_id = r.osm_id -- node
 			GROUP BY
 					w.id
 		)
 		UPDATE
-				{{prefix}}_entries
+				{{area}}_entries
 		SET
 				minLat = bb.minLat,
 				maxLat = bb.maxLat,
@@ -314,13 +314,13 @@ func (b *Converter) Execute() error {
 		FROM
 				bb
 		WHERE
-				{{prefix}}_entries.id = bb.id;
+				{{area}}_entries.id = bb.id;
 
 		WITH relations AS (
 			SELECT
 					e.id
 			FROM
-					{{prefix}}_entries e
+					{{area}}_entries e
 			WHERE
 					e.osm_type = 3 -- relation
 		), bb AS (
@@ -333,11 +333,11 @@ func (b *Converter) Execute() error {
 			FROM
 					relations w
 			JOIN
-					{{prefix}}_refs r
+					{{area}}_refs r
 			ON
 					r.parent_id = w.id
 			JOIN
-					{{prefix}}_entries n
+					{{area}}_entries n
 			ON
 					n.osm_type = r.osm_type AND n.osm_id = r.osm_id
 			GROUP BY
@@ -346,7 +346,7 @@ func (b *Converter) Execute() error {
 					w.id
 		)
 		UPDATE
-				{{prefix}}_entries
+				{{area}}_entries
 		SET
 				minLat = bb.minLat,
 				maxLat = bb.maxLat,
@@ -355,46 +355,46 @@ func (b *Converter) Execute() error {
 		FROM
 				bb
 		WHERE
-				{{prefix}}_entries.id = bb.id;
+				{{area}}_entries.id = bb.id;
 
 		-- useful for calculating boundaries,
 		-- not useful for searching against
-		DELETE FROM {{prefix}}_entries WHERE
+		DELETE FROM {{area}}_entries WHERE
 			minLon IS NULL OR
 			maxLon IS NULL OR
 			minLat IS NULL OR
 			maxLat IS NULL OR
 			tags = jsonb('{}');
-		DROP INDEX {{prefix}}_ref_ids;
-		DROP TABLE {{prefix}}_refs;
+		DROP INDEX {{area}}_ref_ids;
+		DROP TABLE {{area}}_refs;
 
 		-- calculate geohash and add to tags
-		UPDATE {{prefix}}_entries SET tags = jsonb_set(tags, '$.geohash', geohash(minLat, maxLat, minLon, maxLon));
+		UPDATE {{area}}_entries SET tags = jsonb_set(tags, '$.geohash', geohash(minLat, maxLat, minLon, maxLon));
 	`)
 	if err != nil {
 		return fmt.Errorf("could not add bounding boxes: %w", err)
 	}
 
-	slog.Info("db.bounding_boxes.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.bounding_boxes.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
-	slog.Info("db.fts.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.fts.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
 		CREATE VIRTUAL TABLE
-			{{prefix}}_search
+			{{area}}_search
 		USING
-			fts5(tags, osm_id, minLat, maxLat, minLon, maxLon, osm_type, content = '{{prefix}}_entries', tokenize="porter", content_rowid='id');
+			fts5(tags, osm_id, minLat, maxLat, minLon, maxLon, osm_type, content = '{{area}}_entries', tokenize="porter", content_rowid='id');
 
 		WITH tags AS (
 			SELECT
-				{{prefix}}_entries.id AS id,
+				{{area}}_entries.id AS id,
 				json_each.key || ' ' || json_each.value AS kv
 			FROM
-				{{prefix}}_entries,
-				json_each({{prefix}}_entries.tags)
+				{{area}}_entries,
+				json_each({{area}}_entries.tags)
 		)
 		INSERT INTO
-			{{prefix}}_search(rowid, tags)
+			{{area}}_search(rowid, tags)
 		SELECT
 			id,
 			GROUP_CONCAT(kv, ' ')
@@ -407,13 +407,13 @@ func (b *Converter) Execute() error {
 		return fmt.Errorf("could build full text: %w", err)
 	}
 
-	slog.Info("db.fts.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.fts.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	if b.rtree {
-		slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+		slog.Info("db.rtree.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 		err = b.clientExecute(client, `
-			CREATE VIRTUAL TABLE IF NOT EXISTS {{prefix}}_rtree USING rtree(
+			CREATE VIRTUAL TABLE IF NOT EXISTS {{area}}_rtree USING rtree(
 				id INTEGER PRIMARY KEY,
 				minLon REAL,
 				maxLon REAL,
@@ -422,40 +422,40 @@ func (b *Converter) Execute() error {
 			);
 
 			INSERT INTO
-				{{prefix}}_rtree(id, minLon, maxLon, minLat, maxLat)
+				{{area}}_rtree(id, minLon, maxLon, minLat, maxLat)
 			SELECT
 				id,
 				minLon, maxLon,
 				minLat, maxLat
 			FROM
-			{{prefix}}_entries;
+			{{area}}_entries;
 		`)
 		if err != nil {
 			return fmt.Errorf("could build full text: %w", err)
 		}
 
-		slog.Info("db.rtree.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+		slog.Info("db.rtree.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
 	}
 
-	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
 		pragma page_size = 4096;
 		
 		INSERT INTO
-			{{prefix}}_search({{prefix}}_search)
+			{{area}}_search({{area}}_search)
 		VALUES
 			('optimize');
 
-		INSERT INTO prefixes(name, full_name, minLat, maxLat, minLon, maxLon)
+		INSERT INTO areas(name, full_name, minLat, maxLat, minLon, maxLon)
 			SELECT
-				'{{prefix}}', -- Assuming {{prefix}} is replaced with the actual prefix value you want to insert
+				'{{area}}', -- Assuming {{area}} is replaced with the actual area value you want to insert
 				'{{name}}', -- Assuming {{name}} is replaced with the actual name value you want to insert
 				MIN(minLat),
 				MAX(maxLat),
 				MIN(minLon),
 				MAX(maxLon)
-			FROM {{prefix}}_entries;
+			FROM {{area}}_entries;
 
 		vacuum;
 		pragma optimize;
@@ -464,7 +464,7 @@ func (b *Converter) Execute() error {
 		return fmt.Errorf("could not optimize: %w", err)
 	}
 
-	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath), slog.String("prefix", b.prefix))
+	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	return nil
 }

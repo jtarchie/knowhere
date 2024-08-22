@@ -11,7 +11,7 @@ type Convert struct {
 	AllowedTags []string `default:"*"                                       help:"a list of allowed tags, all other will be filtered"`
 	DB          string   `help:"db filename to import data to"              required:""`
 	OSM         string   `help:"osm pbf file to build the sqlite file from" required:""                                               type:"existingfile"`
-	Prefix      string   `help:"will add this prefix to all table names"    required:""`
+	Prefix      string   `help:"will add this area to all table names"    required:""`
 	Rtree       bool     `help:"enable rtree index"`
 }
 

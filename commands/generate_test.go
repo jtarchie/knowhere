@@ -11,7 +11,7 @@ import (
 var _ = Describe("Generate", func() {
 	It("can generate a query", func() {
 		generate := commands.Generate{
-			Value: `n[name="Hatfield Tunnel"](prefix="test")`,
+			Value: `n[name="Hatfield Tunnel"](area="test")`,
 		}
 		buffer := gbytes.NewBuffer()
 
