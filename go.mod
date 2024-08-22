@@ -3,34 +3,34 @@ module github.com/jtarchie/knowhere
 go 1.22.5
 
 require (
-	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240803175058-7cbe6d1f565d
+	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.0.0-20240816173256-744d36214f01
 	github.com/alecthomas/assert/v2 v2.10.0
 	github.com/alecthomas/kong v0.9.0
 	github.com/bokwoon95/wgo v0.5.6
-	github.com/dop251/goja v0.0.0-20240806095544-3491d4a58fbe
+	github.com/dop251/goja v0.0.0-20240816181238-8130cadc5774
 	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
 	github.com/engelsjk/polygol v0.0.3
-	github.com/evanw/esbuild v0.23.0
+	github.com/evanw/esbuild v0.23.1
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.43.7
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20240802163605-ed3abbb78ffa
+	github.com/jtarchie/sqlitezstd v0.0.0-20240821160540-e43af0d2fd81
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/mattn/go-sqlite3 v1.14.22
 	github.com/mmcloughlin/geohash v0.10.0
-	github.com/onsi/ginkgo/v2 v2.20.0
+	github.com/onsi/ginkgo/v2 v2.20.1
 	github.com/onsi/gomega v1.34.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/pioz/countries v0.2.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
-	github.com/samber/lo v1.46.0
-	github.com/samber/slog-echo v1.14.4
+	github.com/samber/lo v1.47.0
+	github.com/samber/slog-echo v1.14.5
 	github.com/schollz/progressbar/v3 v3.14.6
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
@@ -45,8 +45,8 @@ require (
 	github.com/alecthomas/repr v0.4.0 // indirect
 	github.com/andybalholm/brotli v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/cloudflare/circl v1.3.9 // indirect
-	github.com/datadog/czlib v0.0.0-20210322182103-8087f4e14ae7 // indirect
+	github.com/cloudflare/circl v1.4.0 // indirect
+	github.com/datadog/czlib v0.0.0-20240814115052-86a9592b3985 // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
@@ -54,7 +54,7 @@ require (
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
-	github.com/google/btree v1.1.2 // indirect
+	github.com/google/btree v1.1.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/pprof v0.0.0-20240727154555-813a5fbdbec8 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
