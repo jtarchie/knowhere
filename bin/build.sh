@@ -54,5 +54,5 @@ fi
 
 # Cleanup (if enabled)
 if $enable_cleanup; then
-	./bin/cleanup.sh
+	./bin/cleanup.rb
 fi

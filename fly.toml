@@ -28,3 +28,5 @@ primary_region = 'sjc'
 
 [[vm]]
   size = 'performance-2x'
+  memory = '4gb'
+
