@@ -57,6 +57,40 @@ func ToIndexedSQL(query string) (string, error) {
 	equalParts := []string{}
 	notParts := []string{}
 
+	if bbs, ok := ast.Directives["bb"]; ok {
+		if 4 == len(bbs) {
+			parts = append(
+				parts,
+				bbs[0]+" <= s.minLon",
+				bbs[1]+" <= s.minLat",
+				"s.maxLon <= "+bbs[2],
+				"s.maxLat <= "+bbs[3],
+			)
+
+			// find distance of lat/lng
+			bounds := orb.Bound{
+				Min: orb.Point{toFloat(bbs[0]), toFloat(bbs[1])},
+				Max: orb.Point{toFloat(bbs[2]), toFloat(bbs[3])},
+			}
+			precision := boundsToGeohashPrecision(bounds)
+			center := bounds.Center()
+
+			// get all neighboring hashes
+			hash := geohash.EncodeWithPrecision(center.Lat(), center.Lon(), precision)
+			hashes := []string{hash}
+			hashes = append(hashes, geohash.Neighbors(hash)...)
+
+			// add to full text search
+			asString := lo.Map(hashes, func(item string, _ int) string {
+				return item + `*`
+			})
+			equalParts = append(
+				equalParts,
+				`( "geohash" AND ( `+strings.Join(asString, " OR ")+" ) )",
+			)
+		}
+	}
+
 	for operation, tags := range groupedTags {
 		switch operation {
 		case OpEquals:
@@ -175,40 +209,6 @@ func ToIndexedSQL(query string) (string, error) {
 		}
 	}
 
-	if bbs, ok := ast.Directives["bb"]; ok {
-		if 4 == len(bbs) {
-			parts = append(
-				parts,
-				bbs[0]+" <= s.minLon",
-				bbs[1]+" <= s.minLat",
-				"s.maxLon <= "+bbs[2],
-				"s.maxLat <= "+bbs[3],
-			)
-
-			// find distance of lat/lng
-			bounds := orb.Bound{
-				Min: orb.Point{toFloat(bbs[0]), toFloat(bbs[1])},
-				Max: orb.Point{toFloat(bbs[2]), toFloat(bbs[3])},
-			}
-			precision := boundsToGeohashPrecision(bounds)
-			center := bounds.Center()
-
-			// get all neighboring hashes
-			hash := geohash.EncodeWithPrecision(center.Lat(), center.Lon(), precision)
-			hashes := []string{hash}
-			hashes = append(hashes, geohash.Neighbors(hash)...)
-
-			// add to full text search
-			asString := lo.Map(hashes, func(item string, _ int) string {
-				return item + `*`
-			})
-			equalParts = append(
-				equalParts,
-				`( "geohash" AND ( `+strings.Join(asString, " OR ")+" ) )",
-			)
-		}
-	}
-
 	if 0 < len(equalParts) {
 		equals := strings.Join(equalParts, " AND ")
 		if 0 < len(notParts) {
@@ -262,7 +262,7 @@ func boundsToGeohashPrecision(bounds orb.Bound) uint {
 
 	for index, precision := range geohashPrecisions {
 		if height <= precision[0] && width <= precision[1] {
-			return uint(len(geohashPrecisions) - index)
+			return max(0, uint(len(geohashPrecisions) - index + 1))
 		}
 	}
 
