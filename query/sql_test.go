@@ -85,6 +85,8 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("partial match", `nw[name=~"Coffee Cafe*"]`, `( "name" AND ( "Coffee Cafe"* ) )`, `( LOWER(s.tags->>'$.name') GLOB '*coffee cafe**' )`),
 			Entry("multiple tags", "n[amenity=restaurant][cuisine=sushi]", `( "amenity" AND ( "restaurant" ) )`, `( "cuisine" AND ( "sushi" ) )`),
 			Entry("single tag with multiple values", "nw[amenity=restaurant,pub,cafe]", `( "amenity" AND ( "restaurant" OR "pub" OR "cafe" ) )`),
+			Entry("single tag with multiple values with quotes", `nw[amenity="restaurant","pub","cafe"]`, `( "amenity" AND ( "restaurant" OR "pub" OR "cafe" ) )`),
+			Entry("single tag with multiple values with and without quotes", `nw[amenity=Bobs Burgers,"Starbucks"]`, `( "amenity" AND ( "Bobs Burgers" OR "Starbucks" ) )`),
 			Entry("single tag that exists", "nw[name]", `( "name" )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("multiple tag that exists", "r[route][ref][network]", `( "route" ) AND ( "ref" ) AND ( "network" )`),
 			Entry("multiple tag that have value and exist", "r[amenity=restaurant][name]", `( "amenity" AND ( "restaurant" ) )`, `( "name" )`),
