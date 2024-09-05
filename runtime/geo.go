@@ -1,5 +1,9 @@
 package runtime
 
+import (
+	"github.com/paulmach/orb/geo"
+)
+
 type Geo struct{}
 
 func (g *Geo) Rtree() *RTree {
@@ -16,4 +20,8 @@ func (g *Geo) AsBounds(bounds ...Bound) Bounds {
 
 func (g *Geo) AsPoint(lat, lng float64) Point {
 	return Point{lng, lat}
+}
+
+func (g *Geo) Distance(p1, p2 Bound) float64 {
+	return geo.Distance(p1.bound.Center(), p2.bound.Center())
 }
