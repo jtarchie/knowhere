@@ -440,7 +440,7 @@ func (b *Converter) Execute() error {
 	slog.Info("db.optimize.init", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
-		pragma page_size = 4096;
+		pragma page_size = 16384;
 		
 		INSERT INTO
 			{{area}}_search({{area}}_search)
