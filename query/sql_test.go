@@ -28,14 +28,14 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			CREATE VIRTUAL TABLE
 				search
 			USING
-				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'entries', tokenize="porter", content_rowid='id');
+				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'entries', tokenize="unicode61", content_rowid='id');
 			CREATE TABLE test_entries (
 				id, osm_type, osm_id, tags, minLat, maxLat, minLon, maxLon
 			);
 			CREATE VIRTUAL TABLE
 				test_search
 			USING
-				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'test_entries', tokenize="porter", content_rowid='id');
+				fts5(tags, osm_type, osm_id, minLat, maxLat, minLon, maxLon, content = 'test_entries', tokenize="unicode61", content_rowid='id');
 		`)
 		Expect(err).NotTo(HaveOccurred())
 	})

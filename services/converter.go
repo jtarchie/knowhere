@@ -383,7 +383,7 @@ func (b *Converter) Execute() error {
 		CREATE VIRTUAL TABLE
 			{{area}}_search
 		USING
-			fts5(tags, osm_id, minLat, maxLat, minLon, maxLon, osm_type, content = '{{area}}_entries', tokenize="porter", content_rowid='id');
+			fts5(tags, osm_id, minLat, maxLat, minLon, maxLon, osm_type, content = '{{area}}_entries', tokenize="unicode61", content_rowid='id');
 
 		WITH tags AS (
 			SELECT

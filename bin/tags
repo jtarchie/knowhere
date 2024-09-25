@@ -45,9 +45,19 @@ railway
 # other
 name
 website
+phone
+email
+wikipedia
 # address
 addr:housenumber
 addr:street
 addr:city
 addr:postcode
 postal_code
+# religion
+religion
+denomination
+parish
+operator
+church:type
+place_of_worship
