@@ -48,6 +48,9 @@ website
 phone
 email
 wikipedia
+place
+type
+wikidata
 # address
 addr:housenumber
 addr:street
@@ -61,3 +64,7 @@ parish
 operator
 church:type
 place_of_worship
+# population -- https://wiki.openstreetmap.org/wiki/Key:population
+population
+population:date
+source:population
