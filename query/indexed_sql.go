@@ -11,6 +11,10 @@ import (
 	"github.com/samber/lo"
 )
 
+func escape(s string) string {
+	return strings.ReplaceAll(s, "'", "''")
+}
+
 func ToIndexedSQL(query string) (string, error) {
 	ast, err := Parse(query)
 	if err != nil {
@@ -96,7 +100,7 @@ func ToIndexedSQL(query string) (string, error) {
 		case OpEquals:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return `"` + item + `"`
+					return `"` + escape(item) + `"`
 				})
 
 				if tag.Name == "" {
@@ -111,7 +115,7 @@ func ToIndexedSQL(query string) (string, error) {
 					)
 
 					asString = lo.Map(tag.Lookups, func(item string, _ int) string {
-						return "s.tags->>'$." + tag.Name + "' = '" + item + "'"
+						return "s.tags->>'$." + tag.Name + "' = '" + escape(item) + "'"
 					})
 					parts = append(parts,
 						"( "+strings.Join(asString, " OR ")+" )",
@@ -121,7 +125,7 @@ func ToIndexedSQL(query string) (string, error) {
 		case OpNotEquals:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return `"` + item + `"`
+					return `"` + escape(item) + `"`
 				})
 
 				if tag.Name == "" {
@@ -133,6 +137,13 @@ func ToIndexedSQL(query string) (string, error) {
 					notParts = append(
 						notParts,
 						`( "`+tag.Name+`" AND ( `+strings.Join(asString, " OR ")+" ) )",
+					)
+
+					asString = lo.Map(tag.Lookups, func(item string, _ int) string {
+						return "s.tags->>'$." + tag.Name + "' <> '" + escape(item) + "'"
+					})
+					parts = append(parts,
+						"( "+strings.Join(asString, " OR ")+" )",
 					)
 				}
 			}
@@ -170,10 +181,10 @@ func ToIndexedSQL(query string) (string, error) {
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
 					if item[len(item)-1] == '*' {
-						return `"` + item[0:len(item)-1] + `"*`
+						return `"` + escape(item[0:len(item)-1]) + `"*`
 					}
 
-					return `"` + item + `"`
+					return `"` + escape(item) + `"`
 				})
 
 				equalParts = append(
@@ -184,14 +195,14 @@ func ToIndexedSQL(query string) (string, error) {
 				for _, lookup := range tag.Lookups {
 					parts = append(
 						parts,
-						"( LOWER(s.tags->>'$."+tag.Name+"') GLOB '*"+strings.ToLower(lookup)+"*' )",
+						"( LOWER(s.tags->>'$."+tag.Name+"') GLOB '*"+escape(strings.ToLower(lookup))+"*' )",
 					)
 				}
 			}
 		case OpNotContains:
 			for _, tag := range tags {
 				asString := lo.Map(tag.Lookups, func(item string, _ int) string {
-					return `"` + item + `"`
+					return `"` + escape(item) + `"`
 				})
 
 				notParts = append(
@@ -202,7 +213,7 @@ func ToIndexedSQL(query string) (string, error) {
 				for _, lookup := range tag.Lookups {
 					parts = append(
 						parts,
-						"( LOWER(s.tags->>'$."+tag.Name+"') NOT GLOB '*"+strings.ToLower(lookup)+"*' )",
+						"( LOWER(s.tags->>'$."+tag.Name+"') NOT GLOB '*"+escape(strings.ToLower(lookup))+"*' )",
 					)
 				}
 			}

@@ -14,9 +14,9 @@ require (
 	github.com/georgysavva/scany/v2 v2.1.3
 	github.com/goccy/go-json v0.10.3
 	github.com/iancoleman/strcase v0.3.0
-	github.com/imroc/req/v3 v3.47.0
+	github.com/imroc/req/v3 v3.48.0
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20240916212700-cd500d70634f
+	github.com/jtarchie/sqlitezstd v0.0.0-20241014123615-107f0343c233
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
@@ -68,7 +68,7 @@ require (
 	github.com/paulmach/protoscan v0.2.1 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
-	github.com/quic-go/quic-go v0.47.0 // indirect
+	github.com/quic-go/quic-go v0.48.0 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect

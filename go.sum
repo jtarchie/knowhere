@@ -92,8 +92,8 @@ github.com/hexops/gotextdiff v1.0.3 h1:gitA9+qJrrTCsiCl7+kh75nPqQt1cx4ZkudSTLoUq
 github.com/hexops/gotextdiff v1.0.3/go.mod h1:pSWU5MAI3yDq+fZBTazCSJysOMbxWL1BSow5/V2vxeg=
 github.com/iancoleman/strcase v0.3.0 h1:nTXanmYxhfFAMjZL34Ov6gkzEsSJZ5DbhxWjvSASxEI=
 github.com/iancoleman/strcase v0.3.0/go.mod h1:iwCmte+B7n89clKwxIoIXy/HfoL7AsD47ZCWhYzw7ho=
-github.com/imroc/req/v3 v3.47.0 h1:O8D1KtZSEuhHIrWA+YBd4MZeFg3KprfbNSFR49EWdNA=
-github.com/imroc/req/v3 v3.47.0/go.mod h1:weam9gmyb00QnOtu6HXSnk44dNFkIUQb5QdMx13FeUU=
+github.com/imroc/req/v3 v3.48.0 h1:IYuMGetuwLzOOTzDCquDqs912WNwpsPK0TBXWPIvoqg=
+github.com/imroc/req/v3 v3.48.0/go.mod h1:weam9gmyb00QnOtu6HXSnk44dNFkIUQb5QdMx13FeUU=
 github.com/ipfs/go-detect-race v0.0.1 h1:qX/xay2W3E4Q1U7d9lNs1sU9nvguX0a7319XbyQ6cOk=
 github.com/ipfs/go-detect-race v0.0.1/go.mod h1:8BNT7shDZPo99Q74BpGMK+4D8Mn4j46UU0LZ723meps=
 github.com/jackc/pgpassfile v1.0.0 h1:/6Hmqy13Ss2zCq62VdNG8tM1wchn8zjSGOBJ6icpsIM=
@@ -106,8 +106,8 @@ github.com/jackc/puddle/v2 v2.0.0 h1:Kwk/AlLigcnZsDssc3Zun1dk1tAtQNPaBBxBHWn0Mjc
 github.com/jackc/puddle/v2 v2.0.0/go.mod h1:itE7ZJY8xnoo0JqJEpSMprN0f+NQkMCuEV/N9j8h0oc=
 github.com/jmoiron/sqlx v1.4.0 h1:1PLqN7S1UYp5t4SrVVnt4nUVNemrDAtxlulVe+Qgm3o=
 github.com/jmoiron/sqlx v1.4.0/go.mod h1:ZrZ7UsYB/weZdl2Bxg6jCRO9c3YHl8r3ahlKmRT4JLY=
-github.com/jtarchie/sqlitezstd v0.0.0-20240916212700-cd500d70634f h1:TKPNkpq26e8SjXULRyBWUoL9AliC9iAwjCdmtg1uZ7U=
-github.com/jtarchie/sqlitezstd v0.0.0-20240916212700-cd500d70634f/go.mod h1:5yHiQJATtVdY4GNGVQmVlsEtiPHDIQVZeliPAPk3Mxw=
+github.com/jtarchie/sqlitezstd v0.0.0-20241014123615-107f0343c233 h1:qFVjEFN5U+ulry2z9Zj62b/5ETczV++kP7+ruxKMqKk=
+github.com/jtarchie/sqlitezstd v0.0.0-20241014123615-107f0343c233/go.mod h1:pB/YmXSDQyE0Amgw6GmrpIdHDvdeGFjuIAk6Y0BGqeU=
 github.com/jtolds/gls v4.20.0+incompatible h1:xdiiI2gbIgH/gLH7ADydsJ1uDOEzR8yvV7C0MuV77Wo=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
 github.com/kisielk/errcheck v1.5.0/go.mod h1:pFxgyoBC7bSaBwPgfKdkLd5X25qrDl4LWUI2bnpBCr8=
@@ -173,8 +173,8 @@ github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 h1:vAKifIJuYY3
 github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361/go.mod h1:iW4cSew5PAb1sMZiTEkVJAIBNrepaB6jTYjeP47WtI0=
 github.com/quic-go/qpack v0.5.1 h1:giqksBPnT/HDtZ6VhtFKgoLOWmlyo9Ei6u9PqzIMbhI=
 github.com/quic-go/qpack v0.5.1/go.mod h1:+PC4XFrEskIVkcLzpEkbLqq1uCoxPhQuvK5rH1ZgaEg=
-github.com/quic-go/quic-go v0.47.0 h1:yXs3v7r2bm1wmPTYNLKAAJTHMYkPEsfYJmTazXrCZ7Y=
-github.com/quic-go/quic-go v0.47.0/go.mod h1:3bCapYsJvXGZcipOHuu7plYtaV6tnF+z7wIFsU0WK9E=
+github.com/quic-go/quic-go v0.48.0 h1:2TCyvBrMu1Z25rvIAlnp2dPT4lgh/uTqLqiXVpp5AeU=
+github.com/quic-go/quic-go v0.48.0/go.mod h1:yBgs3rWBOADpga7F+jJsb6Ybg1LSYiQvwWlLX+/6HMs=
 github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9 h1:cvht1GrOF8MbAgDvN6flt1sj9Aixv/SokD/XqH6MXIQ=
 github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9/go.mod h1:Voxo2KUk+o0x2taVupAT82GWwNK6Nv7LFwZHyJduxnY=
 github.com/refraction-networking/utls v1.6.7 h1:zVJ7sP1dJx/WtVuITug3qYUq034cDq9B2MR1K67ULZM=

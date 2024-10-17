@@ -100,6 +100,10 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`, `( "pop" )`),
 			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`, `( "pop" )`),
 			Entry("with less than equal", "n[pop<=100]", `s.tags->>'$.pop' <= 100`, `( "pop" )`),
+			Entry("with a single quote equals", `n[name="Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `s.tags->>'$.name' = 'Bob''s Burgers'`),
+			Entry("with a single quote not equals", `n[name][name!="Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `s.tags->>'$.name' <> 'Bob''s Burgers'`),
+			Entry("with a single quote contains", `n[name=~"Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `LOWER(s.tags->>'$.name') GLOB '*bob''s burgers*'`),
+			Entry("with a single quote not contains", `n[name][name!~"Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `LOWER(s.tags->>'$.name') NOT GLOB '*bob''s burgers*'`),
 		)
 	})
 })
