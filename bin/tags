@@ -14,6 +14,11 @@ route
 shop
 tourism
 waterway
+# sports
+sport
+# skiing -- https://wiki.openstreetmap.org/wiki/Pistes
+piste:type
+piste:grooming
 # fuel types -- https://wiki.openstreetmap.org/wiki/Key:fuel
 fuel
 fuel:diesel
