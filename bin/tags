@@ -1,25 +1,106 @@
-# boundaries of political areas
+# general descriptors for areas and types
+place
+landuse
+building
+highway
+leisure
+natural
+waterway
+# transportation and accessibility
+cycleway
+sidewalk
+crossing
+bus
+bus:lanes
+railway
+public_transport
+parking
+access
+footway
+# boundaries and administrative
 admin_level
 border_type
 boundary
-# points of interest
+type
+postal_code
+# address details
+addr:housenumber
+addr:street
+addr:city
+addr:postcode
+# points of interest and amenities
 amenity
-building
-fast_food
-landuse
-leisure
-man_made
-natural
-route
 shop
 tourism
-waterway
-# sports
+historic
+office
+man_made
+attraction
+emergency
+healthcare
+community_centre
+theatre
+cinema
+# contact and information
+name
+website
+phone
+email
+wikipedia
+wikidata
+# commercial and retail
+retail
+shop:type
+shop:brand
+mall
+supermarket
+convenience
+# education
+school
+college
+university
+isced:level
+kindergarten
+library
+# religion
+religion
+denomination
+parish
+operator
+church:type
+place_of_worship
+# food and drink
+drink:beer
+drink:craft_beer
+microbrewery
+brewery
+winery
+distillery
+cafe
+restaurant
+fast_food
+food_court
+bakery
+bar
+pub
+# sports and recreation
 sport
-# skiing -- https://wiki.openstreetmap.org/wiki/Pistes
+sports_centre
+pitch
+swimming_pool
+stadium
+golf_course
+fitness_station
+park
+playground
+beach_resort
 piste:type
 piste:grooming
-# fuel types -- https://wiki.openstreetmap.org/wiki/Key:fuel
+# demographics and population
+population
+population:date
+source:population
+# fuel and charging
 fuel
 fuel:diesel
 fuel:octane_100
@@ -36,40 +117,16 @@ fuel:octane_94
 fuel:octane_95
 fuel:octane_97
 fuel:octane_98
-# attributes of shop
+charging_station
+# internet and connectivity
 internet_access
-# for vehicles
-highway
-cycleway
-# school
-school
-isced:level
-# public transit
-public_transport
-railway
-# other
-name
-website
-phone
-email
-wikipedia
-place
-type
-wikidata
-# address
-addr:housenumber
-addr:street
-addr:city
-addr:postcode
-postal_code
-# religion
-religion
-denomination
-parish
-operator
-church:type
-place_of_worship
-# population -- https://wiki.openstreetmap.org/wiki/Key:population
-population
-population:date
-source:population
+wifi
+# environmental features
+green_space
+tree
+garden
+forest
+wetland
+meadow
+desert
+park
