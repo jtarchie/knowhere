@@ -5,7 +5,7 @@ go 1.22.5
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.7.3
 	github.com/alecthomas/assert/v2 v2.11.0
-	github.com/alecthomas/kong v1.2.1
+	github.com/alecthomas/kong v1.4.0
 	github.com/bokwoon95/wgo v0.5.6
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
@@ -16,14 +16,14 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.48.0
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20241014123615-107f0343c233
+	github.com/jtarchie/sqlitezstd v0.0.0-20241031191127-28c784fbafe2
 	github.com/labstack/echo/v4 v4.12.0
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/mmcloughlin/geohash v0.10.0
 	github.com/onsi/ginkgo/v2 v2.21.0
-	github.com/onsi/gomega v1.35.0
+	github.com/onsi/gomega v1.35.1
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
@@ -49,14 +49,14 @@ require (
 	github.com/datadog/czlib v0.0.0-20240814115052-86a9592b3985 // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
-	github.com/fsnotify/fsnotify v1.7.0 // indirect
+	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20241029153458-d1b30febd7db // indirect
+	github.com/google/pprof v0.0.0-20241101162523-b92577c0c142 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
