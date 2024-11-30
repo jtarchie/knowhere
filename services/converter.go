@@ -28,6 +28,7 @@ type Converter struct {
 	osmPath     string
 	area        string
 	rtree       bool
+	optimize    bool
 }
 
 var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
@@ -38,6 +39,7 @@ func NewConverter(
 	area string,
 	tags []string,
 	rtree bool,
+	optimize bool,
 ) *Converter {
 	var allowedTags []string
 
@@ -55,6 +57,7 @@ func NewConverter(
 		osmPath:     osmPath,
 		area:        strcase.ToSnake(strings.ToLower(area)),
 		rtree:       rtree,
+		optimize:    optimize,
 	}
 }
 
@@ -462,15 +465,24 @@ func (b *Converter) Execute() error {
 				MIN(minLon),
 				MAX(maxLon)
 			FROM {{area}}_entries;
-
-		vacuum;
-		pragma optimize;
 	`)
 	if err != nil {
-		return fmt.Errorf("could not optimize: %w", err)
+		return fmt.Errorf("could not optimize data: %w", err)
 	}
 
 	slog.Info("db.optimize.complete", slog.String("filename", b.dbPath), slog.String("area", b.area))
+
+	if b.optimize {
+		slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
+		err = b.clientExecute(client, `
+			vacuum;
+			pragma optimize;
+		`)
+		if err != nil {
+			return fmt.Errorf("could not optimize db: %w", err)
+		}
+		slog.Info("db.optimize.completed", slog.String("filename", b.dbPath))
+	}
 
 	return nil
 }

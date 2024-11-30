@@ -26,7 +26,7 @@ var _ = Describe("Converter", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"name"}, true)
+		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"name"}, true, true)
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())
@@ -41,7 +41,7 @@ var _ = Describe("Converter", func() {
 		Expect(err).NotTo(HaveOccurred())
 
 		dbPath := filepath.Join(buildDir, "test.db")
-		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"*"}, true)
+		builder := services.NewConverter("../fixtures/sample.pbf", dbPath, "united_states", []string{"*"}, true, true)
 
 		err = builder.Execute()
 		Expect(err).NotTo(HaveOccurred())

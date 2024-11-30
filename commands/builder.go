@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"io"
@@ -57,11 +56,15 @@ func (b *Build) Run(stdout io.Writer) error {
 	}
 
 	client := req.C().SetOutputDirectory(buildPath).SetTimeout(time.Hour)
-	scanner := bufio.NewScanner(config)
 
-	for scanner.Scan() {
-		url := scanner.Text()
+	contents, err := io.ReadAll(config)
+	if err != nil {
+		return fmt.Errorf("could not read config file: %w", err)
+	}
 
+	lines := strings.Split(string(contents), "\n")
+
+	for index, url := range lines {
 		filename := filepath.Base(url)
 		slog.Info("processing", "url", url, "filename", filename)
 		downloadFilename := filepath.Join(buildPath, filename)
@@ -106,6 +109,7 @@ func (b *Build) Run(stdout io.Writer) error {
 			DB:          b.DB,
 			Prefix:      area,
 			AllowedTags: b.AllowedTags,
+			OptimizeDB:  index%10 == 0 || index == len(lines)-1,
 		}
 
 		err := command.Run(stdout)

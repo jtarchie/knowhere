@@ -13,10 +13,11 @@ type Convert struct {
 	OSM         string   `help:"osm pbf file to build the sqlite file from" required:""                                               type:"existingfile"`
 	Prefix      string   `help:"will add this area to all table names"    required:""`
 	Rtree       bool     `help:"enable rtree index"`
+	OptimizeDB  bool     `help:"optimize the database after import" default:"true"`
 }
 
 func (b *Convert) Run(_ io.Writer) error {
-	builder := services.NewConverter(b.OSM, b.DB, b.Prefix, b.AllowedTags, b.Rtree)
+	builder := services.NewConverter(b.OSM, b.DB, b.Prefix, b.AllowedTags, b.Rtree, b.OptimizeDB)
 
 	err := builder.Execute()
 	if err != nil {
