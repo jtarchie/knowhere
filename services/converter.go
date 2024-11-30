@@ -112,8 +112,7 @@ func (b *Converter) Execute() error {
 			maxLat   REAL,
 			minLon   REAL,
 			maxLon   REAL,
-			tags     BLOB,
-			refs     BLOB
+			tags     BLOB
 		) STRICT;
 
 		CREATE TABLE {{area}}_refs (
@@ -151,9 +150,9 @@ func (b *Converter) Execute() error {
 
 	insert, err := transaction.Prepare(b.Sprintf(`
 	INSERT INTO {{area}}_entries
-		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags, refs)
+		(osm_id, osm_type, minLat, maxLat, minLon, maxLon, tags)
 			VALUES
-		(?, ?, ?, ?, ?, ?, jsonb(?), jsonb(?));
+		(?, ?, ?, ?, ?, ?, jsonb(?));
 	`))
 	if err != nil {
 		return fmt.Errorf("could not create prepared statement for insert: %w", err)
@@ -181,7 +180,6 @@ func (b *Converter) Execute() error {
 				math.Round(node.Lon*precision)/precision,
 				math.Round(node.Lon*precision)/precision,
 				marshal.Tags(filteredTags),
-				nil,
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
@@ -203,7 +201,6 @@ func (b *Converter) Execute() error {
 				nil,
 				nil,
 				marshal.Tags(filteredTags),
-				marshal.WayNodes(way.Nodes),
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)
@@ -234,7 +231,6 @@ func (b *Converter) Execute() error {
 				nil,
 				nil,
 				marshal.Tags(filteredTags),
-				marshal.Members(relation.Members),
 			)
 			if err != nil {
 				return fmt.Errorf("could not insert node: %w", err)

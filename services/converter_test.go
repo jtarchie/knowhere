@@ -63,13 +63,13 @@ var _ = Describe("Converter", func() {
 		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2 AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2 AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 2", &result)
 		Expect(result).To(BeEquivalentTo(44))
 
 		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3 AND tags <> '{}'", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
-		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3 AND refs <> '[]'", &result)
+		value(dbPath, "SELECT COUNT(*) FROM united_states_entries WHERE osm_type = 3", &result)
 		Expect(result).To(BeEquivalentTo(5))
 
 		// checking the id of full text search matches the id in the entries table
