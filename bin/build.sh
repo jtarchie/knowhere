@@ -34,13 +34,15 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Building the SQLite database
-go run -tags fts5 github.com/jtarchie/knowhere build \
+echo "Building the SQLite database..."
+time go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$config_path" \
 	--db "$db_path" \
 	--allowed-tags "$(grep -v '^#' bin/tags | tr '\n' ',')"
 
 # Compressing the database
-go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
+echo "Compressing the database..."
+time go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 	-f "$db_path" \
 	-o "$db_path".zst \
 	-q 20 \
@@ -48,11 +50,13 @@ go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 
 # Rclone copy (if enabled)
 if $enable_rclone; then
-	rclone copy "$db_path" r2:knowhere-sqlite/ -P
-	rclone copy "$db_path".zst r2:knowhere-sqlite/ -P
+	echo "Rclone copy..."
+	time rclone copy "$db_path" r2:knowhere-sqlite/ -P
+	time rclone copy "$db_path".zst r2:knowhere-sqlite/ -P
 fi
 
 # Cleanup (if enabled)
 if $enable_cleanup; then
-	./bin/cleanup.rb
+	echo "Cleanup..."
+	time ./bin/cleanup.rb
 fi
