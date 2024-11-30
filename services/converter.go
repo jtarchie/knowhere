@@ -101,6 +101,16 @@ func (b *Converter) Execute() error {
 
 	client.SetMaxOpenConns(1)
 
+	// Speed up inserts by adjusting PRAGMA settings
+	_, err = client.Exec(`
+		PRAGMA synchronous = OFF;
+		PRAGMA journal_mode = MEMORY;
+		PRAGMA temp_store = MEMORY;
+	`)
+	if err != nil {
+		return fmt.Errorf("could not set PRAGMA settings: %w", err)
+	}
+
 	slog.Info("db.schema.create", slog.String("filename", b.dbPath), slog.String("area", b.area))
 
 	err = b.clientExecute(client, `
