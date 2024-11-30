@@ -93,8 +93,20 @@ var _ = Describe("Server", func() {
               ]
             },
             "properties": {
+              "carriageway_ref": "A",
+              "geohash": "gcpy6x7n96ur",
+              "highway": "motorway",
               "id": 294,
+              "lanes": "3",
+              "layer": "-1",
+              "lit": "yes",
+              "maxspeed": "national",
+              "name": "Hatfield Tunnel",
+              "oneway": "yes",
+              "ref": "A1(M)",
+              "source:maxspeed": "local_knowledge",
               "title": "Hatfield Tunnel",
+              "tunnel": "yes",
               "type": 2
             }
           }

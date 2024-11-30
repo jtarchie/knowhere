@@ -22,6 +22,10 @@ func (wr Result) Bound() Bound {
 func (wr Result) AsFeature(properties map[string]interface{}) *geojson.Feature {
 	feature := geojson.NewFeature(wr.Bound().bound.Center())
 
+	for name, value := range wr.Tags {
+		feature.Properties[name] = value
+	}
+
 	feature.Properties["title"] = wr.Name()
 	feature.Properties["id"] = wr.ID
 	feature.Properties["type"] = wr.OsmType
