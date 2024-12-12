@@ -3,18 +3,39 @@
 
 require 'json'
 require 'open3'
+require 'timeout'
+require 'logger'
 
-def task(command)
-  puts "> #{command}"
+# Initialize logger
+logger = Logger.new(STDOUT)
 
-  if command.include?('--json')
-    stdout, status = Open3.capture2(command)
-    raise "exit status: #{status.exitstatus}" unless status.exitstatus.zero?
+def task(command, timeout = 120)
+  logger.info("> #{command}")
 
-    return stdout
+  begin
+    Timeout.timeout(timeout) do
+      if command.include?('--json')
+        stdout, status = Open3.capture2(command)
+        unless status.exitstatus.zero?
+          logger.error("Command failed with exit status: #{status.exitstatus}")
+          raise "exit status: #{status.exitstatus}"
+        end
+
+        return stdout
+      end
+
+      unless system(command)
+        logger.error("Command failed: #{command}")
+        raise 'failed command'
+      end
+    end
+  rescue Timeout::Error
+    logger.error("Command timed out: #{command}")
+    raise 'command timed out'
+  rescue => e
+    logger.error("An error occurred: #{e.message}")
+    raise
   end
-
-  raise 'failed command' unless system(command)
 end
 
 def json(payload)
@@ -35,7 +56,7 @@ begin
   volume_id = json(task(%(fly volumes create "#{volume_name}" --size 25 --region #{region} --yes --no-encryption --json))).fetch('id')
   task(%(fly machine run . --name "#{machine_name}" --volume "#{volume_id}:/var/osm/" --region #{region} --rm))
   machine_id = json(task(%(fly machine ls --json))).find { |machine| machine['name'] == machine_name }.fetch('id')
-  task(%(fly ssh console --machine "#{machine_id}" --command "curl -q --progress-bar -o /var/osm/entries.db.zst https://sqlite.knowhere.live/entries.db.zst"))
+  task(%(fly ssh console --machine "#{machine_id}" --command "curl -q --progress-bar -o /var/osm/entries.db.zst https://sqlite.knowhere.live/entries.db.zst"), nil)
   task(%(fly machine destroy "#{machine_id}" --force))
 
   machines = json(task(%(fly machines ls --json))).select do |machine|

@@ -51,7 +51,6 @@ time go run github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek \
 # Rclone copy (if enabled)
 if $enable_rclone; then
 	echo "Rclone copy..."
-	time rclone copy "$db_path" r2:knowhere-sqlite/ -P
 	time rclone copy "$db_path".zst r2:knowhere-sqlite/ -P
 fi
 
