@@ -475,8 +475,9 @@ func (b *Converter) Execute() error {
 	if b.optimize {
 		slog.Info("db.optimize.init", slog.String("filename", b.dbPath))
 		err = b.clientExecute(client, `
-			vacuum;
-			pragma optimize;
+			PRAGMA temp_store = FILE;
+			VACUUM;
+			PRAGMA optimize;
 		`)
 		if err != nil {
 			return fmt.Errorf("could not optimize db: %w", err)

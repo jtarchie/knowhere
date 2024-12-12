@@ -38,7 +38,7 @@ echo "Building the SQLite database..."
 time go run -tags fts5 github.com/jtarchie/knowhere build \
 	--config "$config_path" \
 	--db "$db_path" \
-	--allowed-tags "$(grep -v '^#' bin/tags | tr '\n' ',')"
+	--allowed-tags "*"
 
 # Compressing the database
 echo "Compressing the database..."

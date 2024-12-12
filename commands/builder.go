@@ -109,7 +109,7 @@ func (b *Build) Run(stdout io.Writer) error {
 			DB:          b.DB,
 			Prefix:      area,
 			AllowedTags: b.AllowedTags,
-			OptimizeDB:  index%10 == 0 || index == len(lines)-1,
+			OptimizeDB:  index == len(lines)-1,
 		}
 
 		err := command.Run(stdout)
