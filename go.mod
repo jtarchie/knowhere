@@ -5,32 +5,32 @@ go 1.22.5
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.7.3
 	github.com/alecthomas/assert/v2 v2.11.0
-	github.com/alecthomas/kong v1.5.1
+	github.com/alecthomas/kong v1.6.0
 	github.com/bokwoon95/wgo v0.5.7
 	github.com/dop251/goja v0.0.0-20241024094426-79f3a7efcdbd
 	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
 	github.com/engelsjk/polygol v0.0.3
-	github.com/evanw/esbuild v0.24.0
+	github.com/evanw/esbuild v0.24.2
 	github.com/georgysavva/scany/v2 v2.1.3
-	github.com/goccy/go-json v0.10.3
+	github.com/goccy/go-json v0.10.4
 	github.com/iancoleman/strcase v0.3.0
-	github.com/imroc/req/v3 v3.48.0
+	github.com/imroc/req/v3 v3.49.1
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20241204192250-bb0bbb425db0
-	github.com/labstack/echo/v4 v4.13.0
+	github.com/jtarchie/sqlitezstd v0.0.0-20241225211909-2e20eae11eaf
+	github.com/labstack/echo/v4 v4.13.3
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
 	github.com/mattn/go-sqlite3 v1.14.24
 	github.com/mmcloughlin/geohash v0.10.0
-	github.com/onsi/ginkgo/v2 v2.22.0
-	github.com/onsi/gomega v1.36.0
+	github.com/onsi/ginkgo/v2 v2.22.1
+	github.com/onsi/gomega v1.36.2
 	github.com/paulmach/orb v0.11.1
 	github.com/paulmach/osm v0.8.0
 	github.com/phayes/freeport v0.0.0-20220201140144-74d24b5ae9f5
 	github.com/pioz/countries v0.2.0
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/samber/lo v1.47.0
-	github.com/samber/slog-echo v1.14.7
+	github.com/samber/slog-echo v1.14.8
 	github.com/schollz/progressbar/v3 v3.17.1
 	github.com/tidwall/geojson v1.4.5
 	github.com/tidwall/rtree v1.10.0
@@ -55,7 +55,7 @@ require (
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/btree v1.1.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
-	github.com/google/pprof v0.0.0-20241206021119-61a79c692802 // indirect
+	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
@@ -79,22 +79,22 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.mongodb.org/mongo-driver v1.17.1 // indirect
-	go.opentelemetry.io/otel v1.32.0 // indirect
-	go.opentelemetry.io/otel/trace v1.32.0 // indirect
+	go.opentelemetry.io/otel v1.33.0 // indirect
+	go.opentelemetry.io/otel/trace v1.33.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/mock v0.5.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.30.0 // indirect
-	golang.org/x/exp v0.0.0-20241204233417-43b7b7cde48d // indirect
+	golang.org/x/crypto v0.31.0 // indirect
+	golang.org/x/exp v0.0.0-20241217172543-b2144cdd0a67 // indirect
 	golang.org/x/mod v0.22.0 // indirect
-	golang.org/x/net v0.32.0 // indirect
+	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
 	golang.org/x/term v0.27.0 // indirect
 	golang.org/x/time v0.8.0 // indirect
 	golang.org/x/tools v0.28.0 // indirect
-	google.golang.org/protobuf v1.35.2 // indirect
+	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	howett.net/ranger v0.0.0-20171016084633-e2e137620847 // indirect
 )
