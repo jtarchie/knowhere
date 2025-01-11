@@ -17,6 +17,14 @@ func (t *Tags) Scan(value interface{}) error {
 	return json.Unmarshal([]byte(value.(string)), t)
 }
 
+func (t *Tags) Keys() []string {
+	keys := make([]string, 0, len(*t))
+	for k := range *t {
+		keys = append(keys, k)
+	}
+	return keys
+}
+
 type Result struct {
 	ID      int64      `db:"id"       js:"id"`
 	MaxLat  float64    `db:"maxLat"   js:"max_lat"`

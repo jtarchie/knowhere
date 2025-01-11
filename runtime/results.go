@@ -97,3 +97,15 @@ func (r Results) AsTree(radius float64) *RTree {
 
 	return tree
 }
+
+func (r Results) TagCount() map[string]int {
+	counts := map[string]int{}
+
+	for _, result := range r {
+		for key := range result.Tags {
+			counts[key]++
+		}
+	}
+
+	return counts
+}

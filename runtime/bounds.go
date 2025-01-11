@@ -1,6 +1,8 @@
 package runtime
 
 import (
+	"fmt"
+
 	"github.com/engelsjk/polygol"
 	"github.com/paulmach/orb"
 	"github.com/paulmach/orb/geo"
@@ -14,6 +16,10 @@ type Bound struct {
 
 func NewBound(bound orb.Bound) Bound {
 	return Bound{bound: bound}
+}
+
+func (wb Bound) AsBB() string {
+	return fmt.Sprintf("%f,%f,%f,%f", wb.bound.Min[0], wb.bound.Min[1], wb.bound.Max[0], wb.bound.Max[1])
 }
 
 func (wb Bound) Min() [2]float64 {
