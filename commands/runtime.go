@@ -7,11 +7,10 @@ import (
 	"io"
 	"log/slog"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/jtarchie/knowhere/services"
-	"github.com/jtarchie/sqlitezstd"
+	_ "github.com/jtarchie/sqlitezstd"
 )
 
 type Runtime struct {
@@ -21,18 +20,7 @@ type Runtime struct {
 }
 
 func (r *Runtime) Run(stdout io.Writer) error {
-	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro", r.DB)
-
-	if strings.Contains(r.DB, ".zst") {
-		err := sqlitezstd.Init()
-		if err != nil {
-			return fmt.Errorf("could not load sqlite zstd vfs: %w", err)
-		}
-
-		connectionString += "&vfs=zstd"
-	}
-
-	client, err := sql.Open("sqlite3", connectionString)
+	client, err := sql.Open("sqlite3", connectionString(r.DB))
 	if err != nil {
 		return fmt.Errorf("could not open database file: %w", err)
 	}

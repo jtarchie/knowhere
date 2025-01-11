@@ -45,7 +45,6 @@ var _ = Describe("Server", func() {
 			Port:           port,
 			DB:             dbFilename,
 			RuntimeTimeout: time.Second,
-			CacheSize:      5000,
 		}
 		go func() {
 			defer GinkgoRecover()

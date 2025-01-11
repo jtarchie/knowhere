@@ -7,7 +7,7 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/jtarchie/sqlitezstd"
+	_ "github.com/jtarchie/sqlitezstd"
 )
 
 type Integrity struct {
@@ -21,11 +21,6 @@ func (i *Integrity) Run(stdout io.Writer) error {
 		return fmt.Errorf("could not open uncompressed database: %w", err)
 	}
 	defer uncompressedDB.Close()
-
-	err = sqlitezstd.Init()
-	if err != nil {
-		return fmt.Errorf("could not load sqlite zstd vfs: %w", err)
-	}
 
 	compressedDB, err := sql.Open("sqlite3", fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&vfs=zstd", i.CompressedDB))
 	if err != nil {

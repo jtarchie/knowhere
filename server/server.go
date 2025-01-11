@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"log/slog"
 	runtimeNative "runtime"
-	"strings"
 	"time"
 
-	"github.com/jtarchie/sqlitezstd"
+	_ "github.com/jtarchie/sqlitezstd"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,23 +19,11 @@ type Server struct {
 
 func New(
 	port int,
-	dbFilename string,
+	connectionString string,
 	cors []string,
 	allowCIDRs []string,
 	timeout time.Duration,
-	cacheSize int,
 ) (*Server, error) {
-	connectionString := fmt.Sprintf("file:%s?_query_only=true&immutable=true&mode=ro&_cache_size=%d&_busy_timeout=5000", dbFilename, cacheSize)
-
-	if strings.Contains(dbFilename, ".zst") {
-		err := sqlitezstd.Init()
-		if err != nil {
-			return nil, fmt.Errorf("could not load sqlite zstd vfs: %w", err)
-		}
-
-		connectionString += "&vfs=zstd"
-	}
-
 	client, err := sql.Open("sqlite3", connectionString)
 	if err != nil {
 		return nil, fmt.Errorf("could not open database file: %w", err)
@@ -48,7 +35,7 @@ func New(
 	slog.Info(
 		"server.config",
 		slog.Int("port", port),
-		slog.String("db", dbFilename),
+		slog.String("database_uri", connectionString),
 	)
 
 	handler := echo.New()

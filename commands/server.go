@@ -14,17 +14,15 @@ type Server struct {
 	DB             string        `help:"sqlite file to server"      required:""`
 	Port           int           `default:"8080"                    help:"port for the http server" required:""`
 	RuntimeTimeout time.Duration `help:"the timeout for single runtime" default:"2s"`
-	CacheSize      int           `help:"SQLite cache size" default:"5000"`
 }
 
 func (s *Server) Run(_ io.Writer) error {
 	server, err := server.New(
 		s.Port,
-		s.DB,
+		connectionString(s.DB),
 		s.Cors,
 		s.AllowCIDR,
 		s.RuntimeTimeout,
-		s.CacheSize,
 	)
 	if err != nil {
 		return fmt.Errorf("could not initialized the server: %w", err)
