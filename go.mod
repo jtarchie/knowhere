@@ -16,7 +16,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.49.1
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20250111040614-9d8ef13b0e25
+	github.com/jtarchie/sqlitezstd v0.0.0-20250111142549-f1872dedfc2d
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
@@ -65,6 +65,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/paulmach/protoscan v0.2.1 // indirect
+	github.com/psanford/httpreadat v0.1.0 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.48.2 // indirect
@@ -96,7 +97,6 @@ require (
 	golang.org/x/tools v0.29.0 // indirect
 	google.golang.org/protobuf v1.36.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	howett.net/ranger v0.0.0-20171016084633-e2e137620847 // indirect
 )
 
 replace github.com/datadog/czlib => github.com/DataDog/czlib v0.0.0-20210322182103-8087f4e14ae7

@@ -20,10 +20,14 @@ type Runtime struct {
 }
 
 func (r *Runtime) Run(stdout io.Writer) error {
-	client, err := sql.Open("sqlite3", connectionString(r.DB))
+	dsn := connectionString(r.DB)
+	slog.Info("runtime.start", "dsn", dsn, "timeout", r.RuntimeTimeout.String())
+
+	client, err := sql.Open("sqlite3", dsn)
 	if err != nil {
 		return fmt.Errorf("could not open database file: %w", err)
 	}
+	defer client.Close()
 
 	runtime := services.NewRuntime(client, r.RuntimeTimeout)
 
