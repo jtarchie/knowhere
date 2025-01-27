@@ -9,7 +9,7 @@ import (
 	"github.com/alecthomas/assert/v2"
 	"github.com/jtarchie/knowhere/address"
 	"github.com/recursionpharma/go-csv-map"
-	"github.com/samber/lo"
+	"github.com/samber/lo/mutable"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -34,7 +34,8 @@ var _ = Describe("Parse", func() {
 
 		valid := 0
 		total := 0
-		for _, record := range lo.Shuffle(records) {
+		mutable.Shuffle(records)
+		for _, record := range records {
 			if record["country_code"] == "us" {
 				total++
 				fullAddress := record["full_address"]
