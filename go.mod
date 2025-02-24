@@ -1,14 +1,16 @@
 module github.com/jtarchie/knowhere
 
-go 1.22.5
+go 1.23.0
+
+toolchain go1.24.0
 
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.7.3
 	github.com/alecthomas/assert/v2 v2.11.0
-	github.com/alecthomas/kong v1.8.0
-	github.com/bokwoon95/wgo v0.5.9
+	github.com/alecthomas/kong v1.8.1
+	github.com/bokwoon95/wgo v0.5.11
 	github.com/dop251/goja v0.0.0-20250125213203-5ef83b82af17
-	github.com/dop251/goja_nodejs v0.0.0-20240728170619-29b559befffc
+	github.com/dop251/goja_nodejs v0.0.0-20250217171036-ba90ff8d8790
 	github.com/engelsjk/polygol v0.0.3
 	github.com/evanw/esbuild v0.25.0
 	github.com/georgysavva/scany/v2 v2.1.3
@@ -16,7 +18,7 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.49.1
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20250111142549-f1872dedfc2d
+	github.com/jtarchie/sqlitezstd v0.0.0-20250224213843-f1144dbef406
 	github.com/labstack/echo/v4 v4.13.3
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
@@ -47,19 +49,19 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudflare/circl v1.6.0 // indirect
 	github.com/datadog/czlib v0.0.0-20240814115052-86a9592b3985 // indirect
-	github.com/dlclark/regexp2 v1.11.4 // indirect
+	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/engelsjk/splay-tree v0.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.8.0 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-sourcemap/sourcemap v2.1.4+incompatible // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
 	github.com/google/btree v1.1.3 // indirect
-	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20250208200701-d0013a598941 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hexops/gotextdiff v1.0.3 // indirect
-	github.com/klauspost/compress v1.17.11 // indirect
+	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -68,7 +70,7 @@ require (
 	github.com/psanford/httpreadat v0.1.0 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
-	github.com/quic-go/quic-go v0.49.0 // indirect
+	github.com/quic-go/quic-go v0.50.0 // indirect
 	github.com/refraction-networking/utls v1.6.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/smartystreets/goconvey v1.8.1 // indirect
@@ -86,8 +88,8 @@ require (
 	go.uber.org/mock v0.5.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.0 // indirect
-	golang.org/x/crypto v0.33.0 // indirect
-	golang.org/x/exp v0.0.0-20250210185358-939b2ce775ac // indirect
+	golang.org/x/crypto v0.35.0 // indirect
+	golang.org/x/exp v0.0.0-20250218142911-aa4b98e5adaa // indirect
 	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
