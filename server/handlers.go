@@ -37,6 +37,9 @@ func setupRoutes(
 	handler.GET("/api/search", locationSearch(client))
 	handler.GET("/api/areas", areas(client))
 	handler.Any("/api/runtime", runtime(client, timeout))
+	handler.GET("/up", func(c echo.Context) error {
+		return c.String(http.StatusOK, "ok")
+	})
 
 	assetHandler := assetHandler()
 	handler.GET("/", echo.WrapHandler(assetHandler))
