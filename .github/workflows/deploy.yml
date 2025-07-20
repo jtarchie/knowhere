@@ -13,6 +13,9 @@ jobs:
       DROPLET_IP_ADDRESS: ${{ vars.DROPLET_IP_ADDRESS }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.4'
