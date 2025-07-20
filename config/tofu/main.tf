@@ -41,6 +41,20 @@ resource "digitalocean_firewall" "web" {
   }
 }
 
+resource "github_actions_variable" "DROPLET_IP_ADDRESS" {
+  repository = "jtarchie/knowhere"
+  name       = "DROPLET_IP_ADDRESS"
+  value      = digitalocean_droplet.web.ipv4_address
+} 
+
+resource "cloudflare_record" "kamal_web" {
+  zone_id = "your-cloudflare-zone-id"
+  name    = "kamal-web"
+  value   = digitalocean_droplet.web.ipv4_address
+  type    = "A"
+  ttl     = 3600
+}
+
 output "droplet_ip_address" {
   value = digitalocean_droplet.web.ipv4_address
 }
