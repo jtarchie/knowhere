@@ -22,7 +22,7 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 COPY --from=builder /app/knowhere .
-COPY --from=builder /app/zstdseek .
+COPY --from=builder /app/zstdseek . 
 COPY --from=builder /app/bin/entrypoint.sh .
 
 EXPOSE 3000
