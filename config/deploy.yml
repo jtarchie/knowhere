@@ -3,7 +3,7 @@ service: knowhere
 
 
 # Name of the container image.
-image: my-user/my-app
+image: knowhere/app
 
 # Deploy to these servers.
 servers:
@@ -26,7 +26,7 @@ proxy:
 # Credentials for your image host.
 registry:
   # Specify the registry server, if you're not using Docker Hub
-  server: registry.digitalocean.com
+  server: registry.digitalocean.com/knowhere
   username:
     - KAMAL_REGISTRY_USERNAME
 
