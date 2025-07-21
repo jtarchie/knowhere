@@ -5,18 +5,18 @@ go 1.24.4
 require (
 	github.com/SaveTheRbtz/zstd-seekable-format-go/cmd/zstdseek v0.8.0
 	github.com/alecthomas/assert/v2 v2.11.0
-	github.com/alecthomas/kong v1.12.0
+	github.com/alecthomas/kong v1.12.1
 	github.com/bokwoon95/wgo v0.5.13
 	github.com/dop251/goja v0.0.0-20250630131328-58d95d85e994
 	github.com/dop251/goja_nodejs v0.0.0-20250409162600-f7acab6894b0
 	github.com/engelsjk/polygol v0.0.3
-	github.com/evanw/esbuild v0.25.6
+	github.com/evanw/esbuild v0.25.8
 	github.com/georgysavva/scany/v2 v2.1.4
 	github.com/goccy/go-json v0.10.5
 	github.com/iancoleman/strcase v0.3.0
 	github.com/imroc/req/v3 v3.54.0
 	github.com/jmoiron/sqlx v1.4.0
-	github.com/jtarchie/sqlitezstd v0.0.0-20250616115951-a7735631b9a2
+	github.com/jtarchie/sqlitezstd v0.0.0-20250718013730-86793c0f671f
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/libp2p/go-cidranger v1.1.0
 	github.com/lithammer/fuzzysearch v1.1.8
@@ -70,7 +70,7 @@ require (
 	github.com/psanford/httpreadat v0.1.0 // indirect
 	github.com/psanford/sqlite3vfs v0.0.0-20240315230605-24e1d98cf361 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
-	github.com/quic-go/quic-go v0.53.0 // indirect
+	github.com/quic-go/quic-go v0.54.0 // indirect
 	github.com/refraction-networking/utls v1.7.3 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.13.1 // indirect
