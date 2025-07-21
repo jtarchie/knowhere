@@ -4,7 +4,7 @@ set -eux
 
 echo "Booting app version $KAMAL_VERSION on $KAMAL_HOSTS..."
 mkdir -p $HOME/osm
-if [ -f /var/osm/entries.db.zst ]; then
+if [ -f $HOME/osm/entries.db.zst ]; then
   echo "Using existing database at /var/osm/entries.db.zst"
 else
   echo "Downloading database from https://sqlite.knowhere.live/entries.db.zst"

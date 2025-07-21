@@ -60,7 +60,7 @@ builder:
 #
 ssh:
   user: root
-  keys: ["~/.ssh/id_github"]
+  keys: ["~/.ssh/id_do"]
 
 # Use a persistent storage volume.
 #
