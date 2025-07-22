@@ -41,18 +41,19 @@ resource "digitalocean_firewall" "web" {
   }
 }
 
-resource "github_actions_variable" "DROPLET_IP_ADDRESS" {
-  repository = "jtarchie/knowhere"
-  name       = "DROPLET_IP_ADDRESS"
-  value      = digitalocean_droplet.web.ipv4_address
-} 
+resource "github_actions_secret" "ip_address" {
+  repository      = "knowhere"
+  secret_name     = "DROPLET_IP_ADDRESS"
+  plaintext_value = digitalocean_droplet.web.ipv4_address
+}
 
-resource "cloudflare_record" "kamal_web" {
-  zone_id = "your-cloudflare-zone-id"
-  name    = "kamal-web"
-  value   = digitalocean_droplet.web.ipv4_address
+resource "cloudflare_dns_record" "kamal_web" {
+  zone_id = var.cloudflare_zone_id
+  name    = "api"
+  content = digitalocean_droplet.web.ipv4_address
   type    = "A"
   ttl     = 3600
+  proxied = true
 }
 
 output "droplet_ip_address" {
