@@ -95,7 +95,7 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("everything", `nrw[name][!amenity][name="*King*","*Queen*"]`, `( "name" )`, `( "name" AND ( "*King*" OR "*Queen*" ) )`, `NOT ( "amenity" )`, `( s.tags->>'$.amenity' IS NULL )`, `( s.tags->>'$.name' IS NOT NULL )`),
 			Entry("with table area", "n[amenity=restaurant](area=test)", `test_search`, `( "amenity" AND ( "restaurant" ) )`, `( s.tags->>'$.amenity' = 'restaurant' )`),
 			Entry("with ids", "n(id=1,123,4567)", `s.osm_id IN (1,123,4567)`),
-			Entry("with bounding box (bb=minLon,minLat,maxLon,maxLat)", "n(bb=1.10,2.20,11.11,99.99)", `1.10 <= s.minLon`, `2.20 <= s.minLat`, `s.maxLon <= 11.11`, `s.maxLat <= 99.99`),
+			Entry("with bounding box (bb=minLon,minLat,maxLon,maxLat)", "n(bb=1.10,2.20,11.11,11.99)", `1.10 <= s.minLon`, `2.20 <= s.minLat`, `s.maxLon <= 11.11`, `s.maxLat <= 11.99`),
 			Entry("with greater than", "n[pop>100]", `s.tags->>'$.pop' > 100`, `( "pop" )`),
 			Entry("with greater than equal", "n[pop>=100]", `s.tags->>'$.pop' >= 100`, `( "pop" )`),
 			Entry("with less than", "n[pop<100]", `s.tags->>'$.pop' < 100`, `( "pop" )`),
@@ -104,6 +104,22 @@ var _ = Describe("Build SQL from a query", Ordered, func() {
 			Entry("with a single quote not equals", `n[name][name!="Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `s.tags->>'$.name' <> 'Bob''s Burgers'`),
 			Entry("with a single quote contains", `n[name=~"Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `LOWER(s.tags->>'$.name') GLOB '*bob''s burgers*'`),
 			Entry("with a single quote not contains", `n[name][name!~"Bob's Burgers"]`, `"name" AND ( "Bob''s Burgers" )`, `LOWER(s.tags->>'$.name') NOT GLOB '*bob''s burgers*'`),
+		)
+
+		DescribeTable("query with invalid coordinates that should fail gracefully", func(q string, expectedError string) {
+			_, err := query.ToIndexedSQL(q)
+			Expect(err).To(HaveOccurred())
+			Expect(err.Error()).To(ContainSubstring(expectedError))
+		},
+			Entry("invalid latitude too high", "n(bb=-180,91,180,90)", "invalid latitude"),
+			Entry("invalid latitude too low", "n(bb=-180,-91,180,90)", "invalid latitude"),
+			Entry("invalid longitude too high", "n(bb=181,-90,180,90)", "invalid longitude"),
+			Entry("invalid longitude too low", "n(bb=-181,-90,180,90)", "invalid longitude"),
+			Entry("NaN values", "n(bb=NaN,0,0,0)", "invalid coordinates"),
+			Entry("infinity values", "n(bb=Inf,0,0,0)", "invalid coordinates"),
+			Entry("very large numbers that could cause overflow", "n(bb=1e308,0,0,0)", "invalid"),
+			Entry("inverted bounds - min > max longitude", "n(bb=180,-90,-180,90)", "invalid bounds"),
+			Entry("inverted bounds - min > max latitude", "n(bb=-180,90,180,-90)", "invalid bounds"),
 		)
 	})
 })

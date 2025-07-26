@@ -2,6 +2,7 @@ package query
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 
@@ -63,6 +64,17 @@ func ToIndexedSQL(query string) (string, error) {
 
 	if bbs, ok := ast.Directives["bb"]; ok {
 		if 4 == len(bbs) {
+			// Parse and validate coordinate values
+			minLon := toFloat(bbs[0])
+			minLat := toFloat(bbs[1])
+			maxLon := toFloat(bbs[2])
+			maxLat := toFloat(bbs[3])
+
+			// Validate coordinates
+			if err := validateCoordinates(minLon, minLat, maxLon, maxLat); err != nil {
+				return "", fmt.Errorf("invalid bounding box coordinates: %w", err)
+			}
+
 			parts = append(
 				parts,
 				bbs[0]+" <= s.minLon",
@@ -73,14 +85,23 @@ func ToIndexedSQL(query string) (string, error) {
 
 			// find distance of lat/lng
 			bounds := orb.Bound{
-				Min: orb.Point{toFloat(bbs[0]), toFloat(bbs[1])},
-				Max: orb.Point{toFloat(bbs[2]), toFloat(bbs[3])},
+				Min: orb.Point{minLon, minLat},
+				Max: orb.Point{maxLon, maxLat},
 			}
 			precision := boundsToGeohashPrecision(bounds)
 			center := bounds.Center()
 
+			// Validate center coordinates before geohash encoding
+			centerLat, centerLon := center.Lat(), center.Lon()
+			if math.IsNaN(centerLat) || math.IsNaN(centerLon) ||
+				math.IsInf(centerLat, 0) || math.IsInf(centerLon, 0) ||
+				centerLat < -90 || centerLat > 90 ||
+				centerLon < -180 || centerLon > 180 {
+				return "", fmt.Errorf("invalid center coordinates: lat=%f, lon=%f", centerLat, centerLon)
+			}
+
 			// get all neighboring hashes
-			hash := geohash.EncodeWithPrecision(center.Lat(), center.Lon(), precision)
+			hash := geohash.EncodeWithPrecision(centerLat, centerLon, precision)
 			hashes := []string{hash}
 			hashes = append(hashes, geohash.Neighbors(hash)...)
 
@@ -252,6 +273,44 @@ func toFloat(s string) float64 {
 	return value
 }
 
+func validateCoordinates(minLon, minLat, maxLon, maxLat float64) error {
+	// Check for NaN or Infinity values
+	coords := []float64{minLon, minLat, maxLon, maxLat}
+	names := []string{"minLon", "minLat", "maxLon", "maxLat"}
+
+	for i, coord := range coords {
+		if math.IsNaN(coord) || math.IsInf(coord, 0) {
+			return fmt.Errorf("invalid coordinates: %s=%f (NaN or Infinity values not allowed)", names[i], coord)
+		}
+	}
+
+	// Validate latitude bounds
+	if minLat < -90 || minLat > 90 {
+		return fmt.Errorf("invalid latitude: %f (must be between -90 and 90)", minLat)
+	}
+	if maxLat < -90 || maxLat > 90 {
+		return fmt.Errorf("invalid latitude: %f (must be between -90 and 90)", maxLat)
+	}
+
+	// Validate longitude bounds
+	if minLon < -180 || minLon > 180 {
+		return fmt.Errorf("invalid longitude: %f (must be between -180 and 180)", minLon)
+	}
+	if maxLon < -180 || maxLon > 180 {
+		return fmt.Errorf("invalid longitude: %f (must be between -180 and 180)", maxLon)
+	}
+
+	// Validate bounds order
+	if minLon > maxLon {
+		return fmt.Errorf("invalid bounds: minLon (%f) must be <= maxLon (%f)", minLon, maxLon)
+	}
+	if minLat > maxLat {
+		return fmt.Errorf("invalid bounds: minLat (%f) must be <= maxLat (%f)", minLat, maxLat)
+	}
+
+	return nil
+}
+
 func boundsToGeohashPrecision(bounds orb.Bound) uint {
 	geohashPrecisions := [][2]float64{
 		{0.0372, 0.0186},
@@ -271,9 +330,18 @@ func boundsToGeohashPrecision(bounds orb.Bound) uint {
 	height := geo.BoundHeight(bounds)
 	width := geo.BoundWidth(bounds)
 
+	// Handle invalid bounds
+	if math.IsNaN(height) || math.IsNaN(width) || math.IsInf(height, 0) || math.IsInf(width, 0) {
+		return 1 // Return minimum precision for invalid bounds
+	}
+
 	for index, precision := range geohashPrecisions {
 		if height <= precision[0] && width <= precision[1] {
-			return max(0, uint(len(geohashPrecisions)-index+1))
+			result := len(geohashPrecisions) - index + 1
+			if result < 0 {
+				return 1
+			}
+			return uint(result)
 		}
 	}
 
