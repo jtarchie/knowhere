@@ -16,7 +16,7 @@ primary_region = 'sjc'
 [[mounts]]
   source = 'sqlite'
   destination = '/var/osm/'
-  initial_size = '25gb'
+  initial_size = '18gb'
 
 [http_service]
   internal_port = 3000
@@ -27,6 +27,6 @@ primary_region = 'sjc'
   processes = ['app']
 
 [[vm]]
-  size = 'shared-cpu-2x'
+  size = 'shared-cpu-4x'
   memory = '4gb'
 
